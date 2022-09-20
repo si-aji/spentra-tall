@@ -48,11 +48,6 @@ class Login extends Component
     private function usernameKeyValidate()
     {
         $key = filter_var($this->email, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';;
-        \Log::debug("Debug on Username Key Validation", [
-            'value' => $this->email,
-            'validate' => $key
-        ]);
-        
         return $key;
     }
 }
