@@ -16,7 +16,10 @@
         <!-- Fonts -->
         <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
 
-        @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+        <!-- Tailwind -->
+        <link href="{{ mix('assets/css/tailwind.css') }}" rel="stylesheet">
+        <!-- Style -->
+        <link href="{{ mix('assets/css/app.css') }}" rel="stylesheet">
         @livewireStyles
         @livewireScripts
 
@@ -26,5 +29,8 @@
 
     <body>
         @yield('body')
+
+        <!-- Script -->
+        <script src="{{ mix('assets/js/app.js') }}"></script>
     </body>
 </html>
