@@ -18,7 +18,7 @@ class Login extends Component
     public $remember = false;
 
     protected $rules = [
-        'email' => ['required', 'email'],
+        'email' => ['required'],
         'password' => ['required'],
     ];
 
@@ -26,7 +26,8 @@ class Login extends Component
     {
         $this->validate();
 
-        if (!Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
+        $userKey = $this->usernameKeyValidate() ?? 'email';
+        if (!Auth::attempt([$userKey => $this->email, 'password' => $this->password], $this->remember)) {
             $this->addError('email', trans('auth.failed'));
 
             return;
@@ -38,5 +39,20 @@ class Login extends Component
     public function render()
     {
         return view('livewire.auth.login')->extends('layouts.auth');
+    }
+
+    /**
+     * Validate User Key, sign-in use username/email
+     * 
+     */
+    private function usernameKeyValidate()
+    {
+        $key = filter_var($this->email, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';;
+        \Log::debug("Debug on Username Key Validation", [
+            'value' => $this->email,
+            'validate' => $key
+        ]);
+        
+        return $key;
     }
 }
