@@ -1,73 +1,73 @@
 @section('title', 'Sign in to your account')
 
 <div>
-    <div class="sm:mx-auto sm:w-full sm:max-w-md">
+    <div class="sm:tw__mx-auto sm:tw__w-full sm:tw__max-w-md">
         <a href="{{ route('home') }}">
-            <x-logo class="w-auto h-16 mx-auto text-indigo-600" />
+            <x-logo class="tw__w-auto tw__h-16 tw__mx-auto tw__text-indigo-600" />
         </a>
 
-        <h2 class="mt-6 text-3xl font-extrabold text-center text-gray-900 leading-9">
+        <h2 class="tw__mt-6 tw__text-3xl tw__font-extrabold tw__text-center tw__text-gray-900 tw__leading-9">
             Sign in to your account
         </h2>
         @if (Route::has('register'))
-            <p class="mt-2 text-sm text-center text-gray-600 leading-5 max-w">
+            <p class="tw__mt-2 tw__text-sm tw__text-center tw__text-gray-600 tw__leading-5 tw__max-w">
                 Or
-                <a href="{{ route('register') }}" class="font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:underline transition ease-in-out duration-150">
+                <a href="{{ route('register') }}" class="tw__font-medium tw__text-indigo-600 hover:tw__text-indigo-500 focus:tw__outline-none focus:tw__underline tw__transition tw__ease-in-out tw__duration-150">
                     create a new account
                 </a>
             </p>
         @endif
     </div>
 
-    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div class="px-4 py-8 bg-white shadow sm:rounded-lg sm:px-10">
+    <div class="tw__mt-8 sm:tw__mx-auto sm:tw__w-full sm:tw__max-w-md">
+        <div class="tw__px-4 tw__py-8 tw__bg-white tw__shadow sm:tw__rounded-lg sm:tw__px-10">
             <form wire:submit.prevent="authenticate">
                 <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700 leading-5">
+                    <label for="email" class="tw__block tw__text-sm tw__font-medium tw__text-gray-700 tw__leading-5">
                         Email / Username
                     </label>
 
-                    <div class="mt-1 rounded-md shadow-sm">
-                        <input wire:model.lazy="email" id="email" name="email" type="text" required autofocus class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5 @error('email') border-red-300 text-red-900 placeholder-red-300 focus:border-red-300 focus:ring-red @enderror" />
+                    <div class="tw__mt-1 tw__rounded-md tw__shadow-sm">
+                        <input wire:model.lazy="email" id="email" name="email" type="text" required autofocus class="tw__appearance-none tw__block tw__w-full tw__px-3 tw__py-2 tw__border tw__border-gray-300 tw__rounded-md tw__placeholder-gray-400 focus:tw__outline-none focus:tw__ring-blue focus:tw__border-blue-300 tw__transition tw__duration-150 tw__ease-in-out sm:tw__text-sm sm:tw__leading-5 @error('email') tw__border-red-300 tw__text-red-900 tw__placeholder-red-300 focus:tw__border-red-300 focus:tw__ring-red @enderror" />
                     </div>
 
                     @error('email')
-                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        <p class="tw__mt-2 tw__text-sm tw__text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <div class="mt-6">
-                    <label for="password" class="block text-sm font-medium text-gray-700 leading-5">
+                    <label for="password" class="tw__block tw__text-sm tw__font-medium tw__text-gray-700 tw__leading-5">
                         Password
                     </label>
 
-                    <div class="mt-1 rounded-md shadow-sm">
-                        <input wire:model.lazy="password" id="password" type="password" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5 @error('password') border-red-300 text-red-900 placeholder-red-300 focus:border-red-300 focus:ring-red @enderror" />
+                    <div class="tw__mt-1 tw__rounded-md tw__shadow-sm">
+                        <input wire:model.lazy="password" id="password" type="password" required class="tw__appearance-none tw__block tw__w-full tw__px-3 tw__py-2 tw__border tw__border-gray-300 tw__rounded-md tw__placeholder-gray-400 focus:tw__outline-none focus:tw__ring-blue focus:tw__border-blue-300 tw__transition tw__duration-150 tw__ease-in-out sm:tw__text-sm sm:tw__leading-5 @error('password') tw__border-red-300 tw__text-red-900 tw__placeholder-red-300 focus:tw__border-red-300 focus:tw__ring-red @enderror" />
                     </div>
 
                     @error('password')
-                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        <p class="tw__mt-2 tw__text-sm tw__text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <div class="flex items-center justify-between mt-6">
-                    <div class="flex items-center">
-                        <input wire:model.lazy="remember" id="remember" type="checkbox" class="form-checkbox w-4 h-4 text-indigo-600 transition duration-150 ease-in-out" />
-                        <label for="remember" class="block ml-2 text-sm text-gray-900 leading-5">
+                <div class="tw__flex tw__items-center tw__justify-between tw__mt-6">
+                    <div class="tw__flex tw__items-center">
+                        <input wire:model.lazy="remember" id="remember" type="checkbox" class="tw__form-checkbox tw__w-4 tw__h-4 tw__text-indigo-600 tw__transition tw__duration-150 tw__ease-in-out" />
+                        <label for="remember" class="tw__block tw__ml-2 tw__text-sm tw__text-gray-900 tw__leading-5">
                             Remember
                         </label>
                     </div>
 
-                    <div class="text-sm leading-5">
-                        <a href="{{ route('password.request') }}" class="font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:underline transition ease-in-out duration-150">
+                    <div class="tw__text-sm tw__leading-5">
+                        <a href="{{ route('password.request') }}" class="tw__font-medium tw__text-indigo-600 hover:tw__text-indigo-500 focus:tw__outline-none focus:tw__underline tw__transition tw__ease-in-out tw__duration-150">
                             Forgot your password?
                         </a>
                     </div>
                 </div>
 
-                <div class="mt-6">
-                    <span class="block w-full rounded-md shadow-sm">
-                        <button type="submit" class="flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:ring-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
+                <div class="tw__mt-6">
+                    <span class="tw__block tw__w-full tw__rounded-md tw__shadow-sm">
+                        <button type="submit" class="tw__flex tw__justify-center tw__w-full tw__px-4 tw__py-2 tw__text-sm tw__font-medium tw__text-white tw__bg-indigo-600 tw__border tw__border-transparent tw__rounded-md hover:tw__tw__bg-indigo-500 focus:tw__outline-none focus:tw__border-indigo-700 focus:tw__ring-indigo active:tw__bg-indigo-700 tw__transition tw__duration-150 tw__ease-in-out">
                             Sign in
                         </button>
                     </span>

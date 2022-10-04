@@ -9,12 +9,14 @@
         "guzzlehttp/guzzle": "^7.2",
         "laravel-frontend-presets/tall": "^5.0",
         "laravel/framework": "^9.19",
+        "laravel/helpers": "^1.5",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
         "livewire/livewire": "^2.10",
         "opcodesio/log-viewer": "^1.4"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.7",
         "fakerphp/faker": "^1.9.1",
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.0.1",
@@ -28,7 +30,10 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "files": [
+            "app/Helper/function.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

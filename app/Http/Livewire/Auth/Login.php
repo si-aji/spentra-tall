@@ -33,7 +33,7 @@ class Login extends Component
             return;
         }
 
-        return redirect()->intended(route('home'));
+        return redirect()->intended(route('sys.index'));
     }
 
     public function render()

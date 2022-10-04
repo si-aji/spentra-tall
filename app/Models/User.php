@@ -41,4 +41,14 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Scope
+     * 
+     */
+    public function scopeGetProfilePicture()
+    {
+        $asset = 'assets/img/no-pict.jpeg';
+        return asset(!empty($this->avatar) ? $this->avatar : $asset);
+    }
 }

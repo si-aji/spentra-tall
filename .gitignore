@@ -2,6 +2,8 @@
 /public/build
 /public/hot
 /public/storage
+/public/livewire-tmp
+/public/files/user
 /storage/*.key
 /vendor
 .env

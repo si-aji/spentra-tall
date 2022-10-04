@@ -15,7 +15,24 @@ use Illuminate\Support\Facades\Route;
 Route::group([
     'as' => 'sys.'
 ], function(){
-    Route::get('/', function(){
-        return response()->json('ok');
+    // Dashboard
+    Route::get('/', \App\Http\Livewire\Sys\Dashboard\Index::class)
+        ->name('index');
+
+    // Wallet
+    Route::group([
+        'prefix' => 'wallet',
+        'as' => 'wallet.'
+    ], function(){
+        // List
+        Route::get('list', \App\Http\Livewire\Sys\Wallet\Lists\Index::class)
+            ->name('list.index');
+        // Group
+        Route::get('group', \App\Http\Livewire\Sys\Wallet\Group\Index::class)
+        ->name('group.index');
     });
+
+    // Profile
+    Route::get('profile', \App\Http\Livewire\Sys\Profile\Index::class)
+        ->name('profile.index');
 });
