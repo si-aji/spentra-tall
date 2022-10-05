@@ -81,6 +81,18 @@
     @livewire(\App\Http\Livewire\Sys\Component\RecordModal::class, ['user' => \Auth::user()], key(\Auth::user()->id))
 @endsection
 
+
+@push('javascript')
+    <!-- Lightbox -->
+    <script src="{{ mix('assets/plugins/fslightbox/fslightbox.js') }}"></script>
+    <!-- Flatpickr -->
+    <script src="{{ mix('assets/plugins/flatpickr/flatpickr.min.js') }}"></script>
+    <!-- Choices Js -->
+    <script src="{{ mix('assets/plugins/choices.js/choices.min.js') }}"></script>
+    <!-- iMask -->
+    <script src="{{ mix('assets/plugins/imask/imask.js') }}"></script>
+@endpush
+
 {{-- JS Plugins --}}
 @section('baseJsPlugins')
     <script src="{{ mix('assets/js/shortcut.js') }}"></script>
@@ -100,15 +112,6 @@
     <script src="{{ mix('assets/themes/sneat/libs/apex-charts/apexcharts.js') }}vendor/"></script>
     <script src="{{ mix('assets/themes/sneat/js/main.js') }}"></script>
     {{-- <script async defer src="https://buttons.github.io/buttons.js"></script> --}}
-
-    <!-- Lightbox -->
-    <script src="{{ mix('assets/plugins/fslightbox/fslightbox.js') }}"></script>
-    <!-- Flatpickr -->
-    <script src="{{ mix('assets/plugins/flatpickr/flatpickr.min.js') }}"></script>
-    <!-- Choices Js -->
-    <script src="{{ mix('assets/plugins/choices.js/choices.min.js') }}"></script>
-    <!-- iMask -->
-    <script src="{{ mix('assets/plugins/imask/imask.js') }}"></script>
 
     @yield('js_plugins')
 @endsection

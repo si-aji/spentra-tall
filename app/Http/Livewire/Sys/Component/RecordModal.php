@@ -24,9 +24,9 @@ class RecordModal extends Component
     public $recordTitle = 'Add new Record';
     public $recordType = 'income';
     public $recordExtraType = 'amount';
-    public $recordAmount = null;
-    public $recordExtraAmount = null;
-    public $recordFinalAmount = null;
+    public $recordAmount = '';
+    public $recordExtraAmount = '';
+    public $recordFinalAmount = '';
     public $recordNote = null;
     public $recordReceipt;
     public $recordPeriod = null;
@@ -99,6 +99,12 @@ class RecordModal extends Component
         $this->recordResetField[] = 'recordMoreState';
         $this->reset($this->recordResetField);
         $this->dispatchBrowserEvent('close-modal');
+        $this->dispatchBrowserEvent('trigger-event', [
+            'recordType' => $this->recordType,
+            'recordExtraType' => $this->recordExtraType,
+            'recordAmount' => $this->recordAmount,
+            'recordExtraAmount' => $this->recordExtraAmount
+        ]);
     }
     // Update Model / Variable
     public function localUpdate($key, $value): void

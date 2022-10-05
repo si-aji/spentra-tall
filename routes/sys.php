@@ -13,11 +13,16 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group([
-    'as' => 'sys.'
+    'as' => 'sys.',
+    'middleware' => ['web', 'auth']
 ], function(){
     // Dashboard
     Route::get('/', \App\Http\Livewire\Sys\Dashboard\Index::class)
         ->name('index');
+
+    // Category
+    Route::get('category', \App\Http\Livewire\Sys\Category\Index::class)
+        ->name('category.index');
 
     // Wallet
     Route::group([

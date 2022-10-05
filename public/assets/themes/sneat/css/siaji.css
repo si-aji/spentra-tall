@@ -7,6 +7,10 @@
   margin-top: 12px;
 }
 
+.menu-item {
+  position: relative;
+}
+
 .app-brand-logo {
   font-size: 1.75rem;
   letter-spacing: -0.5px;

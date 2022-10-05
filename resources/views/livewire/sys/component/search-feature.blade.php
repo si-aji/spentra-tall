@@ -121,16 +121,16 @@
 
 @push('javascript')
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Initialize menu togglers and bind click on each
-            let menuToggler = document.querySelectorAll('.layout-menu-toggle');
-            menuToggler.forEach(item => {
-                item.addEventListener('click', event => {
-                    event.preventDefault();
-                    window.Helpers.toggleCollapsed();
-                });
-            });
-        });
+        // document.addEventListener('DOMContentLoaded', () => {
+        //     // Initialize menu togglers and bind click on each
+        //     let menuToggler = document.querySelectorAll('.layout-menu-toggle');
+        //     menuToggler.forEach(item => {
+        //         item.addEventListener('click', event => {
+        //             event.preventDefault();
+        //             window.Helpers.toggleCollapsed();
+        //         });
+        //     });
+        // });
 
         function sidebarSearch(el){
             let keyword = (el.target.value).toUpperCase();

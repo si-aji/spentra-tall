@@ -76,7 +76,7 @@
 					</li>
 				@else
 					{{-- Menu --}}
-					<li class="menu-item {{ isset($menuState) && isset($menu['state']) && $menuState === $menu['state'] ? (isset($menu['sub']) && is_array($menu['sub']) && count($menu['sub']) > 0 ? 'active open' : 'active') : '' }}">
+					<li class="menu-item {{ isset($menuState) && isset($menu['state']) && $menuState === $menu['state'] ? (isset($menu['sub']) && (is_array($menu['sub']) || count($menu['sub']) > 0) ? 'active open' : 'active') : '' }}">
 						@if (isset($menu['sub']) && count($menu['sub']) > 0)
 							{{-- Has Sub menu --}}
 							<a href="javascript:void(0);" class="menu-link menu-toggle">

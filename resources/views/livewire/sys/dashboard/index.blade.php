@@ -1,3 +1,4 @@
+@section('title', 'Dashboard')
 <div>
     <div class="row">
         <div class="col-lg-8 mb-4 order-0">

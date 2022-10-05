@@ -29,8 +29,6 @@
         @livewireStyles
         @livewireScripts
 
-        <!-- JS Plugins -->
-        @yield('baseJsPlugins')
         @stack('javascript')
 
         <!-- CSRF Token -->
@@ -42,6 +40,8 @@
 
         <!-- Script -->
         <script src="{{ mix('assets/js/app.js') }}"></script>
+        <!-- JS Plugins -->
+        @yield('baseJsPlugins')
         <!-- Script Inline -->
         @yield('baseJsInline')
     </body>

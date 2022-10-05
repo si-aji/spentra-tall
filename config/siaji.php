@@ -67,7 +67,7 @@ return [
             ], [
                 'name' => 'Category',
                 'icon' => 'bx bx-tag-alt',
-                'route' => null,
+                'route' => 'sys.category.index',
                 'is_header' => false,
                 'state' => null,
                 'sub' => collect([])
