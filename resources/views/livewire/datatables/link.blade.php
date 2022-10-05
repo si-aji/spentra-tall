@@ -1,0 +1,1 @@
+<a href="{{ $href }}" class="tw__border-2 tw__border-transparent hover:tw__border-blue-500 hover:tw__bg-blue-100 hover:tw__shadow-lg tw__text-blue-600 tw__rounded-lg tw__px-3 tw__py-1">{{ $slot }}</a>

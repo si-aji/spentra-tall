@@ -15,7 +15,7 @@
     {{-- Be like water. --}}
     <div class="card tw__mt-4">
         <div class="card-body">
-
+            <livewire:datatable model="App\Models\Wallet" name="all-users" />
         </div>
     </div>
 </div>

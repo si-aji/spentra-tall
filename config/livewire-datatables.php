@@ -1,0 +1,104 @@
+<?php
+
+return [
+    /*
+    |--------------------------------------------------------------------------
+    | Default Carbon Formats
+    |--------------------------------------------------------------------------
+    | The default formats that are used for TimeColumn & DateColumn.
+    | You can use the formatting characters from the PHP DateTime class.
+    | More info: https://www.php.net/manual/en/datetime.format.php
+    |
+    */
+
+    'default_time_format' => 'H:i',
+    'default_date_format' => 'd F, Y',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Default Carbon Formats
+    |--------------------------------------------------------------------------
+    | The default formats that are used for TimeColumn & DateColumn.
+    | You can use the formatting characters from the PHP DateTime class.
+    | More info: https://www.php.net/manual/en/datetime.format.php
+    |
+    */
+
+    'default_time_start' => '0000-00-00',
+    'default_time_end' => '9999-12-31',
+
+    // Defaults that work with smalldatetime in SQL Server
+    //  'default_time_start' => '1900-01-01',
+    //  'default_time_end' => '2079-06-06',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Surpress Search Highlights
+    |--------------------------------------------------------------------------
+    | When enabled, matching text won't be highlighted in the search results
+    | while searching.
+    |
+    */
+
+    'suppress_search_highlights' => false,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Per Page Options
+    |--------------------------------------------------------------------------
+    | Sets the options to choose from in the `Per Page`dropdown.
+    |
+    */
+
+    'per_page_options' => [10, 25, 50, 100],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Default Per Page
+    |--------------------------------------------------------------------------
+    | Sets the default amount of rows to display per page.
+    |
+    */
+
+    'default_per_page' => 10,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Model Namespace
+    |--------------------------------------------------------------------------
+    | Sets the default namespace to be used when generating a new Datatables
+    | component.
+    |
+    */
+
+    'model_namespace' => 'App',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Default Sortable
+    |--------------------------------------------------------------------------
+    | Should a column of a datatable be sortable by default ?
+    |
+    */
+
+    'default_sortable' => true,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Default CSS classes
+    |--------------------------------------------------------------------------
+    |
+    | Sets the default classes that will be applied to each row and class
+    | if the rowClasses() and cellClasses() functions are not overrided.
+    |
+    */
+
+    'default_classes' => [
+        'row' => [
+            'even' => 'tw__divide-x tw__divide-gray-100 tw__text-sm tw__text-gray-900 tw__bg-gray-100',
+            'odd' => 'tw__divide-x tw__divide-gray-100 tw__text-sm tw__text-gray-900 tw__bg-gray-50',
+            'selected' => 'tw__divide-x tw__divide-gray-100 tw__text-sm tw__text-gray-900 tw__bg-yellow-100',
+        ],
+        'cell' => 'tw__whitespace-no-wrap tw__text-sm tw__text-gray-900 tw__px-6 tw__py-2',
+    ],
+];
