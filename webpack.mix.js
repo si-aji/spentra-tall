@@ -30,6 +30,7 @@ mix.js('resources/js/app.js', 'public/assets/js')
  *
  */ 
 mix.copy('resources/js/shortcut.js', 'public/assets/js/shortcut.js');
+mix.copy('resources/js/siaji.js', 'public/assets/js/siaji.js');
 
 /**
  * Themes
@@ -45,6 +46,8 @@ mix.js('resources/themes/sneat/assets/js/config.js', 'public/assets/themes/sneat
  * Plugins
  * 
  */
+// jQuery
+mix.js('resources/js/plugins/jquery/jquery.js', 'public/assets/plugins/jquery').version();
 // Lightbox
 mix.js('resources/js/plugins/fslightbox/script.js', 'public/assets/plugins/fslightbox/fslightbox.js').version();
 // Flatpickr
@@ -56,3 +59,15 @@ mix.copy('node_modules/choices.js/public/assets/styles/base.min.css', 'public/as
 mix.copy('node_modules/choices.js/public/assets/styles/choices.min.css', 'public/assets/plugins/choices.js/choices.min.css').version();
 // Imask
 mix.js('resources/js/plugins/imask/script.js', 'public/assets/plugins/imask/imask.js').version();
+// Datatable
+mix.copy('node_modules/datatables.net-dt/css/jquery.dataTables.css', 'public/assets/plugins/datatable/css');
+mix.copy('node_modules/datatables.net-dt/images', 'public/assets/plugins/datatable/images');
+mix.copy('node_modules/datatables.net/js/jquery.dataTables.js', 'public/assets/plugins/datatable/datatable.js');
+mix.copy('node_modules/datatables.net-responsive/js/dataTables.responsive.js', 'public/assets/plugins/datatable');
+mix.copy('node_modules/datatables.net-responsive/js/dataTables.responsive.js', 'public/assets/plugins/datatable');
+mix.copy('node_modules/datatables.net-plugins/pagination', 'public/assets/plugins/datatable/plugins/pagination');
+mix.copy('resources/js/plugins/datatable/datatable-loadmore.js', 'public/assets/plugins/datatable/plugins/loadmore');
+mix.copy('node_modules/jquery-datatables-checkboxes/css/dataTables.checkboxes.css', 'public/assets/plugins/datatable/plugins/checkbox/css');
+mix.copy('node_modules/jquery-datatables-checkboxes/js/dataTables.checkboxes.min.js', 'public/assets/plugins/datatable/plugins/checkbox/js');
+mix.copy('node_modules/datatables.net-select/js/dataTables.select.min.js', 'public/assets/plugins/datatable/plugins/select');
+// mix.js('resources/assets/plugins/datatable/datatable.js', 'public/assets/plugins/datatable');

@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group([
     'as' => 'sys.',
-    'middleware' => ['web', 'auth']
+    'middleware' => ['web', 'auth:web']
 ], function(){
     // Dashboard
     Route::get('/', \App\Http\Livewire\Sys\Dashboard\Index::class)

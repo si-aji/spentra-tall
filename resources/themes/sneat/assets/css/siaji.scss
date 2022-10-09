@@ -211,3 +211,129 @@ h4 {
 		}
 	}
 }
+
+/**
+* Datatable
+*/
+.datatable {
+	&.card-body {
+		padding-left: 0 !important;;
+		padding-right: 0 !important;;
+	}
+
+	.dataTables_wrapper {
+		@media (min-width: 1200px) {
+			.dataTables_length, .dataTables_info {
+				padding-left: 1.5rem;
+			}
+			.dataTables_filter, .dataTables_paginate {
+				padding-right: 1.5rem;
+			}
+		}
+		.dataTables_length {
+			select {
+				border-radius: .375rem;
+				padding: .4375rem 1.875rem .4375rem .875rem;
+				border: 1px solid #d9dee3;
+			}
+		}
+		.dataTables_filter {
+			input[type="search"] {
+				position: relative;
+				display: inline-block;
+				margin-left: .5em;
+				width: auto;
+				border: 1px solid #d9dee3;
+				border-radius: .375rem;
+				font-size: .9375rem;
+				font-weight: 400;
+				line-height: 1.53;
+				padding: .4375rem .875rem;
+			}
+		}
+		.table {
+			margin: 0 !important;
+			border-left: 1px solid transparent;
+			border-right: 1px solid transparent;
+
+			.sorting {
+				&::before, &::after {
+					font-size: 1rem;
+					opacity: .4;
+				}
+				&.sorting_asc {
+					&::before {
+						opacity: .75 !important;
+					}
+				}
+				&.sorting_desc {
+					&::after {
+						opacity: .75 !important;
+					}
+				}
+			}
+		}
+		.dataTables_info {
+			color: #a1acb8;
+		}
+		.dataTables_paginate {
+			// .pagination {
+			// 	justify-content: flex-end;
+			// 	margin: 2px 0;
+			// 	white-space: nowrap;
+			// 	.page-item {
+			// 		&.previous {
+
+			// 		}
+			// 		&.disabled {
+			// 			.page-link {
+			// 				background-color: rgba(124,125,182,.08);
+			// 			}
+			// 		}
+			// 		&.next {
+
+			// 		}
+			// 		&.active {
+			// 			background-color: #696cff;
+			// 			border-color: #696cff;
+			// 			box-shadow: 0 0.125rem 0.25rem rgb(105 108 255 / 40%);
+			// 			color: #fff;
+			// 		}
+
+			// 		.page-link {
+			// 			font-size: .75rem;
+			// 			line-height: 1;
+			// 			min-width: 2rem;
+			// 			padding: .625rem .5125rem;
+			// 		}
+			// 	}
+			// }
+			.paginate_button {
+				font-size: .75rem;
+				line-height: 1;
+				min-width: 2rem;
+				padding: .625rem .5125rem;
+				background-color: #f0f2f4;
+				border-radius: 0.25rem;
+				color: #697a8d;
+				border: 0px solid transparent;
+				transition: all .3s ease-in-out;
+
+				&:hover {
+					background: #e1e4e8 !important;
+					color: #697a8d !important;
+					border: 0px solid transparent !important;
+				}
+				&.current {
+					background: #696cff !important;
+					color: #fff !important;
+					border: 0px solid transparent !important;
+
+					&:hover {
+						border: 0px solid transparent !important;
+					}
+				}
+			}
+		}
+	}
+}

@@ -17,3 +17,22 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::group([
+    'as' => 'api.'
+], function(){
+    Route::group([
+        'prefix' => 'sys',
+        'as' => 'sys.',
+        'middleware' => ['auth:web']
+    ], function(){
+        // Version
+        Route::group([
+            'prefix' => 'v0',
+            'as' => 'v0.'
+        ], function(){
+            // Wallet List
+            Route::get('wallet', [\App\Http\Controllers\Api\Sys\v0\WalletController::class, 'list'])->name('wallet.list');
+        });
+    });
+});

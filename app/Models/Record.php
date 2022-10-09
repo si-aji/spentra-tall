@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class RecordTemplate extends Model
+class Record extends Model
 {
     use HasFactory;
 
@@ -16,6 +16,7 @@ class RecordTemplate extends Model
      * @var array
      */
     protected $fillable = [
+        'planned_id',
         'user_id',
         'category_id',
         'type',
@@ -25,7 +26,13 @@ class RecordTemplate extends Model
         'extra_type',
         'extra_percentage',
         'extra_amount',
+        'date',
+        'time',
+        'datetime',
         'note',
+        'status',
+        'receipt',
+        'timezone_offset',
     ];
 
     /**
@@ -71,10 +78,6 @@ class RecordTemplate extends Model
     {
         return $this->belongsTo(\App\Models\User::class, 'user_id');
     }
-    public function category()
-    {
-        return $this->belongsTo(\App\Models\Category::class, 'category_id');
-    }
     public function wallet()
     {
         return $this->belongsTo(\App\Models\Wallet::class, 'wallet_id')
@@ -84,6 +87,10 @@ class RecordTemplate extends Model
     {
         return $this->belongsTo(\App\Models\Wallet::class, 'to_wallet_id')
             ->withTrashed();
+    }
+    public function category()
+    {
+        return $this->belongsTo(\App\Models\Category::class, 'category_id');
     }
 
     /**
@@ -101,6 +108,11 @@ class RecordTemplate extends Model
             $model->{'uuid'} = (string) Str::uuid();
         });
 
+        // Listen to Created Event
+        static::created(function ($model) {
+            // Update planned id next payment
+            
+        });
         // Listen to Saving Event
         static::saving(function ($model) {
             if ($model->extra_amount === null) {
@@ -117,9 +129,34 @@ class RecordTemplate extends Model
 
                 $calc = ($model->amount * $model->extra_percentage) / 100;
                 if ($calc !== $model->extra_amount) {
+                    // Add default extra amount, based on percentage value
                     $model->extra_amount = $calc;
                 }
             }
+
+            if (empty($model->timezone_offset)) {
+                $model->timezone_offset = env('APP_TIMEZONE_OFFSET');
+            }
         });
+    }
+
+    /**
+     * Accessor
+     *
+     * Laravel Getter
+     */
+    public function getExtraAmountAttribute($value)
+    {
+        return ! empty($value) ? $value : 0;
+    }
+
+    /**
+     * Mutator
+     *
+     * Laravel Setter
+     */
+    public function setExtraAmountAttribute($value)
+    {
+        $this->attributes['extra_amount'] = ! empty($value) ? $value : 0;
     }
 }

@@ -6,53 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-/**
- * App\Models\Category
- *
- * @property int $id
- * @property string $uuid
- * @property int $user_id
- * @property int|null $parent_id
- * @property string $name
- * @property string|null $icon
- * @property string|null $color
- * @property int|null $order
- * @property int|null $order_main
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|Category[] $budget
- * @property-read int|null $budget_count
- * @property-read \Illuminate\Database\Eloquent\Collection|Category[] $child
- * @property-read int|null $child_count
- * @property-read Category|null $parent
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\PlannedPayment[] $plannedPayment
- * @property-read int|null $planned_payment_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Record[] $record
- * @property-read int|null $record_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\RecordTemplate[] $recordTemplate
- * @property-read int|null $record_template_count
- * @property-read \App\Models\User $user
- *
- * @method static \Database\Factories\CategoryFactory factory(...$parameters)
- * @method static \Illuminate\Database\Eloquent\Builder|Category newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Category newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Category query()
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereColor($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereIcon($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereOrder($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereOrderMain($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereParentId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereUserId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereUuid($value)
- * @mixin \Eloquent
- *
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Budget[] $budgetExclude
- * @property-read int|null $budget_exclude_count
- */
 class Category extends Model
 {
     use HasFactory;

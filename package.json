@@ -27,8 +27,21 @@
     },
     "dependencies": {
         "choices.js": "^10.1.0",
+        "datatables.net": "^1.12.1",
+        "datatables.net-colreorder": "^1.5.6",
+        "datatables.net-colreorder-dt": "^1.5.6",
+        "datatables.net-dt": "^1.12.1",
+        "datatables.net-fixedcolumns": "^4.1.0",
+        "datatables.net-fixedcolumns-dt": "^4.1.0",
+        "datatables.net-fixedheader": "^3.2.4",
+        "datatables.net-fixedheader-dt": "^3.2.4",
+        "datatables.net-plugins": "^1.11.5",
+        "datatables.net-responsive": "^2.3.0",
+        "datatables.net-responsive-dt": "^2.3.0",
+        "datatables.net-select": "^1.4.0",
         "flatpickr": "^4.6.13",
         "fslightbox": "^3.3.1",
-        "imask": "^6.4.3"
+        "imask": "^6.4.3",
+        "jquery-datatables-checkboxes": "^1.2.13"
     }
 }

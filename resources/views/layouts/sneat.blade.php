@@ -96,6 +96,7 @@
 {{-- JS Plugins --}}
 @section('baseJsPlugins')
     <script src="{{ mix('assets/js/shortcut.js') }}"></script>
+    <script src="{{ mix('assets/js/siaji.js') }}"></script>
     <!-- Helpers -->
     <script src="{{ mix('assets/themes/sneat/js/helpers.js') }}"></script>
     <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
