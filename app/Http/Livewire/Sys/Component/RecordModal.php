@@ -84,7 +84,6 @@ class RecordModal extends Component
     public function render()
     {
         $this->dispatchBrowserEvent('record_wire-init');
-
         return view('livewire.sys.component.record-modal');
     }
 

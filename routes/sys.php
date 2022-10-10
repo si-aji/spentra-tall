@@ -30,6 +30,8 @@ Route::group([
         'as' => 'wallet.'
     ], function(){
         // List
+        Route::get('list/re-order', \App\Http\Livewire\Sys\Wallet\Lists\ReOrder::class)
+            ->name('list.re-order');
         Route::get('list', \App\Http\Livewire\Sys\Wallet\Lists\Index::class)
             ->name('list.index');
         // Group

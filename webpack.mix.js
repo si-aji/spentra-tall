@@ -71,3 +71,6 @@ mix.copy('node_modules/jquery-datatables-checkboxes/css/dataTables.checkboxes.cs
 mix.copy('node_modules/jquery-datatables-checkboxes/js/dataTables.checkboxes.min.js', 'public/assets/plugins/datatable/plugins/checkbox/js');
 mix.copy('node_modules/datatables.net-select/js/dataTables.select.min.js', 'public/assets/plugins/datatable/plugins/select');
 // mix.js('resources/assets/plugins/datatable/datatable.js', 'public/assets/plugins/datatable');
+// Sweetalert2
+mix.copy('node_modules/sweetalert2/dist/sweetalert2.min.css', 'public/assets/plugins/sweetalert2/sweetalert2.min.css').version();
+mix.copy('node_modules/sweetalert2/dist/sweetalert2.all.min.js', 'public/assets/plugins/sweetalert2/sweetalert2.all.min.js').version();

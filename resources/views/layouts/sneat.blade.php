@@ -33,6 +33,8 @@
     <!-- Choices Js -->
     {{-- <link href="{{ mix('assets/plugins/choices.js/base.min.css') }}" rel="stylesheet"> --}}
     <link href="{{ mix('assets/plugins/choices.js/choices.min.css') }}" rel="stylesheet">
+    <!-- Sweetalert2 -->
+    <link href="{{ mix('assets/plugins/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet">
 
     @yield('css_plugins')
 @endsection
@@ -51,7 +53,7 @@
             @include('layouts.partials.sys.sidebar')
 
             <!-- Layout container -->
-            <div class="layout-page before:tw__fixed before:tw__block before:tw__w-full before:tw__h-16 before:tw__bg-gradient-to-t tw__to-[rgba(245,245,249,.6)] before:tw__backdrop-saturate-[20%] before:tw__backdrop-blur-[10px] before:tw__z-[9]">
+            <div class="layout-page before:tw__fixed before:tw__block before:tw__w-full before:tw__h-4 before:tw__bg-gradient-to-t tw__to-[rgba(245,245,249,.6)] before:tw__backdrop-blur-[10px] before:tw__z-[9]">
                 <!-- Layout Navbar -->
                 @include('layouts.partials.sys.navbar')
 
@@ -79,6 +81,11 @@
 
     {{-- Record Modal --}}
     @livewire(\App\Http\Livewire\Sys\Component\RecordModal::class, ['user' => \Auth::user()], key(\Auth::user()->id))
+
+    @if (isset($componentWallet) && $componentWallet)
+        {{-- Wallet Modal --}}
+        @livewire(\App\Http\Livewire\Sys\Component\WalletModal::class, ['user' => \Auth::user()], key(\Auth::user()->id))
+    @endif
 @endsection
 
 
@@ -91,7 +98,9 @@
     <script src="{{ mix('assets/plugins/choices.js/choices.min.js') }}"></script>
     <!-- iMask -->
     <script src="{{ mix('assets/plugins/imask/imask.js') }}"></script>
-@endpush
+    <!-- Sweetalert2 -->
+    <script src="{{ mix('assets/plugins/sweetalert2/sweetalert2.all.min.js') }}"></script>
+    @endpush
 
 {{-- JS Plugins --}}
 @section('baseJsPlugins')
@@ -214,6 +223,20 @@
                 new bootstrap.Tooltip(el);
             });
         }
+    </script>
+
+    {{-- Handle Action Result --}}
+    <script>
+        window.addEventListener('wire-action', (event) => {
+            let result = event.detail;
+            console.log(result);
+
+            Swal.fire({
+                icon: result.status,
+                title: `Action: ${result.action}`,
+                text: result.message,
+            });
+        });
     </script>
 
     @yield('js_inline')

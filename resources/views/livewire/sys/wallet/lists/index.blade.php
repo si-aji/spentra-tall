@@ -14,7 +14,12 @@
 
 <div>
     <div class="">
-        <a href="javascript:void(0)" class="btn btn-primary"><i class="bx bx-plus"></i>Add new</a>
+        <a href="javascript:void(0)" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#modal-wallet">
+            <span class=" tw__flex tw__items-center tw__gap-2"><i class="bx bx-plus"></i>Add new</span>
+        </a>
+        <a href="{{ route('sys.wallet.list.re-order') }}" class="btn btn-secondary">
+            <span class=" tw__flex tw__items-center tw__gap-2"><i class='bx bx-sort-a-z'></i>Re-order</span>
+        </a>
     </div>
     {{-- Be like water. --}}
     <div class="card tw__mt-4">
@@ -67,7 +72,7 @@
                 }, {
                     targets: 1,
                     render: function (row, type, data, meta) {
-                        console.log(data);
+                        // console.log(data);
                         let walletName = `${data.parent_id ? `${data.parent.name} - ` : ''}${data.name}`;
                         return walletName;
                     }
@@ -82,11 +87,22 @@
                     searchable: false,
                     sortable: false,
                     render: function (row, type, data, meta) {
-                        return '-';
+                        return `
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-warning tw__flex tw__items-center tw__gap-2" x-on:click="$wire.emitTo('sys.component.wallet-modal', 'editAction', '${data.uuid}')"><i class="bx bx-edit"></i>Edit</button>
+                            </div>
+                        `;
                     }
                 }, 
             ],
             responsive: true
         });
+
+        if(document.getElementById('modal-wallet')){
+            document.getElementById('modal-wallet').addEventListener('hide.bs.offcanvas', (e) => {
+                console.log("Refresh datatable");
+                table.ajax.reload(null, false);
+            });
+        }
     </script>
 @endsection
