@@ -119,6 +119,37 @@ class WalletModal extends Component
             'action' => 'Success',
             'message' => 'Successfully store new Wallet Data'
         ]);
+
+        // Create Wallet Re-Order Request
+        $allParentWallet = \App\Models\Wallet::whereNull('parent_id')
+            ->orderBy('order', 'asc')
+            ->get();
+        $formatedRequest = [];
+        if (count($allParentWallet) > 0) {
+            foreach ($allParentWallet as $wallet) {
+                $arr = [
+                    'id' => $wallet->uuid,
+                ];
+
+                if ($wallet->child()->exists()) {
+                    $childArr = [];
+                    foreach ($wallet->child()->orderBy('order', 'asc')->get() as $child) {
+                        $childArr[] = [
+                            'id' => $child->uuid,
+                        ];
+                    }
+
+                    $arr = [
+                        'id' => $wallet->uuid,
+                        'child' => $childArr,
+                    ];
+                }
+
+                $formatedRequest[] = $arr;
+            }
+
+            (new \App\Http\Livewire\Sys\Wallet\Lists\ReOrder())->reOrder($formatedRequest);
+        }
     }
 
     /**

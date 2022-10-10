@@ -8,6 +8,7 @@ class Index extends Component
 {
     public $menuState = null;
     public $submenuState = null;
+
     public function mount()
     {
         $this->menuState = 'wallet';

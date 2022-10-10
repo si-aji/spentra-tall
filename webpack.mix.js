@@ -74,3 +74,6 @@ mix.copy('node_modules/datatables.net-select/js/dataTables.select.min.js', 'publ
 // Sweetalert2
 mix.copy('node_modules/sweetalert2/dist/sweetalert2.min.css', 'public/assets/plugins/sweetalert2/sweetalert2.min.css').version();
 mix.copy('node_modules/sweetalert2/dist/sweetalert2.all.min.js', 'public/assets/plugins/sweetalert2/sweetalert2.all.min.js').version();
+// Nestable
+mix.copy('node_modules/nestablejs/dist/nestable.css', 'public/assets/plugins/nestable/nestable.css').version();
+mix.copy('node_modules/nestablejs/dist/nestable.js', 'public/assets/plugins/nestable/nestable.js').version();

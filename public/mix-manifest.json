@@ -6,7 +6,7 @@
     "/assets/plugins/fslightbox/fslightbox.js": "/assets/plugins/fslightbox/fslightbox.js?id=290ae97bdae6140f83294ac2abcdb453",
     "/assets/plugins/flatpickr/flatpickr.min.js": "/assets/plugins/flatpickr/flatpickr.min.js?id=5ecd6fe6d56579fd79ff130effae44af",
     "/assets/plugins/imask/imask.js": "/assets/plugins/imask/imask.js?id=61ea916a83f0dd57efdd860de9fc39cf",
-    "/assets/themes/sneat/css/siaji.css": "/assets/themes/sneat/css/siaji.css?id=ee13a0cdff71dc6849969288849354b9",
+    "/assets/themes/sneat/css/siaji.css": "/assets/themes/sneat/css/siaji.css?id=356f25c8c5c153ce3821bfd955957705",
     "/assets/css/app.css": "/assets/css/app.css?id=b3e75b155b9febb45686e98d8e0ef424",
     "/assets/css/tailwind.css": "/assets/css/tailwind.css?id=b2e08e97b5e6de2892de1c36575e313b",
     "/assets/js/shortcut.js": "/assets/js/shortcut.js?id=fd71a4084bf58a49747df5790c639b06",
@@ -111,5 +111,7 @@
     "/assets/plugins/datatable/plugins/checkbox/js/dataTables.checkboxes.min.js": "/assets/plugins/datatable/plugins/checkbox/js/dataTables.checkboxes.min.js?id=ec7f971b35b1e5e2fa14e96f8116246e",
     "/assets/plugins/datatable/plugins/select/dataTables.select.min.js": "/assets/plugins/datatable/plugins/select/dataTables.select.min.js?id=03b0e4ee6ad5717bd0d499464231f233",
     "/assets/plugins/sweetalert2/sweetalert2.min.css": "/assets/plugins/sweetalert2/sweetalert2.min.css?id=3512b675c8867f5f1fecd64113711dce",
-    "/assets/plugins/sweetalert2/sweetalert2.all.min.js": "/assets/plugins/sweetalert2/sweetalert2.all.min.js?id=f5d762cc3f2040d2bd597466229e2925"
+    "/assets/plugins/sweetalert2/sweetalert2.all.min.js": "/assets/plugins/sweetalert2/sweetalert2.all.min.js?id=f5d762cc3f2040d2bd597466229e2925",
+    "/assets/plugins/nestable/nestable.css": "/assets/plugins/nestable/nestable.css?id=3121e0ba7527a605e4088b35239e42be",
+    "/assets/plugins/nestable/nestable.js": "/assets/plugins/nestable/nestable.js?id=01972170169a4077135ce802ed3eee97"
 }

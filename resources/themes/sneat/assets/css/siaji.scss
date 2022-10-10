@@ -352,6 +352,51 @@ h4 {
 	}
 }
 
+// Nestable
+.nst-list {
+    .nst-item {
+        // border-bottom: 1px solid #e5e7eb;
+		margin-bottom: .5rem;
+
+        .nst-list {
+            .nst-item {
+                // border-top: 1px solid #e5e7eb;
+                // border-bottom: unset !important;
+				margin-top: .5rem;
+            }
+        }
+
+        .nst-handle {
+            position: absolute;
+            line-height: 1;
+            padding: .9rem 0.5rem;
+            top: 0;
+            left: 0;
+        }
+        .nst-content {
+            display: block;
+            text-overflow: ellipsis;
+            line-height: 1;
+            border: unset;
+            padding: 1rem 2rem;
+            margin: 0 !important;
+        }
+        .nst-button {
+            width: unset;
+            height: unset;
+            top: 0;
+            line-height: 1;
+            right: 0;
+            left: unset;
+            padding: .9rem 1rem;
+        }
+        .nst-placeholder {
+            // margin-bottom: unset !important;
+			margin-top: .5rem;
+        }
+    }
+}
+
 /**
 * Modal
 */

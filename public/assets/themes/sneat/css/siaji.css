@@ -271,6 +271,40 @@ h4.breadcrumb span.active {
   border: 0px solid transparent !important;
 }
 
+.nst-list .nst-item {
+  margin-bottom: 0.5rem;
+}
+.nst-list .nst-item .nst-list .nst-item {
+  margin-top: 0.5rem;
+}
+.nst-list .nst-item .nst-handle {
+  position: absolute;
+  line-height: 1;
+  padding: 0.9rem 0.5rem;
+  top: 0;
+  left: 0;
+}
+.nst-list .nst-item .nst-content {
+  display: block;
+  text-overflow: ellipsis;
+  line-height: 1;
+  border: unset;
+  padding: 1rem 2rem;
+  margin: 0 !important;
+}
+.nst-list .nst-item .nst-button {
+  width: unset;
+  height: unset;
+  top: 0;
+  line-height: 1;
+  right: 0;
+  left: unset;
+  padding: 0.9rem 1rem;
+}
+.nst-list .nst-item .nst-placeholder {
+  margin-top: 0.5rem;
+}
+
 /**
 * Modal
 */
