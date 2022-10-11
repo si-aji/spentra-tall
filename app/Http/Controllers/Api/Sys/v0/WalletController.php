@@ -25,6 +25,14 @@ class WalletController extends Controller
         if ($request->has('force_order_column') && ! empty($request->force_order_column)) {
             $data->orderBy($request->force_order_column, $request->force_order ?? 'asc');
         }
+        if($request->has('wallet_group') && $request->wallet_group != ''){
+            $data->whereHas('walletGroup', function($q) use ($request){
+                $walletGroup = \App\Models\WalletGroup::where(\DB::raw('BINARY `uuid`'), $request->wallet_group)
+                    ->firstOrFail();
+
+                return $q->where('wallet_group_id', $walletGroup->id);
+            });
+        }
 
         if($request->has('is_datatable') && $request->is_datatable != ''){
             $dt = datatables()

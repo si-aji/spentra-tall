@@ -732,6 +732,9 @@ select {
 .tw__mt-0 {
   margin-top: 0px !important;
 }
+.tw__mb-0 {
+  margin-bottom: 0px !important;
+}
 .tw__block {
   display: block !important;
 }
@@ -884,6 +887,10 @@ select {
   --tw-bg-opacity: 1 !important;
   background-color: rgb(241 245 249 / var(--tw-bg-opacity)) !important;
 }
+.tw__bg-gray-400 {
+  --tw-bg-opacity: 1 !important;
+  background-color: rgb(156 163 175 / var(--tw-bg-opacity)) !important;
+}
 .tw__to-\[rgba\(245\,245\,249\,\.6\)\] {
   --tw-gradient-to: rgba(245,245,249,.6) !important;
 }
@@ -923,6 +930,14 @@ select {
 .tw__py-3 {
   padding-top: 0.75rem !important;
   padding-bottom: 0.75rem !important;
+}
+.tw__px-2 {
+  padding-left: 0.5rem !important;
+  padding-right: 0.5rem !important;
+}
+.tw__py-1 {
+  padding-top: 0.25rem !important;
+  padding-bottom: 0.25rem !important;
 }
 .tw__pb-2 {
   padding-bottom: 0.5rem !important;

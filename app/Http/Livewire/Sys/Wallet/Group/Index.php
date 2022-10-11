@@ -18,7 +18,8 @@ class Index extends Component
     {
         return view('livewire.sys.wallet.group.index')->extends('layouts.sneat', [
             'menuState' => $this->menuState,
-            'submenuState' => $this->submenuState
+            'submenuState' => $this->submenuState,
+            'componentWalletGroup' => true
         ]);
     }
 }

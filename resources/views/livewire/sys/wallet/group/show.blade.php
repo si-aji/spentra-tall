@@ -1,10 +1,13 @@
-@section('title', 'Wallet List')
+@section('title', 'Wallet Group: Detail')
 @section('breadcrumb')
     <h4 class="tw__fw-bold tw__py-3 tw__mb-4 tw__text-2xl breadcrumb">
         <span>
             <a href="{{ route('sys.index') }}">Dashboard</a>
         </span>
-        <span class="active">Wallet: List</span>
+        <span>
+            <a href="{{ route('sys.wallet.group.index') }}">Wallet Group: List</a>
+        </span>
+        <span class="active">Detail</span>
     </h4>
 @endsection
 
@@ -13,25 +16,57 @@
 @endsection
 
 <div>
-    <div class="">
-        <a href="javascript:void(0)" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#modal-wallet">
-            <span class=" tw__flex tw__items-center tw__gap-2"><i class="bx bx-plus"></i>Add new</span>
+    <div>
+        <a href="{{ url()->previous() }}" class="btn btn-secondary">
+            <span class="tw__flex tw__items-center tw__gap-2"><i class='bx bx-arrow-back'></i>Back</span>
         </a>
-        <a href="{{ route('sys.wallet.list.re-order') }}" class="btn btn-secondary">
-            <span class=" tw__flex tw__items-center tw__gap-2"><i class='bx bx-sort-a-z'></i>Re-order</span>
-        </a>
+        <button type="button" class="btn btn-warning" x-on:click="$wire.emitTo('sys.component.wallet-group-modal', 'editAction', $wire.get('walletGroup'), true)">
+            <span class="tw__flex tw__items-center tw__gap-2"><i class='bx bx-edit'></i>Edit</span>
+        </button>
     </div>
-    {{-- Be like water. --}}
+
     <div class="card tw__mt-4">
-        <div class="card-body datatable">
-            <table class="table table-hover table-striped table-bordered" id="table-wallet">
-                <thead>
-                    <th>#</th>
+        <div class="card-body">
+            <table class="table table-hover table-striped">
+                <tr>
                     <th>Name</th>
+                    <td>{{ $walletGroup->name }}</td>
+                </tr>
+                <tr>
+                    <th>Account</th>
+                    <td>
+                        <small class=" tw__flex tw__items-center tw__gap-2 tw__mt-2">
+                            @foreach ($walletGroup->walletGroupList as $item)
+                                <small class=" bg-primary tw__px-2 tw__py-1 tw__rounded tw__text-white">{{ ($item->parent()->exists() ? $item->parent->name.' - ' : '').$item->name }}</small>
+                            @endforeach
+                        </small>
+                    </td>
+                </tr>
+                <tr>
                     <th>Balance</th>
-                    <th>Action</th>
-                </thead>
+                    <td>
+                        <span>{{ formatRupiah($walletGroup->getBalance()) }}</span>
+                    </td>
+                </tr>
             </table>
+
+            <div class="card tw__mt-4">
+                <div class="card-header">
+                    <h5 class="card-title tw__mb-0">Account(s)</h5>
+                </div>
+                <div class="card-body datatable">
+                    <table class="table table-bordered table-hover table-striped" id="table-wallet_group_list">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Balance</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -43,7 +78,7 @@
 
 @section('js_inline')
     <script>
-        let table = new DataTable('#table-wallet', {
+        let table = new DataTable('#table-wallet_group_list', {
             order: [0, 'asc'],
             pagingType: 'numbers',
             lengthMenu: [5, 10, 25],
@@ -55,6 +90,7 @@
                 type: "GET",
                 data: function(d){
                     d.is_datatable = true;
+                    d.wallet_group = "{{ $walletGroup->uuid }}"
                 }
             },
             columns: [
@@ -89,9 +125,6 @@
                     render: function (row, type, data, meta) {
                         return `
                             <div class="">
-                                <button type="button" class="btn btn-sm btn-warning" x-on:click="$wire.emitTo('sys.component.wallet-modal', 'editAction', '${data.uuid}')">
-                                    <span class="tw__flex tw__items-center tw__gap-2"><i class="bx bx-edit"></i>Edit</span>    
-                                </button>
                                 <button type="button" class="btn btn-sm btn-secondary" x-on:click="$wire.emitTo('sys.component.wallet-balance-modal', 'editAction', '${data.uuid}')">
                                     <span class="tw__flex tw__items-center tw__gap-2"><i class="bx bx-slider"></i>Adjustment</span>
                                 </button>
@@ -103,10 +136,9 @@
             responsive: true
         });
 
-        if(document.getElementById('modal-wallet')){
-            document.getElementById('modal-wallet').addEventListener('hide.bs.offcanvas', (e) => {
-                console.log("Refresh datatable");
-                table.ajax.reload(null, false);
+        if(document.getElementById('modal-wallet_group')){
+            document.getElementById('modal-wallet_group').addEventListener('hide.bs.offcanvas', (e) => {
+                Livewire.emitTo('sys.wallet.group.show', 'refreshComponent');
             });
         }
     </script>

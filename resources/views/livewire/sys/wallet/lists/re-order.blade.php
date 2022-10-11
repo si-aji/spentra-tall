@@ -47,7 +47,7 @@
                                     <div class="nst-handle custom-handle">
                                        <i class='bx bx-grid-vertical'></i>
                                     </div>
-                                    <span class="wallet-name" data-name="{{ $child->name }}"><span class="wallet_parent-name" data-name="{{ $item->name }}">{{ $item->name }} - </span>{{ $child->name }}</span>
+                                    <span class="wallet-name" data-name="{{ $child->name }}"><p class="wallet_parent-name" data-name="{{ $item->name }}">{{ $item->name }} - </p>{{ $child->name }}</span>
                                 </li>
                             @endforeach
                         </ol>
@@ -94,7 +94,7 @@
 
                     if(!activeEl.querySelector('.wallet_parent-name')){
                         activeEl.querySelector('.wallet-name').insertAdjacentHTML('afterbegin', `
-                            <span class="wallet_parent-name" data-name="${parentEl.querySelector('.wallet-name').dataset.name}">${parentEl.querySelector('.wallet-name').dataset.name} - </span>
+                            <p class="wallet_parent-name" data-name="${parentEl.querySelector('.wallet-name').dataset.name}">${parentEl.querySelector('.wallet-name').dataset.name} - </p>
                         `);
                     } else if(activeEl.dataset.parent_id !== parentEl.dataset.wallet_id){
                         console.log("Different parent El");
@@ -145,7 +145,6 @@
 
         document.addEventListener('walletorder_wire-init', (event) => {
             initNestable();
-            console.log("Order init");
         });
     </script>
 @endsection

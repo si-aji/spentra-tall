@@ -4,13 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
-class Wallet extends Model
+class WalletGroup extends Model
 {
     use HasFactory;
-    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -19,11 +17,7 @@ class Wallet extends Model
      */
     protected $fillable = [
         'user_id',
-        'parent_id',
         'name',
-        'type',
-        'order',
-        'order_main',
     ];
 
     /**
@@ -59,18 +53,12 @@ class Wallet extends Model
      *
      * @return model
      */
-    public function child()
+    public function walletGroupList()
     {
-        return $this->hasMany(\App\Models\Wallet::class, 'parent_id')
+        return $this->belongsToMany(\App\Models\Wallet::class, (new \App\Models\WalletGroupList())->getTable())
+            ->using(\App\Models\WalletGroupList::class)
+            ->withTimestamps()
             ->withTrashed();
-    }
-    public function record()
-    {
-        return $this->hasMany(\App\Models\Record::class, 'wallet_id');
-    }
-    public function recordTransferTarget()
-    {
-        return $this->hasMany(\App\Models\Record::class, 'to_wallet_id');
     }
 
     /**
@@ -81,17 +69,6 @@ class Wallet extends Model
     public function user()
     {
         return $this->belongsTo(\App\Models\User::class, 'user_id');
-    }
-    public function parent()
-    {
-        return $this->belongsTo(\App\Models\Wallet::class, 'parent_id')
-            ->withTrashed();
-    }
-    public function walletGroup()
-    {
-        return $this->belongsToMany(\App\Models\WalletGroup::class, (new \App\Models\WalletGroupList())->getTable())
-            ->using(\App\Models\WalletGroupList::class)
-            ->withTimestamps();
     }
 
     /**
@@ -111,23 +88,38 @@ class Wallet extends Model
     }
 
     /**
-     * Laravel Scope
-     * 
+     * Scope
+     *
+     * Run specific function
      */
-    public function scopeGetBalance($query, $period = null)
+    public function scopeGetBalance($query, $walletList = null, $period = null, $type = 'all')
     {
-        $balance = $this->record()
+        if (empty($walletList)) {
+            $walletList = $this->walletGroupList()
+                ->withoutTrashed()
+                ->pluck('wallet_id');
+        }
+
+        $record = new \App\Models\Record();
+        $balance = \DB::table($record->getTable())
             ->select(\DB::raw('IFNULL(SUM((amount + extra_amount) * IF(type = "expense", -1, 1)), 0) as balance'))
-            ->where('wallet_id', $this->id)
+            ->whereIn('wallet_id', $walletList)
             ->where('status', 'complete');
 
-        if (! empty($period) && validateDate($period, 'Y-m-d H:i:s')) {
+        if (!empty($period) && validateDate($period, 'Y-m-d H:i:s')) {
             $balance->where('datetime', '<', $period);
+        }
+        if(!empty($type) && $type !== 'all'){
+            $balance->where('type', $type);
         }
 
         $balance->orderBy('datetime', 'desc')
             ->orderBy('created_at', 'desc');
 
-        return $balance->first() ? $balance->first()->balance : 0;
+        return !empty($balance->first()) ? $balance->first()->balance : 0;
+    }
+    public function scopeGetBalanceByType($query, $type = 'income', $walletList = null, $period = null)
+    {
+        return $this->getBalance($walletList, $period, $type);
     }
 }

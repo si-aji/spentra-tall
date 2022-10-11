@@ -35,6 +35,8 @@ Route::group([
         Route::get('list', \App\Http\Livewire\Sys\Wallet\Lists\Index::class)
             ->name('list.index');
         // Group
+        Route::get('group/{uuid}', \App\Http\Livewire\Sys\Wallet\Group\Show::class)
+        ->name('group.show');
         Route::get('group', \App\Http\Livewire\Sys\Wallet\Group\Index::class)
         ->name('group.index');
     });

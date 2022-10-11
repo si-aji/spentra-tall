@@ -57,12 +57,12 @@ class WalletModal extends Component
             'walletName',
             'walletBalance'
         ];
-
-        $this->fetchMainWallet();
     }
 
     public function render()
     {
+        $this->fetchMainWallet();
+
         $this->dispatchBrowserEvent('wallet_wire-init');
         return view('livewire.sys.component.wallet-modal');
     }

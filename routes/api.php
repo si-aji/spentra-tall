@@ -32,6 +32,7 @@ Route::group([
             'as' => 'v0.'
         ], function(){
             // Wallet List
+            Route::get('wallet/group', [\App\Http\Controllers\Api\Sys\v0\WalletGroupController::class, 'list'])->name('wallet.group.list');
             Route::get('wallet', [\App\Http\Controllers\Api\Sys\v0\WalletController::class, 'list'])->name('wallet.list');
         });
     });

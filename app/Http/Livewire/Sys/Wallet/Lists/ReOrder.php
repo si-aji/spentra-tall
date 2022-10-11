@@ -29,12 +29,13 @@ class ReOrder extends Component
     {
         $this->menuState = 'wallet';
         $this->submenuState = 'list';
-        $this->fetchMainWallet();
     }
 
     public function render()
     {
+        $this->fetchMainWallet();
         $this->dispatchBrowserEvent('walletorder_wire-init');
+        
         return view('livewire.sys.wallet.lists.re-order')->extends('layouts.sneat', [
             'menuState' => $this->menuState,
             'submenuState' => $this->submenuState,

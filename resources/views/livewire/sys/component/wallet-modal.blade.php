@@ -31,14 +31,6 @@
                     @enderror
                 </div>
     
-                <div class="form-group tw__mb-4" id="form_wallet-balance">
-                    <label for="input_wallet-balance">Balance</label>
-                    <input type="text" inputmode="numeric" class="form-control @error('walletBalance') is-invalid @enderror" name="balance" id="input_wallet-balance" placeholder="Balance" wire:model.defer="walletBalance" value="{{ $walletBalance }}">
-                    @error('walletBalance')
-                        <small class="invalid-feedback tw__block">{{ $message }}</small>
-                    @enderror
-                </div>
-    
                 <button type="submit" class="btn btn-primary mb-2 d-grid w-100">Submit</button>
                 <button type="button" class="btn btn-outline-secondary d-grid w-100" data-bs-dismiss="offcanvas">
                     Cancel
@@ -54,8 +46,6 @@
 
 @push('javascript')
     <script>
-        var balanceMask = null;
-
         window.addEventListener('wallet_wire-init', (event) => {
             console.log("Wallet Component Init");
             console.log(event);
@@ -72,20 +62,6 @@
                     shouldSort: false
                 });
             }
-            if(document.getElementById('input_wallet-balance')){
-                balanceMask = IMask(document.getElementById('input_wallet-balance'), {
-                    mask: Number,
-                    thousandsSeparator: ',',
-                    scale: 2,  // digits after point, 0 for integers
-                    signed: false,  // disallow negative
-                    radix: '.',  // fractional delimiter
-                    min: 0,
-                });
-                balanceMask.on('accept', (e) => {
-                    Livewire.emitTo('sys.component.wallet-modal', 'localUpdate', 'walletBalance', balanceMask.unmaskedValue);
-                });
-            }
-            
             document.getElementById('modal-wallet').addEventListener('hidden.bs.offcanvas', (e) => {
                 Livewire.emitTo('sys.component.wallet-modal', 'closeModal');
             });
