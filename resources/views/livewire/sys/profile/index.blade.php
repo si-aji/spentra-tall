@@ -4,32 +4,29 @@
         <span>
             <a href="{{ route('sys.index') }}">Dashboard</a>
         </span>
-        <span class="active">Profile</span>
+        <span>Profile</span>
+        <span class="active">Account</span>
     </h4>
 @endsection
 
 <div>
-    <ul class="nav nav-pills flex-column flex-md-row mb-3">
-        <li class="nav-item">
-            <a class="nav-link active" href="javascript:void(0);"><i class="bx bx-user me-1"></i> Profile</a>
-        </li>
-        {{-- <li class="nav-item">
-            <a class="nav-link" href="javascript:void(0)"><i class="bx bx-bell me-1"></i> Achievement</a>
-        </li> --}}
-    </ul>
+    <div class="card">
+		<div class="card-body">
+			<ul class="nav nav-pills flex-column flex-md-row">
+				@foreach ($extraMenu as $menu)
+					<li class="nav-item">
+						<a class="nav-link {{ $submenuState === $menu['state'] ? 'active' : '' }}" href="{{ isset($menu['route']) && !empty($menu['route']) ? route($menu['route']) : 'javascript:void(0);' }}"><i class="{{ $menu['icon'] }} me-1"></i> {{ $menu['name'] }}</a>
+					</li>
+				@endforeach
+			</ul>
+		</div>
+	</div>
 
-	<form id="form-profile" method="POST" wire:submit.prevent="store" x-on:submit="refreshNavbar()" class="card mb-4">
+	<form id="form-profile" method="POST" wire:submit.prevent="store" x-on:submit="refreshNavbar()" class="card mb-4 tw__mt-4">
 		@csrf
         <h5 class="card-header">Profile Details</h5>
         <!-- Account -->
         <div class="card-body">
-			@if ($alert)
-				<div class="alert alert-success alert-dismissible" role="alert">
-					Data successfully updated
-					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-				</div>
-			@endif
-
             <div class="d-flex align-items-start align-items-sm-center gap-4">
 				@if (empty($photo))
 					<a data-fslightbox href="{{ $avatar }}">

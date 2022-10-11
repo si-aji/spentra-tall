@@ -89,8 +89,12 @@
         @livewire(\App\Http\Livewire\Sys\Component\WalletBalanceModal::class, ['user' => \Auth::user()], key(\Auth::user()->id))
     @endif
     @if (isset($componentWalletGroup) && $componentWalletGroup)
-        {{-- Wallet Modal --}}
+        {{-- Wallet Group Modal --}}
         @livewire(\App\Http\Livewire\Sys\Component\WalletGroupModal::class, ['user' => \Auth::user()], key(\Auth::user()->id))
+    @endif
+    @if (isset($componentCategory) && $componentCategory)
+        {{-- Wallet Group Modal --}}
+        @livewire(\App\Http\Livewire\Sys\Component\CategoryModal::class, ['user' => \Auth::user()], key(\Auth::user()->id))
     @endif
 @endsection
 

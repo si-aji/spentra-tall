@@ -15,7 +15,7 @@ class Index extends Component
 
     public $menuState = null;
     public $submenuState = null;
-    public $alert = false;
+    public $extraMenu = [];
 
     public $name = '';
     public $username = '';
@@ -33,11 +33,22 @@ class Index extends Component
     public function mount()
     {
         $this->menuState = 'profile';
+        $this->submenuState = 'account';
 
         $this->name = \Auth::user()->name;
         $this->username = \Auth::user()->username;
         $this->email = \Auth::user()->email;
         $this->avatar = \Auth::user()->getProfilePicture();
+
+        $extraMenu = config('siaji.sys.sidebar')
+            ->where('name', 'Profile')
+            ->first();
+
+        if(!empty($extraMenu) && count($extraMenu['sub']) > 0){
+            foreach($extraMenu['sub'] as $menu){
+                $this->extraMenu[] = $menu;
+            }
+        }
     }
 
     public function render()
@@ -75,7 +86,10 @@ class Index extends Component
         }
         $user->save();
 
-        // Update alert
-        $this->alert = true;
+        $this->dispatchBrowserEvent('wire-action', [
+            'status' => 'success',
+            'action' => 'Success',
+            'message' => 'Successfully update Profile data'
+        ]);
     }
 }

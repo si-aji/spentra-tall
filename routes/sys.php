@@ -20,10 +20,6 @@ Route::group([
     Route::get('/', \App\Http\Livewire\Sys\Dashboard\Index::class)
         ->name('index');
 
-    // Category
-    Route::get('category', \App\Http\Livewire\Sys\Category\Index::class)
-        ->name('category.index');
-
     // Wallet
     Route::group([
         'prefix' => 'wallet',
@@ -44,4 +40,9 @@ Route::group([
     // Profile
     Route::get('profile', \App\Http\Livewire\Sys\Profile\Index::class)
         ->name('profile.index');
+    // Category
+    Route::get('category/re-order', \App\Http\Livewire\Sys\Profile\Category\ReOrder::class)
+        ->name('category.re-order');
+    Route::get('category', \App\Http\Livewire\Sys\Profile\Category\Index::class)
+        ->name('category.index');
 });

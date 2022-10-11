@@ -1,11 +1,12 @@
-@section('title', 'Wallet List: Re Order')
+@section('title', 'Category: Re Order')
 @section('breadcrumb')
     <h4 class="tw__fw-bold tw__py-3 tw__mb-4 tw__text-2xl breadcrumb">
         <span>
             <a href="{{ route('sys.index') }}">Dashboard</a>
         </span>
+        <span>Profile</span>
         <span>
-            <a href="{{ route('sys.wallet.list.index') }}">Wallet: List</a>
+            <a href="{{ route('sys.category.index') }}">Category</a>
         </span>
         <span class="active">Re Order</span>
     </h4>
@@ -24,30 +25,42 @@
 @endsection
 
 <div wire:init="">
-    {{-- Stop trying to control. --}}
-    <div class=" tw__mb-4">
-        <a href="{{ route('sys.wallet.list.index') }}" class="btn btn-secondary">
+    {{-- Success is as dangerous as failure. --}}
+    <div class="card">
+        <div class="card-body">
+            <ul class="nav nav-pills flex-column flex-md-row">
+                @foreach ($extraMenu as $menu)
+                    <li class="nav-item">
+                        <a class="nav-link {{ $submenuState === $menu['state'] ? 'active' : '' }}" href="{{ isset($menu['route']) && !empty($menu['route']) ? route($menu['route']) : 'javascript:void(0);' }}"><i class="{{ $menu['icon'] }} me-1"></i> {{ $menu['name'] }}</a>
+                    </li>
+                @endforeach
+            </ul>
+        </div>
+    </div>
+
+    <div class=" tw__mb-4 tw__mt-4">
+        <a href="{{ route('sys.category.index') }}" class="btn btn-secondary">
             <span class="tw__flex tw__items-center tw__gap-2"><i class='bx bx-arrow-back'></i>Back</span>
         </a>
     </div>
 
     <div class="sa-sortable">
-        <ol id="wallet-list">
-            @foreach ($listWallet as $item)
-                <li data-wallet_id="{{ $item->uuid }}">
+        <ol id="category-list">
+            @foreach ($listCategory as $item)
+                <li data-category_id="{{ $item->uuid }}">
                     <div class="nst-handle custom-handle">
                        <i class='bx bx-grid-vertical'></i>
                     </div>
-                    <span class="wallet-name" data-name="{{ $item->name }}">{{ $item->name }}</span>
+                    <span class="category-name" data-name="{{ $item->name }}">{{ $item->name }}</span>
 
                     @if ($item->child()->exists())
                         <ol>
                             @foreach($item->child()->orderBy('order', 'asc')->get() as $child)
-                                <li data-wallet_id="{{ $child->uuid }}" data-parent_id="{{ $item->uuid }}">
+                                <li data-category_id="{{ $child->uuid }}" data-parent_id="{{ $item->uuid }}">
                                     <div class="nst-handle custom-handle">
                                        <i class='bx bx-grid-vertical'></i>
                                     </div>
-                                    <span class="wallet-name" data-name="{{ $child->name }}"><p class="wallet_parent-name" data-name="{{ $item->name }}">{{ $item->name }} - </p>{{ $child->name }}</span>
+                                    <span class="category-name" data-name="{{ $child->name }}"><p class="category_parent-name" data-name="{{ $item->name }}">{{ $item->name }} - </p>{{ $child->name }}</span>
                                 </li>
                             @endforeach
                         </ol>
@@ -66,7 +79,7 @@
     <script>
         var nestableInstance = null;
         const initNestable = () => {
-            nestableInstance = new Nestable("#wallet-list", {
+            nestableInstance = new Nestable("#category-list", {
                 maxDepth: 1,
                 animation: 150
             });
@@ -78,31 +91,30 @@
 
                 if(parentEl === null || parentEl === undefined){
                     // ActiveEl is stand alone
-                    console.log()
                     if(event.newParent && event.originalParent !== event.newParent){
                         if(activeEl.hasAttribute('data-parent_id')){
                             // Check if activeEl has data-parent_id attribute
                             activeEl.removeAttribute('data-parent_id');
                         }
 
-                        if(activeEl.querySelector('.wallet_parent-name')){
-                            activeEl.querySelector('.wallet_parent-name').remove();
+                        if(activeEl.querySelector('.category_parent-name')){
+                            activeEl.querySelector('.category_parent-name').remove();
                         }
                     }
                 } else {
                     // ActiveEl is moved to child position
                     if(!(activeEl.hasAttribute('data-parent_id'))){
-                        activeEl.dataset.parent_id = parentEl.dataset.wallet_id;
+                        activeEl.dataset.parent_id = parentEl.dataset.category_id;
                     }
 
-                    if(!activeEl.querySelector('.wallet_parent-name')){
-                        activeEl.querySelector('.wallet-name').insertAdjacentHTML('afterbegin', `
-                            <p class="wallet_parent-name" data-name="${parentEl.querySelector('.wallet-name').dataset.name}">${parentEl.querySelector('.wallet-name').dataset.name} - </p>
+                    if(!activeEl.querySelector('.category_parent-name')){
+                        activeEl.querySelector('.category-name').insertAdjacentHTML('afterbegin', `
+                            <p class="category_parent-name" data-name="${parentEl.querySelector('.category-name').dataset.name}">${parentEl.querySelector('.category-name').dataset.name} - </p>
                         `);
-                    } else if(activeEl.dataset.parent_id !== parentEl.dataset.wallet_id){
+                    } else if(activeEl.dataset.parent_id !== parentEl.dataset.category_id){
                         console.log("Different parent El");
-                        if(activeEl.querySelector('.wallet_parent-name')){
-                            activeEl.querySelector('.wallet_parent-name').innerHTML = `${parentEl.querySelector('.wallet-name').dataset.name} - `;
+                        if(activeEl.querySelector('.category_parent-name')){
+                            activeEl.querySelector('.category_parent-name').innerHTML = `${parentEl.querySelector('.category-name').dataset.name} - `;
                         }
                     }
                 }
@@ -114,7 +126,7 @@
                     if(e.children !== undefined){
                         (e.children).forEach((ec) => {
                             child.push({
-                                'id': ec.node.dataset.wallet_id
+                                'id': ec.node.dataset.category_id
                             });
                         });
                     }
@@ -122,12 +134,12 @@
                     if(child.length > 0){
                         // Push child arr if exists
                         serialize.push({
-                            'id': e.node.dataset.wallet_id,
+                            'id': e.node.dataset.category_id,
                             'child': child
                         });
                     } else {
                         serialize.push({
-                            'id': e.node.dataset.wallet_id
+                            'id': e.node.dataset.category_id
                         });
                     }
                     
@@ -136,17 +148,19 @@
             });
         }
         const updateHierarchy = (hierarchy) => {
+            console.log("A");
             let orderId = hierarchy.reduce(function (r, a) {
                 r[a.id] = r[a.id] || [];
                 r[a.id].push(a.child);
                 return r;
             }, Object.create(null));
 
-            Livewire.emitTo('sys.wallet.lists.re-order', 'reOrder', hierarchy);
+            Livewire.emitTo('sys.profile.category.re-order', 'reOrder', hierarchy);
             nestableInstance.destroy();
         }
 
-        document.addEventListener('walletorder_wire-init', (event) => {
+        document.addEventListener('categoryorder_wire-init', (event) => {
+            console.log("Category Init");
             initNestable();
         });
     </script>

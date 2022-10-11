@@ -816,6 +816,9 @@ select {
 .tw__flex-col {
   flex-direction: column !important;
 }
+.tw__flex-wrap {
+  flex-wrap: wrap !important;
+}
 .tw__items-center {
   align-items: center !important;
 }

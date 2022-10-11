@@ -34,6 +34,9 @@ Route::group([
             // Wallet List
             Route::get('wallet/group', [\App\Http\Controllers\Api\Sys\v0\WalletGroupController::class, 'list'])->name('wallet.group.list');
             Route::get('wallet', [\App\Http\Controllers\Api\Sys\v0\WalletController::class, 'list'])->name('wallet.list');
+
+            // Category
+            Route::get('category', [\App\Http\Controllers\Api\Sys\v0\CategoryController::class, 'list'])->name('category.list');
         });
     });
 });

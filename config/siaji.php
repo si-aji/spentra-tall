@@ -65,20 +65,6 @@ return [
                 'state' => null,
                 'sub' => collect([])
             ], [
-                'name' => 'Category',
-                'icon' => 'bx bx-tag-alt',
-                'route' => 'sys.category.index',
-                'is_header' => false,
-                'state' => null,
-                'sub' => collect([])
-            ], [
-                'name' => 'Tag',
-                'icon' => 'bx bx-purchase-tag',
-                'route' => null,
-                'is_header' => false,
-                'state' => null,
-                'sub' => collect([])
-            ], [
                 'name' => 'Record Template',
                 'icon' => 'bx bxs-book-content',
                 'route' => null,
@@ -102,7 +88,38 @@ return [
                         'state' => 'group',
                     ]
                 ])
-            ],
+            ], [
+                'name' => 'MISCELLANEOUS',
+                'icon' => null,
+                'route' => null,
+                'is_header' => true,
+                'state' => null,
+                'sub' => collect([])
+            ],  [
+                'name' => 'Profile',
+                'icon' => 'bx bx-user-circle',
+                'route' => null,
+                'is_header' => false,
+                'state' => 'profile',
+                'sub' => collect([
+                    [
+                        'name' => 'Account',
+                        'route' => 'sys.profile.index',
+                        'state' => 'account',
+                        'icon' => 'bx bx-wallet-alt',
+                    ], [
+                        'name' => 'Category',
+                        'route' => 'sys.category.index',
+                        'state' => 'category',
+                        'icon' => 'bx bx-wallet-alt',
+                    ],  [
+                        'name' => 'Tags',
+                        'route' => null,
+                        'state' => 'tags',
+                        'icon' => 'bx bx-wallet-alt',
+                    ], 
+                ])
+            ], 
         ])
     ]
 ];

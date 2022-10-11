@@ -99,7 +99,7 @@
                         });
 
                         return `
-                            <small class=" tw__flex tw__items-center tw__gap-2 tw__mt-2">
+                            <small class=" tw__flex tw__items-center tw__gap-2 tw__mt-2 tw__flex-wrap">
                                 ${walletList.join('')}
                             </small>
                         `;

@@ -36,7 +36,6 @@ class WalletModal extends Component
     protected $rules = [
         'walletParent' => ['nullable'],
         'walletName' => ['required'],
-        'walletBalance' => ['nullable', 'numeric'],
     ];
 
     public function fetchMainWallet()
