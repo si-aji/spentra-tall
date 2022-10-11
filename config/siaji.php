@@ -114,8 +114,8 @@ return [
                         'icon' => 'bx bx-wallet-alt',
                     ],  [
                         'name' => 'Tags',
-                        'route' => null,
-                        'state' => 'tags',
+                        'route' => 'sys.tag.index',
+                        'state' => 'tag',
                         'icon' => 'bx bx-wallet-alt',
                     ], 
                 ])

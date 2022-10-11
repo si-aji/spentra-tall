@@ -102,12 +102,12 @@ class CategoryModal extends Component
 
         $this->reset($this->categoryResetField);
         $this->fetchMainCategory();
-        $this->emit('refreshComponent');
         $this->dispatchBrowserEvent('wire-action', [
             'status' => 'success',
             'action' => 'Success',
-            'message' => 'Successfully store new Category Data'
+            'message' => 'Successfully '.(empty($this->categoryUuid) ? 'store new' : 'update').' Category Data'
         ]);
+        $this->emit('refreshComponent');
 
         // Create Category Re-Order Request
         $allParentCategory = \App\Models\Category::whereNull('parent_id')

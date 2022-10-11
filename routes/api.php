@@ -37,6 +37,9 @@ Route::group([
 
             // Category
             Route::get('category', [\App\Http\Controllers\Api\Sys\v0\CategoryController::class, 'list'])->name('category.list');
+
+            // Tags
+            Route::get('tag', [\App\Http\Controllers\Api\Sys\v0\TagController::class, 'list'])->name('tag.list');
         });
     });
 });

@@ -45,4 +45,7 @@ Route::group([
         ->name('category.re-order');
     Route::get('category', \App\Http\Livewire\Sys\Profile\Category\Index::class)
         ->name('category.index');
+    // Tags
+    Route::get('tag', \App\Http\Livewire\Sys\Profile\Tag\Index::class)
+        ->name('tag.index');
 });
