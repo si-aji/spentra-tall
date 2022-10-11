@@ -5,6 +5,7 @@
 /public/livewire-tmp
 /public/files/user
 /storage/*.key
+/storage/debugbar
 /vendor
 .env
 .env.backup
