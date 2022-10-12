@@ -4,10 +4,11 @@
         <div class="modal fade" wire:init="openModal" wire:ignore.self id="modal-record" data-bs-backdrop="static" tabindex="-1" aria-hidden="true" x-data="{
             init(){
                 this.selectedRecordType = '{{ $recordType }}';
-                this.selectedExtraType = '{{ $recordExtraType }}'
+                this.selectedExtraType = '{{ $recordExtraType }}';
+                this.is_mobile = navigator.userAgent.toLowerCase().match(/mobile/i) ? true : false
             }
         }">
-            <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
+            <div class="modal-dialog modal-dialog-centered modal-lg" :class="{'modal-dialog-scrollable': is_mobile}" role="document">
                 <div class="modal-content">
                     <div class="modal-header tw__pb-2">
                         <h5 class="modal-title" id="modalCenterTitle">{{ $recordTitle }}</h5>

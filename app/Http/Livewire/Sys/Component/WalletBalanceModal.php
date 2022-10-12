@@ -21,7 +21,7 @@ class WalletBalanceModal extends Component
         'openModal' => 'openModal',
         'closeModal' => 'closeModal',
         'store' => 'store',
-        'localUpdate' => 'localUpdate',
+        // 'localUpdate' => 'localUpdate',
         'editAction' => 'editAction'
     ];
 
