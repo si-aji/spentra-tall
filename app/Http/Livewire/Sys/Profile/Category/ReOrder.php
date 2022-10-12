@@ -13,6 +13,7 @@ class ReOrder extends Component
     public $listCategory;
 
     protected $listeners = [
+        'refreshComponent' => '$refresh',
         'reOrder' => 'reOrder',
     ];
 
@@ -58,7 +59,6 @@ class ReOrder extends Component
      */
     public function reOrder($order = null)
     {
-        \Log::debug("A");
         $numorder = 0;
         $numorderMain = 0;
         foreach ($order as $hierarchy) {

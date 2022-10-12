@@ -111,13 +111,13 @@ class WalletModal extends Component
         $data->save();
 
         $this->fetchMainWallet();
-        $this->emit('refreshComponent');
         $this->dispatchBrowserEvent('wire-action', [
             'status' => 'success',
             'action' => 'Success',
             'message' => 'Successfully '.(empty($this->walletUuid) ? 'store new' : 'update').' Wallet Data'
         ]);
         $this->reset($this->walletResetField);
+        $this->emit('refreshComponent');
 
         // Create Wallet Re-Order Request
         $allParentWallet = \App\Models\Wallet::whereNull('parent_id')

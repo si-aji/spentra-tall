@@ -100,14 +100,14 @@ class WalletGroupModal extends Component
             $this->dispatchBrowserEvent('wallet_group_wire-modalHide');
         }
 
-        $this->reset($this->walletGroupResetField);
         $this->fetchWallet();
-        $this->emit('refreshComponent');
         $this->dispatchBrowserEvent('wire-action', [
             'status' => 'success',
             'action' => 'Success',
             'message' => 'Successfully store new Wallet Data'
         ]);
+        $this->reset($this->walletGroupResetField);
+        $this->emit('refreshComponent');
     }
 
     /**

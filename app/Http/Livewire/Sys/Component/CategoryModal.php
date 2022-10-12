@@ -100,13 +100,13 @@ class CategoryModal extends Component
         $data->order = $order;
         $data->save();
 
-        $this->reset($this->categoryResetField);
         $this->fetchMainCategory();
         $this->dispatchBrowserEvent('wire-action', [
             'status' => 'success',
             'action' => 'Success',
             'message' => 'Successfully '.(empty($this->categoryUuid) ? 'store new' : 'update').' Category Data'
         ]);
+        $this->reset($this->categoryResetField);
         $this->emit('refreshComponent');
 
         // Create Category Re-Order Request

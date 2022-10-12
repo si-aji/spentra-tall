@@ -75,10 +75,31 @@
             nestableInstance.on("stop", (event) => {
                 let activeEl = event.movedNode;
                 let parentEl = event.newParentItem;
+                let exitFunct = false;
+                // Check if moved node has child
+                activeEl.childNodes.forEach((el) => {
+                    if(el.classList.contains('nst-list') && event.newParent && parentEl !== null){                    
+                        exitFunct = true;
+                    }
+                }); 
+                if(exitFunct){
+                    // Sent alwert
+                    let alert = new CustomEvent('wire-action', {
+                        detail: {
+                            status: 'warning',
+                            action: 'Failed',
+                            message: `Parent data cannot be moved inside another parent data`
+                        }
+                    });
+                    this.dispatchEvent(alert);    
+                    
+                    nestableInstance.destroy();
+                    Livewire.emitTo('sys.wallet.lists.re-order', 'refreshComponent');
+                    return;
+                }
 
                 if(parentEl === null || parentEl === undefined){
                     // ActiveEl is stand alone
-                    console.log()
                     if(event.newParent && event.originalParent !== event.newParent){
                         if(activeEl.hasAttribute('data-parent_id')){
                             // Check if activeEl has data-parent_id attribute
@@ -136,6 +157,7 @@
             });
         }
         const updateHierarchy = (hierarchy) => {
+            console.log("AAAA");
             let orderId = hierarchy.reduce(function (r, a) {
                 r[a.id] = r[a.id] || [];
                 r[a.id].push(a.child);

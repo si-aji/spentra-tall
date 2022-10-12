@@ -59,13 +59,13 @@ class TagModal extends Component
         $data->name = $this->tagName;
         $data->save();
 
-        $this->emit('refreshComponent');
         $this->dispatchBrowserEvent('wire-action', [
             'status' => 'success',
             'action' => 'Success',
             'message' => 'Successfully '.(empty($this->tagUuid) ? 'store new' : 'update').' Tag Data'
         ]);
         $this->reset($this->tagResetField);
+        $this->emit('refreshComponent');
     }
 
     /**

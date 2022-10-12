@@ -88,6 +88,28 @@
             nestableInstance.on("stop", (event) => {
                 let activeEl = event.movedNode;
                 let parentEl = event.newParentItem;
+                let exitFunct = false;
+                // Check if moved node has child
+                activeEl.childNodes.forEach((el) => {
+                    if(el.classList.contains('nst-list') && event.newParent && parentEl !== null){                    
+                        exitFunct = true;
+                    }
+                }); 
+                if(exitFunct){
+                    // Sent alwert
+                    let alert = new CustomEvent('wire-action', {
+                        detail: {
+                            status: 'warning',
+                            action: 'Failed',
+                            message: `Parent data cannot be moved inside another parent data`
+                        }
+                    });
+                    this.dispatchEvent(alert);    
+                    
+                    nestableInstance.destroy();
+                    Livewire.emitTo('sys.profile.category.re-order', 'refreshComponent');
+                    return;
+                }
 
                 if(parentEl === null || parentEl === undefined){
                     // ActiveEl is stand alone
@@ -148,7 +170,6 @@
             });
         }
         const updateHierarchy = (hierarchy) => {
-            console.log("A");
             let orderId = hierarchy.reduce(function (r, a) {
                 r[a.id] = r[a.id] || [];
                 r[a.id].push(a.child);
@@ -161,6 +182,8 @@
 
         document.addEventListener('categoryorder_wire-init', (event) => {
             console.log("Category Init");
+
+            nestableInstance = null;
             initNestable();
         });
     </script>

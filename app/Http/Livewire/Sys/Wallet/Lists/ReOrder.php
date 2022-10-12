@@ -14,6 +14,7 @@ class ReOrder extends Component
 
     protected $listeners = [
         'reOrder' => 'reOrder',
+        'refreshComponent' => '$refresh',
     ];
 
     public function fetchMainWallet()

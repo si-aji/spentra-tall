@@ -76,4 +76,6 @@ mix.copy('node_modules/sweetalert2/dist/sweetalert2.min.css', 'public/assets/plu
 mix.copy('node_modules/sweetalert2/dist/sweetalert2.all.min.js', 'public/assets/plugins/sweetalert2/sweetalert2.all.min.js').version();
 // Nestable
 mix.copy('node_modules/nestablejs/dist/nestable.css', 'public/assets/plugins/nestable/nestable.css').version();
-mix.copy('node_modules/nestablejs/dist/nestable.js', 'public/assets/plugins/nestable/nestable.js').version();
+// mix.copy('node_modules/nestablejs/dist/nestable.js', 'public/assets/plugins/nestable/nestable.js').version();
+// mix.js('node_modules/nestablejs/src/index.js', 'public/assets/plugins/nestable/nestable.js').version();
+mix.js('resources/js/plugins/nestable/script.js', 'public/assets/plugins/nestable/nestable.js').version();
