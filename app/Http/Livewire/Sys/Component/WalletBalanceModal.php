@@ -50,6 +50,10 @@ class WalletBalanceModal extends Component
 
         $this->dispatchBrowserEvent('wallet_balance_wire-modalShow');
     }
+    public function store()
+    {
+        
+    }
 
     // Handle Modal
     public function openModal()

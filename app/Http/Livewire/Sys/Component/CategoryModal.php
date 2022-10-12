@@ -66,6 +66,12 @@ class CategoryModal extends Component
 
     public function store()
     {
+        // \Log::debug("Debug on Category Modal Store function", [
+        //     'parent' => $this->categoryParent,
+        //     'name' => $this->categoryName,
+        //     'uuid' => $this->categoryUuid
+        // ]);
+
         $parent = null;
         if(!empty($this->categoryParent)){
             $parent = \App\Models\Category::where(\DB::raw('BINARY `uuid`'), $this->categoryParent)

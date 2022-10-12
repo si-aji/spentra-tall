@@ -12,67 +12,58 @@ class RecordModal extends Component
     public $menuState = null;
     public $submenuState = null;
 
-    public $listCategory;
+    // List
     public $listTemplate;
+    public $listCategory;
     public $listWallet;
 
+    // Modal
     public $recordModalState = true;
+    public $recordTitle = 'Add new Record';
+
+    // Field
+    public $user_timezone = null;
     public $recordTemplate = '';
+    public $recordType = 'income';
     public $recordCategory = '';
     public $recordWallet = '';
     public $recordWalletTransfer = '';
-    public $recordTitle = 'Add new Record';
-    public $recordType = 'income';
-    public $recordExtraType = 'amount';
     public $recordAmount = '';
+    public $recordExtraType = 'amount';
     public $recordExtraAmount = '';
     public $recordFinalAmount = '';
-    public $recordNote = null;
-    public $recordReceipt;
-    public $recordPeriod = null;
+    public $recordPeriod = '';
+    public $recordNote = '';
+    public $recordReceipt = null;
     public $recordMoreState = false;
-
     public $recordResetField = [];
+
     protected $listeners = [
         'refreshComponent' => '$refresh',
-        'localUpdate' => 'localUpdate',
         'closeModal' => 'closeModal',
-        'store' => 'store',
-        'fetchTemplate' => 'fetchTemplate'
+        'localUpdate' => 'localUpdate',
     ];
 
-    public function mount()
+    // Fetch List
+    public function fetchListTemplate()
     {
-        $this->recordResetField = [
-            'recordTitle',
-            'recordTemplate',
-            'recordCategory',
-            'recordWallet',
-            'recordWalletTransfer',
-            'recordType',
-            'recordExtraType',
-            'recordAmount',
-            'recordExtraAmount',
-            'recordFinalAmount',
-            'recordReceipt',
-            'recordPeriod',
-            'recordNote', 
-        ];
-
-        /**
-         * Handle List
-         */
         // Template
         $this->listTemplate = \App\Models\RecordTemplate::with('category')
             ->where('user_id', \Auth::user()->id)
             ->orderBy('name', 'asc')
             ->get();
+    }
+    public function fetchListCategory()
+    {
         // Category
         $this->listCategory = \App\Models\Category::with('child', 'parent')
             ->where('user_id', \Auth::user()->id)
             ->whereNull('parent_id')
             ->orderBy('order_main', 'asc')
             ->get();
+    }
+    public function fetchListWallet()
+    {
         // Wallet
         $this->listWallet = \App\Models\Wallet::with('child', 'parent')
             ->where('user_id', \Auth::user()->id)
@@ -81,23 +72,102 @@ class RecordModal extends Component
             ->get();
     }
 
+    public function mount()
+    {
+        $this->recordResetField = [
+            'recordTemplate',
+            'recordType',
+            'recordCategory',
+            'recordWallet',
+            'recordWalletTransfer',
+            'recordAmount',
+            'recordExtraType',
+            'recordExtraAmount',
+            'recordFinalAmount',
+            'recordPeriod',
+            'recordNote',
+            'recordReceipt',
+        ];
+    }
+
     public function render()
     {
+        $this->fetchListTemplate();
+        $this->fetchListCategory();
+        $this->fetchListWallet();
+
         $this->dispatchBrowserEvent('record_wire-init');
         return view('livewire.sys.component.record-modal');
     }
 
-    // Handle Modal
-    public function openModal()
+    // Handle Data
+    public function store()
     {
-        $this->emit($this->recordModalState ? 'show' : 'hide');
-    }
-    public function closeModal()
-    {
-        $this->recordTemplate = '';
-        $this->recordResetField[] = 'recordMoreState';
+        \Log::debug("TZ: ".$this->user_timezone);
+
+        $datetime = null;
+        if($this->user_timezone){
+            $raw = date('Y-m-d H:i:00', strtotime($this->recordPeriod));
+            // Convert to UTC
+            $utc = convertToUtc($raw, ($this->user_timezone));
+            $datetime = date('Y-m-d H:i:00', strtotime($utc));
+        }
+
+        \Log::debug("Debug on Record Save", [
+            'type' => $this->recordType,
+            'category' => $this->recordCategory,
+            'wallet' => [
+                'from' => $this->recordWallet,
+                'to' => $this->recordWalletTransfer
+            ],
+            'amount' => [
+                'main' => $this->recordAmount,
+                'type' => $this->recordExtraType,
+                'extra' => $this->recordExtraAmount,
+                'final' => $this->recordFinalAmount
+            ],
+            'period' => [
+                'original' => $this->recordPeriod,
+                'utc' => $datetime,
+                'offset' => $this->user_timezone
+            ],
+            'note' => $this->recordNote
+        ]);
+
+        // Reset Field if Transfer
+        if($this->recordType === 'transfer'){
+            $this->reset([
+                'recordCategory',
+                'recordExtraType',
+                'recordExtraAmount'
+            ]);
+        }
+
+        $file = null;
+        if($this->recordReceipt){
+            $destinationPath = 'files/user'.'/'.\Auth::user()->uuid.'/receipt';
+            // Check if directory exists
+            if (! (\File::exists($destinationPath))) {
+                \File::makeDirectory($destinationPath, 0777, true, true);
+            }
+
+            $file = $this->recordReceipt->store($destinationPath);
+            // Empty file
+            $this->recordReceipt = null;
+        }
+        // Handle store function
+
+        if(!($this->recordMoreState)){
+            $this->recordResetField[] = 'recordMoreState';
+            $this->dispatchBrowserEvent('close-modal');
+        } else {
+            $key = array_search('recordMoreState', $this->recordResetField);
+            if($key !== false){
+                unset($this->recordResetField[$key]);
+            }
+        }
         $this->reset($this->recordResetField);
-        $this->dispatchBrowserEvent('close-modal');
+        $this->emit('refreshComponent');
         $this->dispatchBrowserEvent('trigger-event', [
             'recordType' => $this->recordType,
             'recordExtraType' => $this->recordExtraType,
@@ -105,16 +175,16 @@ class RecordModal extends Component
             'recordExtraAmount' => $this->recordExtraAmount
         ]);
     }
+
     // Update Model / Variable
     public function localUpdate($key, $value): void
     {
-        // \Log::debug("Debug on Local Update function", [
-        //     'key' => $key,
-        //     'value' => $value
-        // ]);
         switch($key){
             case 'recordTemplate':
                 $this->recordTemplate = $value;
+                break;
+            case 'recordType':
+                $this->recordType = $value;
                 break;
             case 'recordCategory':
                 $this->recordCategory = $value;
@@ -125,72 +195,52 @@ class RecordModal extends Component
             case 'recordWalletTransfer':
                 $this->recordWalletTransfer = $value;
                 break;
-            case 'recordType':
-                $this->recordType = $value;
+            case 'recordAmount':
+                $this->recordAmount = $value;
                 break;
             case 'recordExtraType':
                 $this->recordExtraType = $value;
                 break;
+            case 'recordExtraAmount':
+                $this->recordExtraAmount = $value;
+                break;
             case 'recordFinalAmount':
                 $this->recordFinalAmount = $value;
                 break;
-            case 'recordAmount':
-                $this->recordAmount = $value;
-                break;
-            case 'recordExtraAmount':
-                $this->recordExtraAmount = $value;
+            case 'recordPeriod': 
+                $this->recordPeriod = $value;
                 break;
             case 'recordMoreState':
                 $this->recordMoreState = $value;
                 break;
+            case 'user_timezone':
+                $this->user_timezone = $value;
+                break;
         }
     }
-
-    public function store()
+    public function removeReceipt(): void
     {
-        if(!($this->recordResetField)){
-            $this->recordResetField[] = 'recordMoreState';
-        } else {
-            $key = array_search('recordMoreState', $this->recordResetField);
-            if($key !== false){
-                unset($this->recordResetField[$key]);
+        // \Log::debug("Debug on Receipt remove", [
+        //     'file' => $this->recordReceipt ? 'TRUE' : 'FALSE'
+        // ]);
+
+        if($this->recordReceipt){
+            if(\File::exists('livewire-tmp'.'/'.$this->recordReceipt->getFilename())){
+                \Storage::delete('livewire-tmp'.'/'.$this->recordReceipt->getFilename());
             }
+
+            $this->recordReceipt = null;
         }
-        $this->reset($this->recordResetField);
     }
-    // Fetch Template Data
-    public function fetchTemplate($uuid)
+
+    // Handle Modal
+    public function openModal()
     {
-        if($uuid == ''){
-            $this->recordTemplate = '';
-            $this->reset($this->recordResetField);
-            return false;
-        }
-
-        $data = \App\Models\RecordTemplate::with('category', 'wallet', 'walletTransferTarget')
-            ->where(\DB::raw('BINARY `uuid`'), $uuid)
-            ->firstOrFail();
-
-        $key = array_search('recordTemplate', $this->recordResetField);
-        if($key !== false){
-            unset($this->recordResetField[$key]);
-        }
-        $this->reset($this->recordResetField);
-
-        $this->recordType = $data->type;
-        $this->recordCategory = $data->category()->exists() ? $data->category->uuid : '';
-        $this->recordWallet = $data->wallet->uuid;
-        if($data->type === 'transfer'){
-            $this->recordWalletTransfer = $data->walletTransferTarget->uuid;
-        }
-        $this->recordAmount = $data->amount;
-        $this->recordExtraAmount = $data->extra_type === 'amount' ? $data->extra_amount : $data->extra_percentage;
-        $this->recordExtraType = $data->extra_type;
-
-        $calculateFinal = $data->amount + $data->extra_amount;
-        $this->recordFinalAmount = $calculateFinal;
-        $this->recordNote = $data->note;
-
+        $this->emit($this->recordModalState ? 'show' : 'hide');
+    }
+    public function closeModal()
+    {
+        $this->dispatchBrowserEvent('close-modal');
         $this->dispatchBrowserEvent('trigger-event', [
             'recordType' => $this->recordType,
             'recordExtraType' => $this->recordExtraType,

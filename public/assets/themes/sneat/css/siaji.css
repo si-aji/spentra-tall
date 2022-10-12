@@ -136,6 +136,35 @@ h4.breadcrumb span.active {
 }
 
 /**
+* Nav Tabs
+*/
+.nav.nav-tabs {
+  border-bottom: 1px solid #dee2e6 !important;
+}
+.nav.nav-tabs .nav-link:first-child {
+  margin-right: 1rem !important;
+  margin-left: 0 !important;
+}
+.nav.nav-tabs .nav-link:last-child {
+  margin-left: 1rem !important;
+  margin-right: 0 !important;
+}
+@media (min-width: 1024px) {
+  .nav.nav-tabs .nav-link:first-child {
+    margin-left: 1rem !important;
+    margin-right: 0 !important;
+  }
+  .nav.nav-tabs .nav-link:last-child {
+    margin-left: 0 !important;
+    margin-right: 1rem !important;
+  }
+}
+.nav.nav-tabs .nav-link.active {
+  border: 1px solid #dee2e6;
+  border-bottom: 0px transparent;
+}
+
+/**
 * Choices
 */
 .choices {

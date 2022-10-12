@@ -147,6 +147,9 @@ function dateFormat($rawDate, $type = 'days')
     return $result;
 }
 
+/**
+ * Convert related date to utc based on offset
+ */
 function convertToUtc($datetime, $offset, $utc = true)
 {
     $original = $datetime;

@@ -152,6 +152,41 @@ h4 {
 }
 
 /**
+* Nav Tabs
+*/
+.nav {
+	&.nav-tabs {
+		border-bottom: 1px solid #dee2e6 !important;
+
+		.nav-link {
+			&:first-child {
+				margin-right: 1rem !important;
+				margin-left: 0 !important;
+			}
+			&:last-child {
+				margin-left: 1rem !important;
+				margin-right: 0 !important
+			}
+			@media(min-width: 1024px){
+				&:first-child {
+					margin-left: 1rem !important;
+					margin-right: 0 !important;
+				}
+				&:last-child {
+					margin-left: 0 !important;
+					margin-right: 1rem !important;
+				}
+			}
+
+			&.active {
+				border: 1px solid #dee2e6;
+				border-bottom: 0px transparent;
+			}
+		}
+	}
+}
+
+/**
 * Choices
 */
 .choices {

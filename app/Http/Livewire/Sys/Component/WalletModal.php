@@ -68,13 +68,13 @@ class WalletModal extends Component
 
     public function store()
     {
-        // \Log::debug("Debug on Wallet Modal Component ~ \App\Http\Livewire\Sys\Component\WalletModal", [
-        //     'parent' => $this->walletParent,
-        //     'name' => $this->walletName,
-        //     'balance' => $this->walletBalance,
-        //     'modalState' => $this->walletModalState,
-        //     'uuid' => $this->walletUuid
-        // ]);
+        \Log::debug("Debug on Wallet Modal Component ~ \App\Http\Livewire\Sys\Component\WalletModal", [
+            'parent' => $this->walletParent,
+            'name' => $this->walletName,
+            'balance' => $this->walletBalance,
+            'modalState' => $this->walletModalState,
+            'uuid' => $this->walletUuid
+        ]);
         $parent = null;
         if(!empty($this->walletParent)){
             $parent = \App\Models\Wallet::where(\DB::raw('BINARY `uuid`'), $this->walletParent)

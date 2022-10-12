@@ -20,6 +20,10 @@ Route::group([
     Route::get('/', \App\Http\Livewire\Sys\Dashboard\Index::class)
         ->name('index');
 
+    // Record
+    Route::get('record', \App\Http\Livewire\Sys\Record\Index::class)
+        ->name('record.index');
+
     // Wallet
     Route::group([
         'prefix' => 'wallet',

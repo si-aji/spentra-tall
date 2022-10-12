@@ -1,28 +1,33 @@
 <div>
     {{-- Because she competes with no one, no one can compete with her. --}}
+    {{-- <form id="record-form" wire:submit.prevent="store()"> --}}
     <form id="record-form">
-        <div class="modal fade" wire:init="openModal" wire:ignore.self id="modal-record" data-bs-backdrop="static" tabindex="-1" aria-hidden="true" x-data="{
+        <div class="modal fade" wire:init="openModal()" wire:ignore.self id="modal-record" data-bs-backdrop="static" tabindex="-1" aria-hidden="true" x-data="{
             init(){
-                this.selectedRecordType = '{{ $recordType }}';
-                this.selectedExtraType = '{{ $recordExtraType }}';
-                this.is_mobile = navigator.userAgent.toLowerCase().match(/mobile/i) ? true : false
+                this.selectedRecordType = 'income';
+                this.selectedExtraType = 'amount';
+                this.is_mobile = navigator.userAgent.toLowerCase().match(/mobile/i) ? true : false;
+                this.uploadState = false;
+                this.uploadProgress = 0;
+                this.user_timezone = new Date().getTimezoneOffset();
             }
         }">
             <div class="modal-dialog modal-dialog-centered modal-lg" :class="{'modal-dialog-scrollable': is_mobile}" role="document">
                 <div class="modal-content">
                     <div class="modal-header tw__pb-2">
                         <h5 class="modal-title" id="modalCenterTitle">{{ $recordTitle }}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" wire:click="closeModal" x-on:click="
-                            selectedRecordType = 'income';
-                            selectedExtraType = 'amount';
-                        "></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" wire:click="closeModal"></button>
                     </div>
                     <div class="modal-body tw__p-0">
+                        <input type="hidden" name="user_timezone" id="user_timezone" x-bind:value="user_timezone" readonly>
+
                         <div class=" tw__grid tw__grid-flow-row lg:tw__grid-flow-col tw__grid-cols-2 lg:tw__grid-cols-4">
+                            {{-- Left Side --}}
                             <div class=" tw__p-6 tw__col-span-2 tw__self-center">
+                                {{-- Record Template --}}
                                 <div class="form-group tw__mb-4">
                                     <label for="input-template">Template</label>
-                                    <select class="form-control" id="input-template_id" name="template_id" placeholder="Search for Template Data" x-on:change="$wire.localUpdate('recordTemplate', $event.target.value);$wire.fetchTemplate($event.target.value)">
+                                    <select class="form-control" id="input-template_id" name="template_id" placeholder="Search for Template Data" disabled>
                                         <option value="" {{ $recordTemplate == '' ? 'selected' : '' }}>Search for Template Data</option>
                                         @foreach ($listTemplate as $template)
                                             <option value="{{ $template->uuid }}" {{ !empty($recordTemplate) && $template->uuid === $recordTemplate ? 'selected' : '' }}>{{ $template->name }}</option>
@@ -33,13 +38,14 @@
                                 {{-- Record Type --}}
                                 <div class=" tw__text-center tw__mb-4">
                                     <div class="btn-group">
-                                        <a href="javascript:void(0)" wire:click="localUpdate('recordType', 'income')" class="record-type btn" :class="selectedRecordType === 'income' ? 'btn-secondary' : 'btn-outline-secondary'" x-on:click="selectedRecordType = 'income'">Income</a>
-                                        <a href="javascript:void(0)" wire:click="localUpdate('recordType', 'transfer')" class="record-type btn" :class="selectedRecordType === 'transfer' ? 'btn-secondary' : 'btn-outline-secondary'" x-on:click="selectedRecordType = 'transfer'">Transfer</a>
-                                        <a href="javascript:void(0)" wire:click="localUpdate('recordType', 'expense')" class="record-type btn" :class="selectedRecordType === 'expense' ? 'btn-secondary' : 'btn-outline-secondary'" x-on:click="selectedRecordType = 'expense'">Expense</a>
+                                        <a href="javascript:void(0)" class="record-type btn" x-on:click="selectedRecordType = 'income';$wire.localUpdate('recordType', 'income')" :class="selectedRecordType === 'income' ? 'btn-secondary' : 'btn-outline-secondary'">Income</a>
+                                        <a href="javascript:void(0)" class="record-type btn" x-on:click="selectedRecordType = 'transfer';$wire.localUpdate('recordType', 'transfer')" :class="selectedRecordType === 'transfer' ? 'btn-secondary' : 'btn-outline-secondary'">Transfer</a>
+                                        <a href="javascript:void(0)" class="record-type btn" x-on:click="selectedRecordType = 'expense';$wire.localUpdate('recordType', 'expense')" :class="selectedRecordType === 'expense' ? 'btn-secondary' : 'btn-outline-secondary'">Expense</a>
                                     </div>
                                 </div>
 
-                                <div class="form-group tw__mb-4">
+                                {{-- Category --}}
+                                <div class="form-group tw__mb-4" x-show="selectedRecordType !== 'transfer' ? true : false">
                                     <label for="input-category_id">Category</label>
                                     <select class="form-control" id="input-category_id" name="category_id" placeholder="Search for Category Data" x-on:change="$wire.localUpdate('recordCategory', $event.target.value)">
                                         <option value="" {{ $recordCategory == '' ? 'selected' : '' }}>Search for Category Data</option>
@@ -56,6 +62,7 @@
                                     </select>
                                 </div>
 
+                                {{-- Wallet --}}
                                 <div class="form-group tw__mb-4">
                                     <label for="input-wallet_id" x-text="selectedRecordType === 'income' || selectedRecordType === 'expense' ? 'Wallet' : 'From'"></label>
                                     <select class="form-control" id="input-wallet_id" name="wallet_id" placeholder="Search for Wallet Data" x-on:change="$wire.localUpdate('recordWallet', $event.target.value)">
@@ -73,6 +80,7 @@
                                     </select>
                                 </div>
 
+                                {{-- Wallet Transfer --}}
                                 <div class="" x-show="selectedRecordType === 'transfer' ? true : false">
                                     <div class=" tw__mb-4">
                                         <a href="javascript:void(0)" class="btn btn-sm btn-primary" x-on:click="$wire.localUpdate('recordWallet', document.getElementById('input-wallet_transfer_id').value);$wire.localUpdate('recordWalletTransfer', document.getElementById('input-wallet_id').value);">
@@ -98,58 +106,63 @@
                                     </div>
                                 </div>
 
+                                {{-- Amount --}}
                                 <div class="form-group tw__mb-4" id="form-amount">
                                     <label for="input-amount">Amount</label>
                                     <div class="input-group">
                                         <span class="input-group-text" id="input_group-amount">
-                                            <i class="bx" :class="selectedRecordType === 'income' ? 'bx-plus' : (selectedRecordType === 'expense' ? 'bx-minus' : 'bx-transfer')"></i>
+                                            <i class="bx bx-plus"></i>
                                         </span>
-                                        <input type="text" inputmode="numeric" class="form-control" name="amount" id="input-amount" placeholder="Amount" wire:model.defer="recordAmount" @input.debounce="calculateFinal(selectedExtraType)">
+                                        <input type="text" inputmode="numeric" class="form-control" name="amount" id="input-amount" placeholder="Amount" @input.debounce="calculateFinal(selectedExtraType)">
                                     </div>
                                 </div>
 
+                                {{-- Extra Amount --}}
                                 <div class="row" x-show="selectedRecordType !== 'transfer' ? true : false">
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="input-extra">Extra Amount</label>
-                                            <input type="text" inputmode="numeric" class="form-control" name="extra" id="input-extra" placeholder="Extra Amount" wire:model.defer="recordExtraAmount" @input.debounce="calculateFinal(selectedExtraType)">
+                                            <input type="text" inputmode="numeric" class="form-control" name="extra" id="input-extra" placeholder="Extra Amount" @input.debounce="calculateFinal(selectedExtraType)">
                                         </div>
                                     </div>
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="input-final">Final Amount</label>
-                                            <input type="text" inputmode="numeric" class="form-control" name="final" id="input-final" placeholder="Final Amount" wire:model.defer="recordFinalAmount" readonly>
+                                            <input type="text" inputmode="numeric" class="form-control" name="final" id="input-final" placeholder="Final Amount" readonly>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <small class="text-muted">
                                             <span>(</span>
-                                            <a href="javascript:void(0)" class="record_extra-type" wire:click="localUpdate('recordExtraType', 'amount')" x-on:click="selectedExtraType = 'amount'; calculateFinal(selectedExtraType)" :class="selectedExtraType !== 'amount' ? 'tw__text-slate-400' : ''">Amount</a>
+                                            <a href="javascript:void(0)" class="record_extra-type" x-on:click="selectedExtraType = 'amount';calculateFinal(selectedExtraType);$wire.localUpdate('recordExtraType', 'amount')" :class="selectedExtraType !== 'amount' ? 'tw__text-slate-400' : ''">Amount</a>
                                             <span>/</span>
-                                            <a href="javascript:void(0)" class="record_extra-type" wire:click="localUpdate('recordExtraType', 'percentage')" x-on:click="selectedExtraType = 'percentage'; calculateFinal(selectedExtraType)" :class="selectedExtraType !== 'percentage' ? 'tw__text-slate-400' : ''">Percentage</a>
+                                            <a href="javascript:void(0)" class="record_extra-type" x-on:click="selectedExtraType = 'percentage';calculateFinal(selectedExtraType);$wire.localUpdate('recordExtraType', 'percentage')" :class="selectedExtraType !== 'percentage' ? 'tw__text-slate-400' : ''">Percentage</a>
                                             <span>)</span>
                                         </small>
                                     </div>
                                 </div>
                             </div>
+                            {{-- Right Side --}}
                             <div class=" tw__p-6 tw__col-span-2 tw__bg-slate-100 tw__flex tw__items-center">
                                 <div class=" tw__w-full">
+                                    {{-- Period --}}
                                     <div class="form-group tw__mb-4">
                                         <label for="input-period">Date Time</label>
-                                        <input type="text" class="form-control flatpickr" name="period" id="input-period" placeholder="Record Date Time" wire:model.defer="recordPeriod">
+                                        <input type="text" class="form-control flatpickr" name="period" id="input-period" placeholder="Record Date Time">
                                     </div>
-        
+
+                                    {{-- Note --}}
                                     <div class="form-group tw__mb-4">
                                         <label for="input-note">Note</label>
                                         <textarea class="form-control" name="note" id="input-note" placeholder="Record notes..." rows="6" wire:model.defer="recordNote"></textarea>
                                     </div>
-        
-                                    <div class="form-group tw__mb-4">
+
+                                    {{-- Receipt --}}
+                                    <div class="form-group tw__mb-4" x-on:livewire-upload-start="uploadState = true;uploadProgress = 0;$wire.removeReceipt()" x-on:livewire-upload-progress="uploadProgress = $event.detail.progress" x-on:livewire-upload-finish="uploadState = false">
                                         <label for="input-receipt">Receipt</label>
         
                                         <div class="d-flex">
                                             <input type="file" class="tw__hidden" id="input-receipt" name="receipt" accept=".jpeg,.jpg,.png,.pdf" max="512" wire:model.defer="recordReceipt">
-                                            {{-- <input type="file" class="tw__hidden" id="input-receipt" name="receipt" accept=".jpeg,.jpg,.png,.pdf" max="512"> --}}
             
                                             @if ($recordReceipt)
                                                 <label for="input-receipt" id="input-receipt_label" class="tw__cursor-pointer">
@@ -163,9 +176,26 @@
                                                                     <span>(</span>
                                                                     <a href="javascript:void(0)" onclick="removeAvatarUpload()" class="tw__text-red-400 hover:tw__text-red-700 hover:tw__underline">Remove</a>
                                                                     <span>or</span>
-                                                                    <a href="javascript:void(0)" data-src="{{ $recordReceipt->temporaryUrl() }}" @click="lightbox($event.target.dataset.src)" class="tw__text-blue-400 hover:tw__text-blue-700 hover:tw__underline">Preview</a>
+                                                                    @if (strpos($recordReceipt->temporaryUrl(), '.pdf') !== false)
+                                                                        <a data-fslightbox href="#pdf-container" class="tw__text-blue-400 hover:tw__text-blue-700 hover:tw__underline">Preview</a>
+                                                                    @else
+                                                                        <a data-fslightbox href="{{ $recordReceipt->temporaryUrl() }}" class="tw__text-blue-400 hover:tw__text-blue-700 hover:tw__underline">Preview</a>
+                                                                    @endif
                                                                     <span>)</span>
                                                                 </small>
+                                                                @if (strpos($recordReceipt->temporaryUrl(), '.pdf') !== false)
+                                                                    <div class=" tw__hidden">
+                                                                        <iframe
+                                                                            class=" tw__w-full tw__min-h-[350px]"
+                                                                            src="{{ $recordReceipt->temporaryUrl() }}#view=fitH"
+                                                                            id="pdf-container"
+                                                                            width="100%"
+                                                                            height="100%"
+                                                                            allow="autoplay; fullscreen"
+                                                                            allowFullScreen>
+                                                                        </iframe>
+                                                                    </div>
+                                                                @endif
                                                             </div>
                                                             <div class="text-gray small">JPG/JPEG or PNG. Max size of 1M</div>
                                                         </div>
@@ -184,8 +214,15 @@
                                                 </label>
                                             @endif
                                         </div>
+
+                                        <div class=" tw__mt-2" x-show="uploadState">
+                                            <div class="progress">
+                                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" style="width: 20%" x-bind:style="{width: `${uploadProgress}%`}" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                        </div>
                                     </div>
-        
+
+                                    {{-- Add more State --}}
                                     <div class="form-group">
                                         <div class="form-check tw__flex tw__items-center tw__gap-2">
                                             <input class="form-check-input tw__mt-0" type="checkbox" value="" id="input-more" wire:model.defer="recordMoreState">
@@ -199,13 +236,10 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" wire:click="closeModal" x-on:click="
-                            selectedRecordType = 'income';
-                            selectedExtraType = 'amount';
-                        ">
-                            Close
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" wire:click="closeModal">
+                            <span>Close</span>
                         </button>
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-primary" x-bind:disabled="uploadState">Submit</button>
                     </div>
                 </div>
             </div>
@@ -220,6 +254,10 @@
         var extraAmountMask = null;
         var finalAmountMask = null;
         window.addEventListener('record_wire-init', (event) => {
+            console.log("Record Wire init");
+            refreshFsLightbox();
+
+            // iMask
             if(document.getElementById('input-amount')){
                 amountMask = IMask(document.getElementById('input-amount'), {
                     mask: Number,
@@ -250,18 +288,6 @@
                     min: 0,
                 });
             }
-
-            // Flatpickr
-            flatpickr(document.getElementById('input-period'), {
-                enableTime: true,
-                altInput: true,
-                altFormat: "F j, Y / H:i",
-                dateFormat: "Y-m-d H:i",
-                time_24hr: true,
-                minuteIncrement: 1,
-                allowInput: true,
-                defaultDate: {{ !empty($recordPeriod) ? '"'.date('Y-m-d H:i', strtotime($recordPeriod)).'"' : 'null' }}
-            });
 
             // Choices
             let templateChoice =null;
@@ -314,20 +340,36 @@
                 });
             }
 
-            // Submit
+            // Flatpickr
+            flatpickr(document.getElementById('input-period'), {
+                enableTime: true,
+                altInput: true,
+                altFormat: "F j, Y / H:i",
+                dateFormat: "Y-m-d H:i",
+                time_24hr: true,
+                minuteIncrement: 1,
+                allowInput: true,
+                defaultDate: {{ !empty($recordPeriod) ? '"'.date('Y-m-d H:i', strtotime($recordPeriod)).'"' : 'null' }}
+            });
+
+            document.getElementById('modal-record').addEventListener('hidden.bs.modal', (e) => {
+                @this.removeReceipt();
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', (e) => {
+            console.log("Domcontent Loaded");
+
             document.getElementById('record-form').addEventListener('submit', (e) => {
                 e.preventDefault();
-                console.log("Form Submit");
-                Livewire.emit('localUpdate', 'recordAmount', amountMask.unmaskedValue);
-                Livewire.emit('localUpdate', 'recordExtraAmount', extraAmountMask.unmaskedValue);
-                Livewire.emit('localUpdate', 'recordMoreState', document.getElementById('input-more').checked ? true : false)
-                Livewire.emit('store');
 
-                Livewire.emitTo('sys.component.record-modal', 'refreshComponent');
-
-                if(!(document.getElementById('input-more').checked)){
-                    Livewire.emit('closeModal');
-                }
+                @this.localUpdate('user_timezone', document.getElementById('user_timezone').value);
+                @this.localUpdate('recordAmount', amountMask.unmaskedValue);
+                @this.localUpdate('recordExtraAmount', extraAmountMask.unmaskedValue);
+                @this.localUpdate('recordPeriod', document.getElementById('input-period').value);
+                @this.localUpdate('recordMoreState', document.getElementById('input-more').checked);
+                
+                @this.store();
             });
         });
         window.addEventListener('close-modal', (event) => {
@@ -365,8 +407,8 @@
             }
         });
 
-        function calculateFinal(type)
-        {
+        // Calculate Final after adding extra amount
+        function calculateFinal(type){
             let amount = parseFloat(amountMask.unmaskedValue);
             if(isNaN(amount)){
                 amount = 0;
@@ -382,22 +424,16 @@
             }
 
             let final = amount + extra;
-            Livewire.emit('localUpdate', 'recordFinalAmount', final);
+            @this.localUpdate('recordFinalAmount', final);
+            // Livewire.emitTo('sys.component.record-modal', 'localUpdate', 'recordFinalAmount', final);
             finalAmountMask.value = final.toString();
         }
+        // Remove receipt
         function removeAvatarUpload(){
             document.getElementById('input-receipt').value = null;
             document.getElementById('input-receipt_label_helper').textContent = 'Choose Image';
-        }
 
-        // Handle lightbox
-        function lightbox(image){
-            const lightbox = new FsLightbox();
-            // set up props, like sources, types, events etc.
-            lightbox.props.sources = [image];
-            // lightbox.props.onInit = () => console.log('Lightbox initialized!');
-
-            lightbox.open();
+            @this.removeReceipt();
         }
     </script>
 @endpush

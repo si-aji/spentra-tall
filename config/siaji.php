@@ -46,9 +46,9 @@ return [
             ], [
                 'name' => 'Record',
                 'icon' => 'bx bx-book-content',
-                'route' => null,
+                'route' => 'sys.record.index',
                 'is_header' => false,
-                'state' => null,
+                'state' => 'record',
                 'sub' => collect([])
             ], [
                 'name' => 'Shopping List',
