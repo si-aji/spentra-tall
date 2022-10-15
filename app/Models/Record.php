@@ -41,7 +41,7 @@ class Record extends Model
      * @var array
      */
     protected $hidden = [
-        'id',
+        // 'id',
     ];
 
     /**
@@ -158,5 +158,34 @@ class Record extends Model
     public function setExtraAmountAttribute($value)
     {
         $this->attributes['extra_amount'] = ! empty($value) ? $value : 0;
+    }
+
+    /**
+     * Scope
+     * 
+     */
+    public function scopeGetRelatedTransferRecord()
+    {
+        $related = [];
+        if(!empty($this->to_wallet_id)){
+            $related = $this->where('user_id', $this->user_id)
+                ->where('id', '!=', $this->id)
+                ->where('receipt', $this->receipt)
+                ->where('amount', $this->amount);
+
+            if($this->type === 'expense'){
+                // Get related income
+                $related->where('type', 'income')
+                    ->where('wallet_id', $this->to_wallet_id);
+            } else {
+                // Get related expense
+                $related->where('type', 'expense')
+                    ->where('wallet_id', $this->to_wallet_id);
+            }
+
+            $related = $related->first();
+        }
+
+        return $related;
     }
 }

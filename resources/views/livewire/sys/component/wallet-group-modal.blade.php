@@ -50,11 +50,11 @@
 
 @push('javascript')
     <script>
-        let walletChoice = null;
         window.addEventListener('wallet_group_wire-init', (event) => {
             console.log("Wallet Group Component Init");
             console.log(event);
 
+            let walletChoice = null;
             if(document.getElementById('input_wallet_group-wallet_id')){
                 const walletEl = document.getElementById('input_wallet_group-wallet_id');
                 walletChoice = new Choices(walletEl, {

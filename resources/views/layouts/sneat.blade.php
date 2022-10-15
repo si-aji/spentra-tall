@@ -135,6 +135,7 @@
     <!-- Vendor -->
     <script src="{{ mix('assets/themes/sneat/libs/apex-charts/apexcharts.js') }}vendor/"></script>
     <script src="{{ mix('assets/themes/sneat/js/main.js') }}"></script>
+    <script src="{{ mix('assets/plugins/moment/moment.min.js') }}"></script>
     {{-- <script async defer src="https://buttons.github.io/buttons.js"></script> --}}
 
     @yield('js_plugins')

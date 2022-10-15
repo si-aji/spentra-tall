@@ -31,6 +31,7 @@ mix.js('resources/js/app.js', 'public/assets/js')
  */ 
 mix.copy('resources/js/shortcut.js', 'public/assets/js/shortcut.js');
 mix.copy('resources/js/siaji.js', 'public/assets/js/siaji.js');
+mix.copy('resources/js/format-record.js', 'public/assets/js/format-record.js');
 
 /**
  * Themes
@@ -79,3 +80,6 @@ mix.copy('node_modules/nestablejs/dist/nestable.css', 'public/assets/plugins/nes
 // mix.copy('node_modules/nestablejs/dist/nestable.js', 'public/assets/plugins/nestable/nestable.js').version();
 // mix.js('node_modules/nestablejs/src/index.js', 'public/assets/plugins/nestable/nestable.js').version();
 mix.js('resources/js/plugins/nestable/script.js', 'public/assets/plugins/nestable/nestable.js').version();
+// Moment JS
+mix.copy('node_modules/moment/dist/locale', 'public/assets/plugins/moment/locale');
+mix.copy('node_modules/moment/min/moment.min.js', 'public/assets/plugins/moment');

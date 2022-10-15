@@ -19,6 +19,7 @@ class RecordModal extends Component
 
     // Modal
     public $recordModalState = true;
+    public $recordUuid = null;
     public $recordTitle = 'Add new Record';
 
     // Field
@@ -35,6 +36,7 @@ class RecordModal extends Component
     public $recordPeriod = '';
     public $recordNote = '';
     public $recordReceipt = null;
+    public $recordReceiptTemp = null;
     public $recordMoreState = false;
     public $recordResetField = [];
 
@@ -42,6 +44,7 @@ class RecordModal extends Component
         'refreshComponent' => '$refresh',
         'closeModal' => 'closeModal',
         'localUpdate' => 'localUpdate',
+        'editAction' => 'editAction'
     ];
 
     // Fetch List
@@ -75,6 +78,7 @@ class RecordModal extends Component
     public function mount()
     {
         $this->recordResetField = [
+            'recordUuid',
             'recordTemplate',
             'recordType',
             'recordCategory',
@@ -87,6 +91,7 @@ class RecordModal extends Component
             'recordPeriod',
             'recordNote',
             'recordReceipt',
+            'recordReceiptTemp'
         ];
     }
 
@@ -96,42 +101,78 @@ class RecordModal extends Component
         $this->fetchListCategory();
         $this->fetchListWallet();
 
+        // \Log::debug("Debug on Record Modal render", [
+        //     'category' => $this->recordCategory,
+        //     'wallet' => $this->recordWallet,
+        //     'walletTransfer' => $this->recordWalletTransfer,
+        // ]);
+
         $this->dispatchBrowserEvent('record_wire-init');
         return view('livewire.sys.component.record-modal');
     }
 
+    public function updatedRecordPeriod()
+    {
+        \Log::debug("Debug on Record Period changed", [
+            'value' => $this->recordPeriod
+        ]);
+    }
+    public function updatedRecordReceipt()
+    {
+        // \Log::debug("Debug on Receipt Change", [
+        //     '!empty' => !empty($this->recordReceipt) ? 'TRUE' : 'FALSE'
+        // ]);
+
+        if($this->recordReceipt){
+            if(round($this->recordReceipt->getSize()) / 1024.4 > 100){
+                throw \Illuminate\Validation\ValidationException::withMessages([
+                    'recordReceipt' => 'The record receipt must not be greater than 100 kilobytes.'
+                ]);
+            }
+        }
+
+        $this->validate([
+            'recordReceipt' => 'mimes:jpg,jpeg,png,pdf|max:100',
+        ]);
+    }
+    public function editAction($uuid){
+        \Log::debug("Debug on Edit Action Record Modal", [
+            'uuid' => $uuid
+        ]);
+
+        $record = \App\Models\Record::with('wallet', 'walletTransferTarget', 'category')
+            ->where('user_id', \Auth::user()->id)
+            ->where(\DB::raw('BINARY `uuid`'), $uuid)
+            ->firstOrFail();
+
+        $this->recordUuid = $record->uuid;
+        $this->recordTitle = 'Edit Record';
+        $this->recordCategory = $record->category()->exists() ? $record->category->uuid : '';
+        $this->recordType = !empty($record->to_wallet_id) ? 'transfer' : $record->type;
+        $this->recordWallet = !empty($record->to_wallet_id) ? ($record->type === 'expense' ? $record->wallet->uuid : $record->walletTransferTarget->uuid) : $record->wallet->uuid;
+        $this->recordWalletTransfer = !empty($record->to_wallet_id) ? ($record->type === 'income' ? $record->wallet->uuid : $record->walletTransferTarget->uuid) : '';
+        $this->recordAmount = $record->amount;
+        $this->recordExtraType = $record->extra_type;
+        $this->recordExtraAmount = $record->extra_type === 'percentage' ? $record->extra_percentage : $record->extra_amount;
+        $this->recordFinalAmount = $record->amount + $record->extra_amount;
+        $this->recordPeriod = $record->datetime;
+        $this->recordNote = $record->note;
+        // $this->recordReceipt = $record->receipt;
+        $this->recordReceiptTemp = $record->receipt;
+
+        $this->dispatchBrowserEvent('trigger-event', [
+            'recordType' => $this->recordType,
+            'recordExtraType' => $this->recordExtraType,
+            'recordAmount' => $this->recordAmount,
+            'recordExtraAmount' => $this->recordExtraAmount
+        ]);
+        $this->dispatchBrowserEvent('open-modal');
+    }
     // Handle Data
     public function store()
     {
-        \Log::debug("TZ: ".$this->user_timezone);
-
-        $datetime = null;
-        if($this->user_timezone){
-            $raw = date('Y-m-d H:i:00', strtotime($this->recordPeriod));
-            // Convert to UTC
-            $utc = convertToUtc($raw, ($this->user_timezone));
-            $datetime = date('Y-m-d H:i:00', strtotime($utc));
-        }
-
-        \Log::debug("Debug on Record Save", [
-            'type' => $this->recordType,
-            'category' => $this->recordCategory,
-            'wallet' => [
-                'from' => $this->recordWallet,
-                'to' => $this->recordWalletTransfer
-            ],
-            'amount' => [
-                'main' => $this->recordAmount,
-                'type' => $this->recordExtraType,
-                'extra' => $this->recordExtraAmount,
-                'final' => $this->recordFinalAmount
-            ],
-            'period' => [
-                'original' => $this->recordPeriod,
-                'utc' => $datetime,
-                'offset' => $this->user_timezone
-            ],
-            'note' => $this->recordNote
+        \Log::debug("Store function", [
+            'recordUuid' => $this->recordUuid
         ]);
 
         // Reset Field if Transfer
@@ -143,8 +184,58 @@ class RecordModal extends Component
             ]);
         }
 
+        $this->validate([
+            'recordCategory' => ['nullable', 'string', 'exists:'.(new \App\Models\Category())->getTable().',uuid'],
+            'recordWallet' => ['required', 'string', 'exists:'.(new \App\Models\Wallet())->getTable().',uuid'],
+            'recordWalletTransfer' => [($this->recordType === 'transfer' ? 'required' : 'string'), 'string', 'exists:'.(new \App\Models\Wallet())->getTable().',uuid'],
+            'recordAmount' => ['required'],
+            'recordExtraAmount' => ['nullable'],
+            'recordPeriod' => ['required'],
+            'recordNote' => ['nullable'],
+            'recordReceipt' => ['nullable', 'mimes:jpg,jpeg,png,pdf', 'max:1024']
+        ]);
+
+        $datetime = date("Y-m-d H:i", strtotime($this->recordPeriod));
+        if($this->user_timezone){
+            $raw = date('Y-m-d H:i:00', strtotime($this->recordPeriod));
+            // Convert to UTC
+            $utc = convertToUtc($raw, ($this->user_timezone));
+            $datetime = date('Y-m-d H:i:00', strtotime($utc));
+        }
+
+        // \Log::debug("Debug on Record Save", [
+        //     'type' => $this->recordType,
+        //     'category' => $this->recordCategory,
+        //     'wallet' => [
+        //         'from' => $this->recordWallet,
+        //         'to' => $this->recordWalletTransfer
+        //     ],
+        //     'amount' => [
+        //         'main' => $this->recordAmount,
+        //         'type' => $this->recordExtraType,
+        //         'extra' => $this->recordExtraAmount,
+        //         'final' => $this->recordFinalAmount
+        //     ],
+        //     'period' => [
+        //         'original' => $this->recordPeriod,
+        //         'utc' => $datetime,
+        //         'offset' => $this->user_timezone
+        //     ],
+        //     'note' => $this->recordNote
+        // ]);
+
+        // Receipt file Upload
         $file = null;
+        if(!empty($this->recordUuid)){
+            $file = $this->recordReceiptTemp;
+        }
+        // Upload file if file exists
         if($this->recordReceipt){
+            if($this->recordUuid && !empty($file)){
+                // Remove old File
+                \Storage::delete($file);
+            }
+
             $destinationPath = 'files/user'.'/'.\Auth::user()->uuid.'/receipt';
             // Check if directory exists
             if (! (\File::exists($destinationPath))) {
@@ -155,7 +246,167 @@ class RecordModal extends Component
             // Empty file
             $this->recordReceipt = null;
         }
-        // Handle store function
+
+        // Category
+        $category = null;
+        if($this->recordCategory){
+            $categoryData = \App\Models\Category::where(\DB::raw('BINARY `uuid`'), $this->recordCategory)
+                ->firstOrFail();
+            $category = $categoryData->id;
+        }
+        // Main Wallet
+        $wallet = null;
+        if($this->recordWallet){
+            $walletData = \App\Models\Wallet::where(\DB::raw('BINARY `uuid`'), $this->recordWallet)
+                ->firstOrFail();
+            $wallet = $walletData->id;
+        }
+
+        \DB::transaction(function () use ($category, $wallet, $datetime, $file) {
+            if($this->recordUuid){
+                // Update update Function
+                $record = \App\Models\Record::where('user_id', \Auth::user()->id)
+                    ->where(\DB::raw('BINARY `uuid`'), $this->recordUuid)
+                    ->firstOrFail();
+    
+                if($this->recordType === 'transfer'){
+                    // Wallet Transfer
+                    $walletTransfer = null;
+                    if($this->recordWalletTransfer){
+                        // To
+                        $walletTransferData = \App\Models\Wallet::where(\DB::raw('BINARY `uuid`'), $this->recordWalletTransfer)
+                            ->firstOrFail();
+                        $walletTransfer = $walletTransferData->id;
+                    }
+
+                    \Log::debug("Debug Related", [
+                        'related' => $record->getRelatedTransferRecord()
+                    ]);
+    
+                    // Fetch related record
+                    $relatedRecord = new \App\Models\Record();
+                    if(!empty($record->to_wallet_id)){
+                        // Previos data is transfer, use related data instead of new one
+                        $relatedRecord = \App\Models\Record::where(\DB::raw('BINARY `uuid`'), $record->getRelatedTransferRecord()->uuid)
+                            ->firstOrFail();
+                    }
+    
+                    $record->user_id = \Auth::user()->id;
+                    $record->category_id = $category;
+                    $record->type = $record->type === 'expense' ? 'expense' : 'income';
+                    $record->wallet_id = $record->type === 'expense' ? $wallet : $walletTransfer;
+                    $record->to_wallet_id = $record->type === 'expense' ? $walletTransfer : $wallet;
+                    $record->amount = $this->recordAmount;
+                    $record->extra_type = 'amount';
+                    $record->extra_percentage = 0;
+                    $record->extra_amount = 0;
+                    $record->date = date("Y-m-d", strtotime($datetime));
+                    $record->time = date("H:i:00", strtotime($datetime));
+                    $record->datetime = $datetime;
+                    $record->note = $this->recordNote;
+                    $record->status = 'complete';
+                    $record->receipt = $file;
+                    $record->timezone_offset = $this->user_timezone;
+                    $record->save();
+    
+                    // Update related record
+                    $relatedRecord->user_id = \Auth::user()->id;
+                    $relatedRecord->category_id = $category;
+                    $relatedRecord->type = $record->type === 'expense' ? 'income' : 'expense';
+                    $relatedRecord->wallet_id = $record->type === 'expense' ? $walletTransfer : $wallet;
+                    $relatedRecord->to_wallet_id = $record->type === 'expense' ? $wallet : $walletTransfer;
+                    $relatedRecord->amount = $this->recordAmount;
+                    $relatedRecord->extra_type = 'amount';
+                    $relatedRecord->extra_percentage = 0;
+                    $relatedRecord->extra_amount = 0;
+                    $relatedRecord->date = date("Y-m-d", strtotime($datetime));
+                    $relatedRecord->time = date("H:i:00", strtotime($datetime));
+                    $relatedRecord->datetime = $datetime;
+                    $relatedRecord->note = $this->recordNote;
+                    $relatedRecord->status = 'complete';
+                    $relatedRecord->receipt = $file;
+                    $relatedRecord->timezone_offset = $this->user_timezone;
+                    $relatedRecord->save();
+                } else {
+                    // New data is either expense / income
+                    if(!empty($record->to_wallet_id)){
+                        // Previous data is transfer, remove related data
+                        if(!empty($record->getRelatedTransferRecord())){
+                            $record->getRelatedTransferRecord()->delete();
+                        };
+                    }
+    
+                    $record->category_id = $category;
+                    $record->type = $this->recordType;
+                    $record->wallet_id = $wallet;
+                    $record->to_wallet_id = null;
+                    $record->amount = $this->recordAmount;
+                    $record->extra_type = $this->recordExtraType;
+                    $record->extra_percentage = $this->recordExtraType === 'percentage' ? $this->recordExtraAmount : 0;
+                    $record->extra_amount = $this->recordExtraType === 'amount' ? $this->recordExtraAmount : ($this->recordAmount * ($this->recordExtraAmount / 100));
+                    $record->date = date("Y-m-d", strtotime($datetime));
+                    $record->time = date("H:i:00", strtotime($datetime));
+                    $record->datetime = $datetime;
+                    $record->note = $this->recordNote;
+                    $record->status = 'complete';
+                    $record->receipt = $file;
+                    $record->timezone_offset = $this->user_timezone;
+                    $record->save();
+                }
+            } else {
+                // Handle store function
+                if($this->recordType === 'transfer'){
+                    $type = ['expense', 'income'];
+                    $walletTransfer = null;
+                    if($this->recordWalletTransfer){
+                        // To
+                        $walletTransferData = \App\Models\Wallet::where(\DB::raw('BINARY `uuid`'), $this->recordWalletTransfer)
+                            ->firstOrFail();
+                        $walletTransfer = $walletTransferData->id;
+                    }
+    
+                    foreach($type as $typ){                    
+                        $data = new \App\Models\Record();
+                        $data->user_id = \Auth::user()->id;
+                        $data->category_id = $category;
+                        $data->type = $typ;
+                        $data->wallet_id = $typ === 'expense' ? $wallet : $walletTransfer;
+                        $data->to_wallet_id = $typ === 'expense' ? $walletTransfer : $wallet;
+                        $data->amount = $this->recordAmount;
+                        $data->extra_type = 'amount';
+                        $data->extra_percentage = 0;
+                        $data->extra_amount = 0;
+                        $data->date = date("Y-m-d", strtotime($datetime));
+                        $data->time = date("H:i:00", strtotime($datetime));
+                        $data->datetime = $datetime;
+                        $data->note = $this->recordNote;
+                        $data->status = 'complete';
+                        $data->receipt = $file;
+                        $data->timezone_offset = $this->user_timezone;
+                        $data->save();
+                    }
+                } else {
+                    $data = new \App\Models\Record();
+                    $data->user_id = \Auth::user()->id;
+                    $data->category_id = $category;
+                    $data->type = $this->recordType;
+                    $data->wallet_id = $wallet;
+                    $data->to_wallet_id = null;
+                    $data->amount = $this->recordAmount;
+                    $data->extra_type = $this->recordExtraType;
+                    $data->extra_percentage = $this->recordExtraType === 'percentage' ? $this->recordExtraAmount : 0;
+                    $data->extra_amount = $this->recordExtraType === 'amount' ? $this->recordExtraAmount : ($this->recordAmount * ($this->recordExtraAmount / 100));
+                    $data->date = date("Y-m-d", strtotime($datetime));
+                    $data->time = date("H:i:00", strtotime($datetime));
+                    $data->datetime = $datetime;
+                    $data->note = $this->recordNote;
+                    $data->status = 'complete';
+                    $data->receipt = $file;
+                    $data->timezone_offset = $this->user_timezone;
+                    $data->save();
+                }
+            }
+        });
 
         if(!($this->recordMoreState)){
             $this->recordResetField[] = 'recordMoreState';
@@ -173,6 +424,12 @@ class RecordModal extends Component
             'recordExtraType' => $this->recordExtraType,
             'recordAmount' => $this->recordAmount,
             'recordExtraAmount' => $this->recordExtraAmount
+        ]);
+
+        $this->dispatchBrowserEvent('wire-action', [
+            'status' => 'success',
+            'action' => 'Success',
+            'message' => 'Successfully '.(empty($this->walletUuid) ? 'store new' : 'update').' Record Data'
         ]);
     }
 
@@ -220,10 +477,6 @@ class RecordModal extends Component
     }
     public function removeReceipt(): void
     {
-        // \Log::debug("Debug on Receipt remove", [
-        //     'file' => $this->recordReceipt ? 'TRUE' : 'FALSE'
-        // ]);
-
         if($this->recordReceipt){
             if(\File::exists('livewire-tmp'.'/'.$this->recordReceipt->getFilename())){
                 \Storage::delete('livewire-tmp'.'/'.$this->recordReceipt->getFilename());
@@ -240,6 +493,8 @@ class RecordModal extends Component
     }
     public function closeModal()
     {
+        $this->recordResetField[] = 'recordMoreState';
+        $this->reset($this->recordResetField);
         $this->dispatchBrowserEvent('close-modal');
         $this->dispatchBrowserEvent('trigger-event', [
             'recordType' => $this->recordType,

@@ -20,7 +20,7 @@
         <a href="{{ url()->previous() }}" class="btn btn-secondary">
             <span class="tw__flex tw__items-center tw__gap-2"><i class='bx bx-arrow-back'></i>Back</span>
         </a>
-        <button type="button" class="btn btn-warning" x-on:click="$wire.emitTo('sys.component.wallet-group-modal', 'editAction', $wire.get('walletGroup'), true)">
+        <button type="button" class="btn btn-warning" data-uuid="{{ $walletGroup->uuid }}" x-on:click="$wire.emitTo('sys.component.wallet-group-modal', 'editAction', @this.get('walletGroupUuid'), true);">
             <span class="tw__flex tw__items-center tw__gap-2"><i class='bx bx-edit'></i>Edit</span>
         </button>
     </div>

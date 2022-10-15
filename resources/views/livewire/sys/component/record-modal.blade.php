@@ -16,7 +16,7 @@
                 <div class="modal-content">
                     <div class="modal-header tw__pb-2">
                         <h5 class="modal-title" id="modalCenterTitle">{{ $recordTitle }}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" wire:click="closeModal"></button>
+                        <button type="button" class="btn-close" aria-label="Close" wire:click="closeModal"></button>
                     </div>
                     <div class="modal-body tw__p-0">
                         <input type="hidden" name="user_timezone" id="user_timezone" x-bind:value="user_timezone" readonly>
@@ -38,16 +38,16 @@
                                 {{-- Record Type --}}
                                 <div class=" tw__text-center tw__mb-4">
                                     <div class="btn-group">
-                                        <a href="javascript:void(0)" class="record-type btn" x-on:click="selectedRecordType = 'income';$wire.localUpdate('recordType', 'income')" :class="selectedRecordType === 'income' ? 'btn-secondary' : 'btn-outline-secondary'">Income</a>
-                                        <a href="javascript:void(0)" class="record-type btn" x-on:click="selectedRecordType = 'transfer';$wire.localUpdate('recordType', 'transfer')" :class="selectedRecordType === 'transfer' ? 'btn-secondary' : 'btn-outline-secondary'">Transfer</a>
-                                        <a href="javascript:void(0)" class="record-type btn" x-on:click="selectedRecordType = 'expense';$wire.localUpdate('recordType', 'expense')" :class="selectedRecordType === 'expense' ? 'btn-secondary' : 'btn-outline-secondary'">Expense</a>
+                                        <a href="javascript:void(0)" class="record-type btn" x-on:click="selectedRecordType = 'income';@this.set('recordType', 'income')" :class="selectedRecordType === 'income' ? 'btn-secondary' : 'btn-outline-secondary'">Income</a>
+                                        <a href="javascript:void(0)" class="record-type btn" x-on:click="selectedRecordType = 'transfer';@this.set('recordType', 'transfer')" :class="selectedRecordType === 'transfer' ? 'btn-secondary' : 'btn-outline-secondary'">Transfer</a>
+                                        <a href="javascript:void(0)" class="record-type btn" x-on:click="selectedRecordType = 'expense';@this.set('recordType', 'expense')" :class="selectedRecordType === 'expense' ? 'btn-secondary' : 'btn-outline-secondary'">Expense</a>
                                     </div>
                                 </div>
 
                                 {{-- Category --}}
                                 <div class="form-group tw__mb-4" x-show="selectedRecordType !== 'transfer' ? true : false">
                                     <label for="input-category_id">Category</label>
-                                    <select class="form-control" id="input-category_id" name="category_id" placeholder="Search for Category Data" x-on:change="$wire.localUpdate('recordCategory', $event.target.value)">
+                                    <select class="form-control" id="input-category_id" name="category_id" placeholder="Search for Category Data" x-on:change="@this.set('recordCategory', $event.target.value)">
                                         <option value="" {{ $recordCategory == '' ? 'selected' : '' }}>Search for Category Data</option>
                                         @foreach ($listCategory as $category)
                                             <optgroup label="{{ $category->name }}">
@@ -60,12 +60,16 @@
                                             </optgroup>
                                         @endforeach
                                     </select>
+
+                                    @error('recordCategory')
+                                        <span class="invalid-feedback tw__block">{{ $message }}</span>
+                                    @enderror
                                 </div>
 
                                 {{-- Wallet --}}
                                 <div class="form-group tw__mb-4">
                                     <label for="input-wallet_id" x-text="selectedRecordType === 'income' || selectedRecordType === 'expense' ? 'Wallet' : 'From'"></label>
-                                    <select class="form-control" id="input-wallet_id" name="wallet_id" placeholder="Search for Wallet Data" x-on:change="$wire.localUpdate('recordWallet', $event.target.value)">
+                                    <select class="form-control" id="input-wallet_id" name="wallet_id" placeholder="Search for Wallet Data" x-on:change="@this.set('recordWallet', $event.target.value)">
                                         <option value="" {{ $recordWallet == '' ? 'selected' : '' }}>Search for Wallet Data</option>
                                         @foreach ($listWallet as $wallet)
                                             <optgroup label="{{ $wallet->name }}">
@@ -78,19 +82,23 @@
                                             </optgroup>
                                         @endforeach
                                     </select>
+
+                                    @error('recordWallet')
+                                        <span class="invalid-feedback tw__block">{{ $message }}</span>
+                                    @enderror
                                 </div>
 
                                 {{-- Wallet Transfer --}}
                                 <div class="" x-show="selectedRecordType === 'transfer' ? true : false">
                                     <div class=" tw__mb-4">
-                                        <a href="javascript:void(0)" class="btn btn-sm btn-primary" x-on:click="$wire.localUpdate('recordWallet', document.getElementById('input-wallet_transfer_id').value);$wire.localUpdate('recordWalletTransfer', document.getElementById('input-wallet_id').value);">
+                                        <a href="javascript:void(0)" class="btn btn-sm btn-primary" x-on:click="@this.set('recordWallet', document.getElementById('input-wallet_transfer_id').value);@this.set('recordWalletTransfer', document.getElementById('input-wallet_id').value);">
                                             <span class="tw__flex tw__items-center tw__gap-2"><i class='bx bx-transfer-alt bx-rotate-90' ></i>Switch</span>
                                         </a>
                                     </div>
 
                                     <div class="form-group tw__mb-4" id="form-transfer">
                                         <label for="input-target">To</label>
-                                        <select class="form-control" id="input-wallet_transfer_id" name="wallet_transfer_id" placeholder="Search for Wallet Target Data" x-on:change="$wire.localUpdate('recordWalletTransfer', $event.target.value)">
+                                        <select class="form-control" id="input-wallet_transfer_id" name="wallet_transfer_id" placeholder="Search for Wallet Target Data" x-on:change="@this.set('recordWalletTransfer', $event.target.value)">
                                             <option value="" {{ $recordWalletTransfer == '' ? 'selected' : '' }}>Search for Wallet Target Data</option>
                                             @foreach ($listWallet as $wallet)
                                                 <optgroup label="{{ $wallet->name }}">
@@ -103,6 +111,10 @@
                                                 </optgroup>
                                             @endforeach
                                         </select>
+
+                                        @error('recordWalletTransfer')
+                                            <span class="invalid-feedback tw__block">{{ $message }}</span>
+                                        @enderror
                                     </div>
                                 </div>
 
@@ -111,10 +123,14 @@
                                     <label for="input-amount">Amount</label>
                                     <div class="input-group">
                                         <span class="input-group-text" id="input_group-amount">
-                                            <i class="bx bx-plus"></i>
+                                            <i class="bx" :class="selectedRecordType === 'income' ? 'bx-plus' : (selectedRecordType === 'expense' ? 'bx-minus' : 'bx-transfer')"></i>
                                         </span>
-                                        <input type="text" inputmode="numeric" class="form-control" name="amount" id="input-amount" placeholder="Amount" @input.debounce="calculateFinal(selectedExtraType)">
+                                        <input type="text" inputmode="numeric" class="form-control @error('recordAmount') is-invalid @enderror" name="amount" id="input-amount" placeholder="Amount" @input.debounce="calculateFinal(selectedExtraType)">
                                     </div>
+
+                                    @error('recordAmount')
+                                        <span class="invalid-feedback tw__block">{{ $message }}</span>
+                                    @enderror
                                 </div>
 
                                 {{-- Extra Amount --}}
@@ -134,9 +150,9 @@
                                     <div class="col-12">
                                         <small class="text-muted">
                                             <span>(</span>
-                                            <a href="javascript:void(0)" class="record_extra-type" x-on:click="selectedExtraType = 'amount';calculateFinal(selectedExtraType);$wire.localUpdate('recordExtraType', 'amount')" :class="selectedExtraType !== 'amount' ? 'tw__text-slate-400' : ''">Amount</a>
+                                            <a href="javascript:void(0)" class="record_extra-type" x-on:click="selectedExtraType = 'amount';calculateFinal(selectedExtraType);@this.set('recordExtraType', 'amount')" :class="selectedExtraType !== 'amount' ? 'tw__text-slate-400' : ''">Amount</a>
                                             <span>/</span>
-                                            <a href="javascript:void(0)" class="record_extra-type" x-on:click="selectedExtraType = 'percentage';calculateFinal(selectedExtraType);$wire.localUpdate('recordExtraType', 'percentage')" :class="selectedExtraType !== 'percentage' ? 'tw__text-slate-400' : ''">Percentage</a>
+                                            <a href="javascript:void(0)" class="record_extra-type" x-on:click="selectedExtraType = 'percentage';calculateFinal(selectedExtraType);@this.set('recordExtraType', 'percentage')" :class="selectedExtraType !== 'percentage' ? 'tw__text-slate-400' : ''">Percentage</a>
                                             <span>)</span>
                                         </small>
                                     </div>
@@ -148,13 +164,19 @@
                                     {{-- Period --}}
                                     <div class="form-group tw__mb-4">
                                         <label for="input-period">Date Time</label>
-                                        <input type="text" class="form-control flatpickr" name="period" id="input-period" placeholder="Record Date Time">
+                                        <input type="text" class="form-control flatpickr @error('recordPeriod') is-invalid @enderror" name="period" id="input-period" placeholder="Record Date Time" x-on:focusout="console.log($event.target.value)">
+                                        @error('recordPeriod')
+                                            <span class="invalid-feedback tw__block">{{ $message }}</span>
+                                        @enderror
                                     </div>
 
                                     {{-- Note --}}
                                     <div class="form-group tw__mb-4">
                                         <label for="input-note">Note</label>
-                                        <textarea class="form-control" name="note" id="input-note" placeholder="Record notes..." rows="6" wire:model.defer="recordNote"></textarea>
+                                        <textarea class="form-control @error('recordNote') is-invalid @enderror" name="note" id="input-note" placeholder="Record notes..." rows="6" wire:model.defer="recordNote"></textarea>
+                                        @error('recordNote')
+                                            <span class="invalid-feedback tw__block">{{ $message }}</span>
+                                        @enderror
                                     </div>
 
                                     {{-- Receipt --}}
@@ -164,30 +186,39 @@
                                         <div class="d-flex">
                                             <input type="file" class="tw__hidden" id="input-receipt" name="receipt" accept=".jpeg,.jpg,.png,.pdf" max="512" wire:model.defer="recordReceipt">
             
-                                            @if ($recordReceipt)
+                                            @if ($recordReceipt || $recordReceiptTemp)
                                                 <label for="input-receipt" id="input-receipt_label" class="tw__cursor-pointer">
                                                     <div class="d-flex tw__items-center">
                                                         <i class="bx bx-paperclip bx-rotate-90 tw__text-4xl"></i>
                                                         {{-- <i class="bi bi-paperclip tw__text-3xl"></i> --}}
                                                         <div class="d-md-block text-left tw__ml-2">
                                                             <div class="fw-normal text-dark mb-1" id="input-receipt_label_helper">
-                                                                <span>{{ $recordReceipt->getClientOriginalName() }}</span>
+                                                                @php
+                                                                    $previewFileName = !empty($recordReceiptTemp) && empty($recordReceipt) ? basename($recordReceiptTemp) : $recordReceipt->getClientOriginalName();
+                                                                    $previewFileUrl = !empty($recordReceiptTemp) && empty($recordReceipt)  ? asset($recordReceiptTemp) : $recordReceipt->temporaryUrl();
+                                                                @endphp
+
+                                                                <span class=" tw__break-all" data-original="{{ $recordReceiptTemp }}">{{ $previewFileName }}</span>
                                                                 <small class="tw__block">
                                                                     <span>(</span>
-                                                                    <a href="javascript:void(0)" onclick="removeAvatarUpload()" class="tw__text-red-400 hover:tw__text-red-700 hover:tw__underline">Remove</a>
-                                                                    <span>or</span>
-                                                                    @if (strpos($recordReceipt->temporaryUrl(), '.pdf') !== false)
+
+                                                                    @if (empty($recordReceiptTemp) || (!empty($recordReceiptTemp) && basename($recordReceiptTemp) !== $previewFileName))
+                                                                        <a href="javascript:void(0)" onclick="removeReceiptUpload()" class="tw__text-red-400 hover:tw__text-red-700 hover:tw__underline">Remove</a>
+                                                                        <span>or</span>
+                                                                    @endif
+                                                                    
+                                                                    @if (strpos($previewFileUrl, '.pdf') !== false)
                                                                         <a data-fslightbox href="#pdf-container" class="tw__text-blue-400 hover:tw__text-blue-700 hover:tw__underline">Preview</a>
                                                                     @else
-                                                                        <a data-fslightbox href="{{ $recordReceipt->temporaryUrl() }}" class="tw__text-blue-400 hover:tw__text-blue-700 hover:tw__underline">Preview</a>
+                                                                        <a data-fslightbox href="{{ $previewFileUrl }}" class="tw__text-blue-400 hover:tw__text-blue-700 hover:tw__underline">Preview</a>
                                                                     @endif
                                                                     <span>)</span>
                                                                 </small>
-                                                                @if (strpos($recordReceipt->temporaryUrl(), '.pdf') !== false)
+                                                                @if (strpos($previewFileUrl, '.pdf') !== false)
                                                                     <div class=" tw__hidden">
                                                                         <iframe
                                                                             class=" tw__w-full tw__min-h-[350px]"
-                                                                            src="{{ $recordReceipt->temporaryUrl() }}#view=fitH"
+                                                                            src="{{ $previewFileUrl }}#view=fitH"
                                                                             id="pdf-container"
                                                                             width="100%"
                                                                             height="100%"
@@ -220,6 +251,12 @@
                                                 <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" style="width: 20%" x-bind:style="{width: `${uploadProgress}%`}" aria-valuemin="0" aria-valuemax="100"></div>
                                             </div>
                                         </div>
+
+                                        @error('recordReceipt')
+                                            @if ($recordReceipt)
+                                                <span class="invalid-feedback tw__block">{{ $message }}</span>
+                                            @endif
+                                        @enderror
                                     </div>
 
                                     {{-- Add more State --}}
@@ -236,7 +273,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" wire:click="closeModal">
+                        <button type="button" class="btn btn-outline-secondary" wire:click="closeModal">
                             <span>Close</span>
                         </button>
                         <button type="submit" class="btn btn-primary" x-bind:disabled="uploadState">Submit</button>
@@ -253,8 +290,15 @@
         var amountMask = null;
         var extraAmountMask = null;
         var finalAmountMask = null;
+
+        let templateChoice = null;
+        let categoryChoice = null;
+        let walletChoice = null;
+        let walletTransferChoice = null;
+
         window.addEventListener('record_wire-init', (event) => {
             console.log("Record Wire init");
+            console.log(@this.get('recordUuid'));
             refreshFsLightbox();
 
             // iMask
@@ -290,7 +334,6 @@
             }
 
             // Choices
-            let templateChoice =null;
             if(document.getElementById('input-template_id')){
                 const templateEl = document.getElementById('input-template_id');
                 templateChoice = new Choices(templateEl, {
@@ -302,7 +345,6 @@
                     shouldSort: false
                 });
             }
-            let categoryChoice =null;
             if(document.getElementById('input-category_id')){
                 const categoryEl = document.getElementById('input-category_id');
                 categoryChoice = new Choices(categoryEl, {
@@ -315,7 +357,6 @@
                     renderChoiceLimit: 5
                 });
             }
-            let walletChoice =null;
             if(document.getElementById('input-wallet_id')){
                 const walletEl = document.getElementById('input-wallet_id');
                 walletChoice = new Choices(walletEl, {
@@ -327,7 +368,6 @@
                     shouldSort: false
                 });
             }
-            let walletTransferChoice =null;
             if(document.getElementById('input-wallet_transfer_id')){
                 const walletTransferEl = document.getElementById('input-wallet_transfer_id');
                 walletTransferChoice = new Choices(walletTransferEl, {
@@ -341,6 +381,14 @@
             }
 
             // Flatpickr
+            let defaultDate = moment().format('YYYY-MM-DD HH:mm');
+            if(@this.get('recordPeriod')){
+                if (@this.get('recordUuid')) {
+                    defaultDate = moment(`${momentDateTime(@this.get('recordPeriod'), 'YYYY-MM-DD HH:mm')}`).format('YYYY-MM-DD HH:mm');
+                } else {
+                    defaultDate = moment(`${@this.get('recordPeriod')}`).format('YYYY-MM-DD HH:mm');
+                }
+            }
             flatpickr(document.getElementById('input-period'), {
                 enableTime: true,
                 altInput: true,
@@ -349,11 +397,16 @@
                 time_24hr: true,
                 minuteIncrement: 1,
                 allowInput: true,
-                defaultDate: {{ !empty($recordPeriod) ? '"'.date('Y-m-d H:i', strtotime($recordPeriod)).'"' : 'null' }}
+                defaultDate: defaultDate,
+                onClose: function(selectedDates, dateStr, instance){
+                    @this.localUpdate('recordPeriod', document.getElementById('input-period').value);
+                }
             });
 
             document.getElementById('modal-record').addEventListener('hidden.bs.modal', (e) => {
                 @this.removeReceipt();
+            });
+            document.getElementById('input-period').addEventListener('change', (e) => {
             });
         });
 
@@ -363,18 +416,29 @@
             document.getElementById('record-form').addEventListener('submit', (e) => {
                 e.preventDefault();
 
-                @this.localUpdate('user_timezone', document.getElementById('user_timezone').value);
-                @this.localUpdate('recordAmount', amountMask.unmaskedValue);
-                @this.localUpdate('recordExtraAmount', extraAmountMask.unmaskedValue);
-                @this.localUpdate('recordPeriod', document.getElementById('input-period').value);
-                @this.localUpdate('recordMoreState', document.getElementById('input-more').checked);
+                @this.set('user_timezone', document.getElementById('user_timezone').value);
+                @this.set('recordAmount', amountMask.unmaskedValue);
+                @this.set('recordExtraAmount', extraAmountMask.unmaskedValue);
+                @this.set('recordPeriod', document.getElementById('input-period').value);
+                @this.set('recordMoreState', document.getElementById('input-more').checked);
                 
                 @this.store();
             });
+
+            // Receipt Change
+            document.getElementById('input-receipt').addEventListener('change', (e) => {
+                console.log("Receipt change");
+                if(document.getElementById('input-receipt').closest('.form-group') && document.getElementById('input-receipt').closest('.form-group').querySelector('.invalid-feedback')){
+                    document.getElementById('input-receipt').closest('.form-group').querySelector('.invalid-feedback').remove();
+                }
+            });
+        });
+        window.addEventListener('open-modal', (event) => {
+            var myModalEl = document.getElementById('modal-record')
+            var modal = new bootstrap.Modal(myModalEl)
+            modal.show();
         });
         window.addEventListener('close-modal', (event) => {
-            console.log("Modal Close for Record");
-
             var myModalEl = document.getElementById('modal-record')
             var modal = bootstrap.Modal.getInstance(myModalEl);
             modal.hide();
@@ -424,14 +488,14 @@
             }
 
             let final = amount + extra;
-            @this.localUpdate('recordFinalAmount', final);
-            // Livewire.emitTo('sys.component.record-modal', 'localUpdate', 'recordFinalAmount', final);
+            @this.set('recordFinalAmount', final);
             finalAmountMask.value = final.toString();
         }
         // Remove receipt
-        function removeAvatarUpload(){
+        function removeReceiptUpload(){
             document.getElementById('input-receipt').value = null;
             document.getElementById('input-receipt_label_helper').textContent = 'Choose Image';
+            document.getElementById('input-receipt').dispatchEvent(new Event('change'))
 
             @this.removeReceipt();
         }

@@ -6,7 +6,7 @@ use Livewire\Component;
 
 class SearchFeature extends Component
 {
-    public $search = null;
+    public $search = '';
     public $result = null;
     public $avatar = '';
     public function mount()

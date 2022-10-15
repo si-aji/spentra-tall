@@ -165,6 +165,13 @@ h4.breadcrumb span.active {
 }
 
 /**
+* Dropdown
+*/
+.dropdown .dropdown-toggle.arrow-none::after {
+  content: unset;
+}
+
+/**
 * Choices
 */
 .choices {

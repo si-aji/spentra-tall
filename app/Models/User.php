@@ -51,4 +51,16 @@ class User extends Authenticatable
         $asset = 'assets/img/no-pict.jpeg';
         return asset(!empty($this->avatar) ? $this->avatar : $asset);
     }
+    public function scopeGetFirstYearRecord()
+    {
+        $firstYear = 2020;
+        // $record = \App\Models\Record::where('user_id', $this->id)
+        //     ->orderBy('date', 'asc')
+        //     ->first();
+        // if (! empty($record)) {
+        //     $firstYear = date('Y', strtotime($record->date));
+        // }
+
+        return $firstYear;
+    }
 }

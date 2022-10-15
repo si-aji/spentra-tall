@@ -9,6 +9,7 @@ class Show extends Component
     public $menuState = null;
     public $submenuState = null;
     public $walletGroup = null;
+    public $walletGroupUuid = null;
 
     protected $listeners = [
         'refreshComponent' => '$refresh',
@@ -19,6 +20,7 @@ class Show extends Component
         $this->menuState = 'wallet';
         $this->submenuState = 'group';
 
+        $this->walletGroupUuid = $uuid;
         $this->walletGroup = \App\Models\WalletGroup::with('walletGroupList.parent')
             ->where(\DB::raw('BINARY `uuid`'), $uuid)
             ->firstOrFail();

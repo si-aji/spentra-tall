@@ -9,9 +9,23 @@ class Index extends Component
     public $menuState = null;
     public $submenuState = null;
 
+    // Load More Conf
+    public $loadPerPage = 10;
+
     // List
     public $listWallet = null;
     public $listCategory = null;
+
+    // List Data
+    public $dataSelectedYear = '';
+    public $dataSelectedMonth = '';
+    public $dataRecord;
+
+    protected $listeners = [
+        'refreshComponent' => '$refresh',
+        'loadMore' => 'loadMore',
+        'localUpdate' => 'localUpdate',
+    ];
 
     public function fetchMainWallet()
     {
@@ -33,18 +47,53 @@ class Index extends Component
     }
     public function mount()
     {
+        $this->dataSelectedYear = date("Y");
+        $this->dataSelectedMonth = date("Y-m-01", strtotime($this->dataSelectedYear.'-'.($this->dataSelectedYear !== date("Y") ? '12' : date("m")).'-01'));
+        
         $this->menuState = 'record';
         $this->submenuState = null;
     }
 
     public function render()
     {
+        // Get Record Data
+        $this->dataRecord = \App\Models\Record::with('wallet.parent', 'walletTransferTarget.parent', 'category.parent')
+            ->where('user_id', \Auth::user()->id)
+            ->where('status', 'complete')
+            ->whereMonth('date', date('m', strtotime($this->dataSelectedMonth)))
+            ->whereYear('date', date('Y', strtotime($this->dataSelectedMonth)))
+            ->orderBy('datetime', 'desc')
+            ->paginate($this->loadPerPage);
+        $paginate = $this->dataRecord;
+        $this->dataRecord = collect($this->dataRecord->items());
+
         $this->fetchMainCategory();
         $this->fetchMainWallet();
         $this->dispatchBrowserEvent('record_wire-init');
-        return view('livewire.sys.record.index')->extends('layouts.sneat', [
+        return view('livewire.sys.record.index', [
+            'paginate' => $paginate
+        ])->extends('layouts.sneat', [
             'menuState' => $this->menuState,
-            'submenuState' => $this->submenuState
+            'submenuState' => $this->submenuState,
         ]);
+    }
+
+    public function loadMore($limit = 10)
+    {
+        $this->loadPerPage += $limit;
+    }
+
+    // Update Model / Variable
+    public function localUpdate($key, $value): void
+    {
+        switch($key){
+            case 'dataSelectedMonth':
+                $this->dataSelectedMonth = $value;
+                break;
+            case 'dataSelectedYear':
+                $this->dataSelectedYear = $value;
+                $this->dataSelectedMonth = date("Y-m-01", strtotime($this->dataSelectedYear.'-'.($this->dataSelectedYear != date("Y") ? '12' : date("m") ).'-01'));
+                break;
+        }
     }
 }
