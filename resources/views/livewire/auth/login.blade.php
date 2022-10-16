@@ -28,7 +28,7 @@
                     </label>
 
                     <div class="tw__mt-1 tw__rounded-md tw__shadow-sm">
-                        <input wire:model.lazy="email" id="email" name="email" type="text" required autofocus class="tw__appearance-none tw__block tw__w-full tw__px-3 tw__py-2 tw__border tw__border-gray-300 tw__rounded-md tw__placeholder-gray-400 focus:tw__outline-none focus:tw__ring-blue focus:tw__border-blue-300 tw__transition tw__duration-150 tw__ease-in-out sm:tw__text-sm sm:tw__leading-5 @error('email') tw__border-red-300 tw__text-red-900 tw__placeholder-red-300 focus:tw__border-red-300 focus:tw__ring-red @enderror" />
+                        <input wire:model.defer="email" id="email" name="email" type="text" placeholder="Email / Username" required autofocus class="tw__appearance-none tw__block tw__w-full tw__px-3 tw__py-2 tw__border tw__border-gray-300 tw__rounded-md tw__placeholder-gray-400 focus:tw__outline-none focus:tw__ring-blue focus:tw__border-blue-300 tw__transition tw__duration-150 tw__ease-in-out sm:tw__text-sm sm:tw__leading-5 @error('email') tw__border-red-300 tw__text-red-900 tw__placeholder-red-300 focus:tw__border-red-300 focus:tw__ring-red @enderror" />
                     </div>
 
                     @error('email')
@@ -42,7 +42,7 @@
                     </label>
 
                     <div class="tw__mt-1 tw__rounded-md tw__shadow-sm">
-                        <input wire:model.lazy="password" id="password" type="password" required class="tw__appearance-none tw__block tw__w-full tw__px-3 tw__py-2 tw__border tw__border-gray-300 tw__rounded-md tw__placeholder-gray-400 focus:tw__outline-none focus:tw__ring-blue focus:tw__border-blue-300 tw__transition tw__duration-150 tw__ease-in-out sm:tw__text-sm sm:tw__leading-5 @error('password') tw__border-red-300 tw__text-red-900 tw__placeholder-red-300 focus:tw__border-red-300 focus:tw__ring-red @enderror" />
+                        <input wire:model.defer="password" id="password" type="password" placeholder="Password" required class="tw__appearance-none tw__block tw__w-full tw__px-3 tw__py-2 tw__border tw__border-gray-300 tw__rounded-md tw__placeholder-gray-400 focus:tw__outline-none focus:tw__ring-blue focus:tw__border-blue-300 tw__transition tw__duration-150 tw__ease-in-out sm:tw__text-sm sm:tw__leading-5 @error('password') tw__border-red-300 tw__text-red-900 tw__placeholder-red-300 focus:tw__border-red-300 focus:tw__ring-red @enderror" />
                     </div>
 
                     @error('password')
@@ -52,7 +52,7 @@
 
                 <div class="tw__flex tw__items-center tw__justify-between tw__mt-6">
                     <div class="tw__flex tw__items-center">
-                        <input wire:model.lazy="remember" id="remember" type="checkbox" class="tw__form-checkbox tw__w-4 tw__h-4 tw__text-indigo-600 tw__transition tw__duration-150 tw__ease-in-out" />
+                        <input wire:model.defer="remember" id="remember" type="checkbox" class="tw__form-checkbox tw__w-4 tw__h-4 tw__text-indigo-600 tw__transition tw__duration-150 tw__ease-in-out" />
                         <label for="remember" class="tw__block tw__ml-2 tw__text-sm tw__text-gray-900 tw__leading-5">
                             Remember
                         </label>

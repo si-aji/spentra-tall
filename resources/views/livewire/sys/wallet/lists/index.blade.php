@@ -22,7 +22,7 @@
         </a>
     </div>
     {{-- Be like water. --}}
-    <div class="card tw__mt-4">
+    <div class="card tw__mt-4" wire:ignore>
         <div class="card-body datatable">
             <table class="table table-hover table-striped table-bordered" id="table-wallet">
                 <thead>
@@ -105,6 +105,12 @@
 
         if(document.getElementById('modal-wallet')){
             document.getElementById('modal-wallet').addEventListener('hide.bs.offcanvas', (e) => {
+                console.log("Refresh datatable");
+                table.ajax.reload(null, false);
+            });
+        }
+        if(document.getElementById('modal-wallet_balance')){
+            document.getElementById('modal-wallet_balance').addEventListener('hide.bs.modal', (e) => {
                 console.log("Refresh datatable");
                 table.ajax.reload(null, false);
             });

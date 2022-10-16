@@ -28,6 +28,8 @@ class Show extends Component
 
     public function render()
     {
+        $this->dispatchBrowserEvent('wallet_group_wire-init');
+
         return view('livewire.sys.wallet.group.show')->extends('layouts.sneat', [
             'menuState' => $this->menuState,
             'submenuState' => $this->submenuState,

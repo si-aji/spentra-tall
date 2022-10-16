@@ -116,16 +116,6 @@
 @section('js_inline')
     <script>
         document.addEventListener('record_wire-init', (e) => {
-            // if(recordWalletChoice !== null){
-            //     recordWalletChoice.destroy();
-            // }
-            // if(recordCategoryChoice !== null){
-            //     recordCategoryChoice.destroy();
-            // }
-            // if(recordFilterYearChoice !== null){
-            //     recordFilterYearChoice.destroy();
-            // }
-
             let recordFilterYearChoice = null;
             let recordFilterWalletChoice = null;
             let recordFilterCategoryChoice = null;
@@ -207,6 +197,7 @@
 
                         // Append Action
                         let action = [];
+                        // Edit Action
                         action.push(`
                             <li>
                                 <a class="dropdown-item tw__text-yellow-400" href="javascript:void(0)" data-uuid="${val.uuid}" onclick="Livewire.emitTo('sys.component.record-modal', 'editAction', '${val.uuid}')">
@@ -214,10 +205,19 @@
                                 </a>
                             </li>
                         `);
+                        // Detail Action
                         action.push(`
                             <li>
                                 <a class="dropdown-item tw__text-blue-400" href="{{ route('sys.record.index') }}/${val.uuid}">
                                     <span class=" tw__flex tw__items-center"><i class="bx bx-show tw__mr-2"></i>Detail</span>
+                                </a>
+                            </li>
+                        `);
+                        // Delete Action
+                        action.push(`
+                            <li>
+                                <a class="dropdown-item tw__text-red-400" href="javascript:void(0)" onclick="removeRecord('${val.uuid}')">
+                                    <span class=" tw__flex tw__items-center"><i class="bx bx-trash tw__mr-2"></i>Remove</span>
                                 </a>
                             </li>
                         `);
@@ -245,5 +245,27 @@
                 paneEl.appendChild(recordContent);
             }
         };
+
+        function removeRecord(uuid){
+            Swal.fire({
+                title: 'Warning',
+                icon: 'warning',
+                text: `You'll perform remove action, this action cannot be undone and will affect your related Wallet Balance. If this data had related record, it'll also be deleted!`,
+                showCancelButton: true,
+                reverseButtons: true,
+                confirmButtonText: 'Remove',
+                showLoaderOnConfirm: true,
+                preConfirm: (request) => {
+                    return @this.call('removeData', uuid).then((e) => {
+                        Swal.fire({
+                            'title': 'Action: Success',
+                            'icon': 'success',
+                            'text': 'Record data successfully deleted'
+                        });
+                    });
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            });
+        }
     </script>
 @endsection

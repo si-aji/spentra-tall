@@ -47,9 +47,6 @@
 @push('javascript')
     <script>
         window.addEventListener('wallet_wire-init', (event) => {
-            console.log("Wallet Component Init");
-            console.log(event);
-
             let walletChoice =null;
             if(document.getElementById('input_wallet-wallet_id')){
                 const walletEl = document.getElementById('input_wallet-wallet_id');

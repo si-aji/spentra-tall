@@ -31,9 +31,10 @@ class RecordModal extends Component
     public $recordWalletTransfer = '';
     public $recordAmount = '';
     public $recordExtraType = 'amount';
-    public $recordExtraAmount = '';
-    public $recordFinalAmount = '';
+    public $recordExtraAmount = 0;
+    public $recordFinalAmount = 0;
     public $recordPeriod = '';
+    public $recordPeriodChanged = false;
     public $recordNote = '';
     public $recordReceipt = null;
     public $recordReceiptTemp = null;
@@ -89,6 +90,7 @@ class RecordModal extends Component
             'recordExtraAmount',
             'recordFinalAmount',
             'recordPeriod',
+            'recordPeriodChanged',
             'recordNote',
             'recordReceipt',
             'recordReceiptTemp'
@@ -119,10 +121,6 @@ class RecordModal extends Component
     }
     public function updatedRecordReceipt()
     {
-        // \Log::debug("Debug on Receipt Change", [
-        //     '!empty' => !empty($this->recordReceipt) ? 'TRUE' : 'FALSE'
-        // ]);
-
         if($this->recordReceipt){
             if(round($this->recordReceipt->getSize()) / 1024.4 > 100){
                 throw \Illuminate\Validation\ValidationException::withMessages([
@@ -156,6 +154,7 @@ class RecordModal extends Component
         $this->recordExtraAmount = $record->extra_type === 'percentage' ? $record->extra_percentage : $record->extra_amount;
         $this->recordFinalAmount = $record->amount + $record->extra_amount;
         $this->recordPeriod = $record->datetime;
+        $this->recordPeriodTemp = $record->datetime;
         $this->recordNote = $record->note;
         // $this->recordReceipt = $record->receipt;
         $this->recordReceiptTemp = $record->receipt;
@@ -171,10 +170,6 @@ class RecordModal extends Component
     // Handle Data
     public function store()
     {
-        \Log::debug("Store function", [
-            'recordUuid' => $this->recordUuid
-        ]);
-
         // Reset Field if Transfer
         if($this->recordType === 'transfer'){
             $this->reset([
@@ -195,6 +190,14 @@ class RecordModal extends Component
             'recordReceipt' => ['nullable', 'mimes:jpg,jpeg,png,pdf', 'max:1024']
         ]);
 
+        \Log::debug("Debug on Record Modal Store", [
+            'wallet' => $this->recordWallet,
+            'recordAmount' => $this->recordAmount,
+            'type' => $this->recordType,
+            'period' => $this->recordPeriod,
+            'user_timezone' => $this->user_timezone
+        ]);
+
         $datetime = date("Y-m-d H:i", strtotime($this->recordPeriod));
         if($this->user_timezone){
             $raw = date('Y-m-d H:i:00', strtotime($this->recordPeriod));
@@ -202,27 +205,6 @@ class RecordModal extends Component
             $utc = convertToUtc($raw, ($this->user_timezone));
             $datetime = date('Y-m-d H:i:00', strtotime($utc));
         }
-
-        // \Log::debug("Debug on Record Save", [
-        //     'type' => $this->recordType,
-        //     'category' => $this->recordCategory,
-        //     'wallet' => [
-        //         'from' => $this->recordWallet,
-        //         'to' => $this->recordWalletTransfer
-        //     ],
-        //     'amount' => [
-        //         'main' => $this->recordAmount,
-        //         'type' => $this->recordExtraType,
-        //         'extra' => $this->recordExtraAmount,
-        //         'final' => $this->recordFinalAmount
-        //     ],
-        //     'period' => [
-        //         'original' => $this->recordPeriod,
-        //         'utc' => $datetime,
-        //         'offset' => $this->user_timezone
-        //     ],
-        //     'note' => $this->recordNote
-        // ]);
 
         // Receipt file Upload
         $file = null;
@@ -278,10 +260,6 @@ class RecordModal extends Component
                             ->firstOrFail();
                         $walletTransfer = $walletTransferData->id;
                     }
-
-                    \Log::debug("Debug Related", [
-                        'related' => $record->getRelatedTransferRecord()
-                    ]);
     
                     // Fetch related record
                     $relatedRecord = new \App\Models\Record();
@@ -343,7 +321,7 @@ class RecordModal extends Component
                     $record->amount = $this->recordAmount;
                     $record->extra_type = $this->recordExtraType;
                     $record->extra_percentage = $this->recordExtraType === 'percentage' ? $this->recordExtraAmount : 0;
-                    $record->extra_amount = $this->recordExtraType === 'amount' ? $this->recordExtraAmount : ($this->recordAmount * ($this->recordExtraAmount / 100));
+                    $record->extra_amount = $this->recordExtraType === 'amount' ? ($this->recordExtraAmount ?? 0) : ($this->recordAmount * ($this->recordExtraAmount / 100));
                     $record->date = date("Y-m-d", strtotime($datetime));
                     $record->time = date("H:i:00", strtotime($datetime));
                     $record->datetime = $datetime;
@@ -395,7 +373,7 @@ class RecordModal extends Component
                     $data->amount = $this->recordAmount;
                     $data->extra_type = $this->recordExtraType;
                     $data->extra_percentage = $this->recordExtraType === 'percentage' ? $this->recordExtraAmount : 0;
-                    $data->extra_amount = $this->recordExtraType === 'amount' ? $this->recordExtraAmount : ($this->recordAmount * ($this->recordExtraAmount / 100));
+                    $data->extra_amount = $this->recordExtraType === 'amount' ? ($this->recordExtraAmount ?? 0) : ($this->recordAmount * ($this->recordExtraAmount / 100));
                     $data->date = date("Y-m-d", strtotime($datetime));
                     $data->time = date("H:i:00", strtotime($datetime));
                     $data->datetime = $datetime;

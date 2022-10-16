@@ -85,14 +85,18 @@ class WalletModal extends Component
         $order = 0;
         $lastOrder = \App\Models\Wallet::query()
             ->where('user_id', \Auth::user()->id);
-        if (! empty($parent)) {
+        if (!empty($parent)) {
             $lastOrder->where('parent_id', $parent->id);
         } else {
             $lastOrder->whereNull('parent_id');
         }
-        $lastOrder = $lastOrder->orderBy('order', 'desc')->first();
+        $lastOrder = $lastOrder->orderBy('order_main', 'desc')->first();
+        \Log::debug("Last Order", [
+            'order' => $order,
+            'lastOrder' => !empty($lastOrder) ? $lastOrder->order_main : 'null'
+        ]);
         if (! empty($lastOrder)) {
-            $order = $lastOrder->order;
+            $order = $lastOrder->order_main;
         }
 
         $this->validate();
@@ -107,7 +111,7 @@ class WalletModal extends Component
         $data->parent_id = !empty($parent) ? $parent->id : null;
         $data->name = $this->walletName;
         $data->type = 'general';
-        $data->order = $order;
+        $data->order = $order + 1;
         $data->save();
 
         $this->fetchMainWallet();
@@ -121,7 +125,8 @@ class WalletModal extends Component
 
         // Create Wallet Re-Order Request
         $allParentWallet = \App\Models\Wallet::whereNull('parent_id')
-            ->orderBy('order', 'asc')
+            // ->orderBy('order_main', 'asc')
+            ->orderByRaw('ISNULL(order_main), order_main ASC')
             ->get();
         $formatedRequest = [];
         if (count($allParentWallet) > 0) {

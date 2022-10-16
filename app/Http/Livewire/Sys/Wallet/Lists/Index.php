@@ -17,6 +17,8 @@ class Index extends Component
 
     public function render()
     {
+        $this->dispatchBrowserEvent('wallet_list-init');
+
         return view('livewire.sys.wallet.lists.index')->extends('layouts.sneat', [
             'menuState' => $this->menuState,
             'submenuState' => $this->submenuState,

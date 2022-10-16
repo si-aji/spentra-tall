@@ -23,6 +23,8 @@ class Index extends Component
     public $avatar = '';
     public $photo;
 
+    public $deletePassword = '';
+
     protected $rules = [
         'name' => ['required'],
         'username' => ['required', 'alpha_dash'],
@@ -91,5 +93,19 @@ class Index extends Component
             'action' => 'Success',
             'message' => 'Successfully update Profile data'
         ]);
+    }
+
+    public function checkAccount()
+    {
+        $checkPassword = \Hash::check($this->deletePassword, \Auth::user()->password);
+
+        return [
+            'result' => $checkPassword
+        ];
+    }
+    public function deleteAccount()
+    {
+        \Auth::logout();
+        return redirect()->route('home');
     }
 }

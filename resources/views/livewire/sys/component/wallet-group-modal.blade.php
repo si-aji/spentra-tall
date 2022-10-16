@@ -51,9 +51,6 @@
 @push('javascript')
     <script>
         window.addEventListener('wallet_group_wire-init', (event) => {
-            console.log("Wallet Group Component Init");
-            console.log(event);
-
             let walletChoice = null;
             if(document.getElementById('input_wallet_group-wallet_id')){
                 const walletEl = document.getElementById('input_wallet_group-wallet_id');
@@ -102,7 +99,6 @@
             modal.show();
         });
         window.addEventListener('wallet_group_wire-modalHide', (event) => {
-            console.log("Force hide");
             var myModalEl = document.getElementById('modal-wallet_group')
             var modal = bootstrap.Offcanvas.getInstance(myModalEl);
             modal.hide();

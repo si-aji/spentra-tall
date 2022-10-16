@@ -9,7 +9,6 @@
                 this.is_mobile = navigator.userAgent.toLowerCase().match(/mobile/i) ? true : false;
                 this.uploadState = false;
                 this.uploadProgress = 0;
-                this.user_timezone = new Date().getTimezoneOffset();
             }
         }">
             <div class="modal-dialog modal-dialog-centered modal-lg" :class="{'modal-dialog-scrollable': is_mobile}" role="document">
@@ -19,8 +18,6 @@
                         <button type="button" class="btn-close" aria-label="Close" wire:click="closeModal"></button>
                     </div>
                     <div class="modal-body tw__p-0">
-                        <input type="hidden" name="user_timezone" id="user_timezone" x-bind:value="user_timezone" readonly>
-
                         <div class=" tw__grid tw__grid-flow-row lg:tw__grid-flow-col tw__grid-cols-2 lg:tw__grid-cols-4">
                             {{-- Left Side --}}
                             <div class=" tw__p-6 tw__col-span-2 tw__self-center">
@@ -164,7 +161,7 @@
                                     {{-- Period --}}
                                     <div class="form-group tw__mb-4">
                                         <label for="input-period">Date Time</label>
-                                        <input type="text" class="form-control flatpickr @error('recordPeriod') is-invalid @enderror" name="period" id="input-period" placeholder="Record Date Time" x-on:focusout="console.log($event.target.value)">
+                                        <input type="text" class="form-control flatpickr @error('recordPeriod') is-invalid @enderror" name="period" id="input-period" placeholder="Record Date Time">
                                         @error('recordPeriod')
                                             <span class="invalid-feedback tw__block">{{ $message }}</span>
                                         @enderror
@@ -297,8 +294,6 @@
         let walletTransferChoice = null;
 
         window.addEventListener('record_wire-init', (event) => {
-            console.log("Record Wire init");
-            console.log(@this.get('recordUuid'));
             refreshFsLightbox();
 
             // iMask
@@ -384,7 +379,13 @@
             let defaultDate = moment().format('YYYY-MM-DD HH:mm');
             if(@this.get('recordPeriod')){
                 if (@this.get('recordUuid')) {
-                    defaultDate = moment(`${momentDateTime(@this.get('recordPeriod'), 'YYYY-MM-DD HH:mm')}`).format('YYYY-MM-DD HH:mm');
+                    let originalDate = momentDateTime(@this.get('recordPeriodTemp'), 'YYYY-MM-DD HH:mm');
+                    let selectedDate = moment(@this.get('recordPeriod')).format('YYYY-MM-DD HH:mm');
+
+                    defaultDate = originalDate;
+                    if(@this.get('recordPeriodChanged')){
+                        defaultDate = selectedDate;
+                    }
                 } else {
                     defaultDate = moment(`${@this.get('recordPeriod')}`).format('YYYY-MM-DD HH:mm');
                 }
@@ -400,6 +401,7 @@
                 defaultDate: defaultDate,
                 onClose: function(selectedDates, dateStr, instance){
                     @this.localUpdate('recordPeriod', document.getElementById('input-period').value);
+                    @this.localUpdate('recordPeriodChanged', true);
                 }
             });
 
@@ -411,8 +413,6 @@
         });
 
         document.addEventListener('DOMContentLoaded', (e) => {
-            console.log("Domcontent Loaded");
-
             document.getElementById('record-form').addEventListener('submit', (e) => {
                 e.preventDefault();
 
@@ -427,7 +427,6 @@
 
             // Receipt Change
             document.getElementById('input-receipt').addEventListener('change', (e) => {
-                console.log("Receipt change");
                 if(document.getElementById('input-receipt').closest('.form-group') && document.getElementById('input-receipt').closest('.form-group').querySelector('.invalid-feedback')){
                     document.getElementById('input-receipt').closest('.form-group').querySelector('.invalid-feedback').remove();
                 }

@@ -25,6 +25,7 @@ class Index extends Component
         'refreshComponent' => '$refresh',
         'loadMore' => 'loadMore',
         'localUpdate' => 'localUpdate',
+        'removeData' => 'removeData'
     ];
 
     public function fetchMainWallet()
@@ -95,5 +96,21 @@ class Index extends Component
                 $this->dataSelectedMonth = date("Y-m-01", strtotime($this->dataSelectedYear.'-'.($this->dataSelectedYear != date("Y") ? '12' : date("m") ).'-01'));
                 break;
         }
+    }
+
+    // Remove Data
+    public function removeData($uuid)
+    {
+        $record = \App\Models\Record::where('user_id', \Auth::user()->id)
+            ->where(\DB::raw('BINARY `uuid`'), $uuid)
+            ->firstOrFail();
+
+        if(!empty($record->to_wallet_id)){
+            \Log::debug("A");
+            $record->getRelatedTransferRecord()->delete();
+        }
+        $record->delete();
+
+        return $uuid;
     }
 }

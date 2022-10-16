@@ -47,7 +47,9 @@
 {{-- Body --}}
 @section('body')
     <!-- Layout wrapper -->
-    <div class="layout-wrapper layout-content-navbar" x-data="{backdrop: false}">
+    <div class="layout-wrapper layout-content-navbar" x-data="{backdrop: false, user_timezone: new Date().getTimezoneOffset()}">
+        <input type="hidden" name="user_timezone" id="user_timezone" x-bind:value="user_timezone" readonly>
+
         <div class="layout-container">
             <!-- Layout Sidebar -->
             @include('layouts.partials.sys.sidebar')

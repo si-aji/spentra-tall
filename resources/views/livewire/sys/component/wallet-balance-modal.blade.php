@@ -5,17 +5,20 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header tw__pb-2">
-                        <h5 class="modal-title" id="modalCenterTitle">Balance Adjustment: {{ isset($walletBalance) && !empty($walletBalance) ? (($walletBalance->parent()->exists() ? $walletBalance->parent->name.' - ' : '').$walletBalance->name) : '-' }}</h5>
+                        <h5 class="modal-title" id="modalCenterTitle">Balance Adjustment: {{ isset($walletBalanceData) && !empty($walletBalanceData) ? (($walletBalanceData->parent()->exists() ? $walletBalanceData->parent->name.' - ' : '').$walletBalanceData->name) : '-' }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" wire:click="closeModal"></button>
                     </div>
                     <div class="modal-body">
                         <div class="form-group tw__mb-4" id="form-current">
-                            <label for="input-amount">Current Balance</label>
-                            <input type="text" inputmode="numeric" class="form-control" name="current" id="input-current" placeholder="Current Balance" readonly>
+                            <label for="input_wallet_balance-amount">Current Balance</label>
+                            <input type="text" inputmode="numeric" class="form-control" name="current" id="input_wallet_balance-current" placeholder="Current Balance" readonly>
                         </div>
                         <div class="form-group" id="form-actual">
-                            <label for="input-amount">Actual Balance</label>
-                            <input type="text" inputmode="numeric" class="form-control" name="actual" id="input-actual" placeholder="Actual Balance">
+                            <label for="input_wallet_balance-amount">Actual Balance</label>
+                            <input type="text" inputmode="numeric" class="form-control @error('walletActualBalance') is-invalid @enderror" name="actual" id="input_wallet_balance-actual" placeholder="Actual Balance">
+                            @error('walletActualBalance')
+                                <small class="invalid-feedback">{{ $message }}</small>
+                            @enderror
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -32,23 +35,65 @@
 
 @push('javascript')
     <script>
+        let balanceMask = null;
+        let balanceActualMask = null;
         window.addEventListener('wallet_balance_wire-init', (event) => {
-            console.log("Wallet Balance Init");
-
             document.getElementById('modal-wallet').addEventListener('hidden.bs.modal', (e) => {
                 Livewire.emitTo('sys.component.wallet-balance-modal', 'closeModal');
             });
             document.getElementById('modal-wallet').addEventListener('shown.bs.modal', (e) => {
                 Livewire.emitTo('sys.component.wallet-balance-modal', 'localUpdate', 'walletBalanceModalState', 'show');
             });
+
+            if(document.getElementById('input_wallet_balance-current')){
+                balanceMask = IMask(document.getElementById('input_wallet_balance-current'), {
+                    mask: Number,
+                    thousandsSeparator: ',',
+                    scale: 2,  // digits after point, 0 for integers
+                    signed: true,  // disallow negative
+                    radix: '.',  // fractional delimiter
+                });
+            }
+            if(document.getElementById('input_wallet_balance-actual')){
+                balanceActualMask = IMask(document.getElementById('input_wallet_balance-actual'), {
+                    mask: Number,
+                    thousandsSeparator: ',',
+                    scale: 2,  // digits after point, 0 for integers
+                    signed: true,  // disallow negative
+                    radix: '.',  // fractional delimiter
+                });
+            }
+            balanceMask.value = `${@this.get('walletBalance')}`;
+            balanceActualMask.value = `${@this.get('walletActualBalance')}`;
+
+            document.getElementById('modal-wallet_balance').addEventListener('shown.bs.modal', (e) => {
+                document.getElementById('input_wallet_balance-actual').focus();
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', (e) => {
+            if(document.getElementById('wallet_balance-form')){
+                document.getElementById('wallet_balance-form').addEventListener('submit', (e) => {
+                    e.preventDefault();
+
+                    let amount = balanceActualMask.unmaskedValue;
+                    @this.set('walletActualBalance', amount);
+                    @this.set('user_timezone', document.getElementById('user_timezone').value);
+                    @this.set('recordPeriod', moment().format('YYYY-MM-DD HH:mm:ss'))
+                    @this.store();
+                });
+            }
         });
 
         window.addEventListener('wallet_balance_wire-modalShow', (event) => {
-            console.log("Wallet Balance Modal Show");
-
             var myModalEl = document.getElementById('modal-wallet_balance')
             var modal = new bootstrap.Modal(myModalEl)
             modal.show();
+        });
+        window.addEventListener('wallet_balance_wire-modalHide', (event) => {
+            var myModalEl = document.getElementById('modal-wallet_balance')
+            var modal = bootstrap.Modal.getInstance(myModalEl);
+            modal.hide();
         });
     </script>
 @endpush

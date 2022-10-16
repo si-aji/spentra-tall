@@ -50,7 +50,7 @@
                 </tr>
             </table>
 
-            <div class="card tw__mt-4">
+            <div class="card tw__mt-4" wire:ignore>
                 <div class="card-header">
                     <h5 class="card-title tw__mb-0">Account(s)</h5>
                 </div>
@@ -78,66 +78,84 @@
 
 @section('js_inline')
     <script>
-        let table = new DataTable('#table-wallet_group_list', {
-            order: [0, 'asc'],
-            pagingType: 'numbers',
-            lengthMenu: [5, 10, 25],
-            stateSave: true,
-            processing: true,
-            serverSide: true,
-            ajax: {
-                url: "{{ route('api.sys.v0.wallet.list') }}",
-                type: "GET",
-                data: function(d){
-                    d.is_datatable = true;
-                    d.wallet_group = "{{ $walletGroup->uuid }}"
-                }
-            },
-            columns: [
-                { "data": "order_main" },
-                { "data": "name" },
-                { "data": "balance" },
-                { "data": null },
-            ],
-            columnDefs: [
-                {
-                    targets: 0,
-                    render: function (row, type, data, meta) {
-                        return parseInt(row) + 1;
+        let table = null;
+        const initDatatable = () => {
+            console.log("Initialize Datatable");
+            if(table != null){
+                table.destroy();
+                console.log(table);
+            }
+            table = new DataTable('#table-wallet_group_list', {
+                order: [0, 'asc'],
+                pagingType: 'numbers',
+                lengthMenu: [5, 10, 25],
+                stateSave: true,
+                processing: true,
+                serverSide: true,
+                retrieve: true,
+                ajax: {
+                    url: "{{ route('api.sys.v0.wallet.list') }}",
+                    type: "GET",
+                    data: function(d){
+                        d.is_datatable = true;
+                        d.wallet_group = "{{ $walletGroup->uuid }}"
                     }
-                }, {
-                    targets: 1,
-                    render: function (row, type, data, meta) {
-                        // console.log(data);
-                        let walletName = `${data.parent_id ? `${data.parent.name} - ` : ''}${data.name}`;
-                        return walletName;
-                    }
-                }, {
-                    targets: 2,
-                    sortable: false,
-                    render: function (row, type, data, meta) {
-                        return formatRupiah(row);
-                    }
-                }, {
-                    targets: 3,
-                    searchable: false,
-                    sortable: false,
-                    render: function (row, type, data, meta) {
-                        return `
-                            <div class="">
-                                <button type="button" class="btn btn-sm btn-secondary" x-on:click="$wire.emitTo('sys.component.wallet-balance-modal', 'editAction', '${data.uuid}')">
-                                    <span class="tw__flex tw__items-center tw__gap-2"><i class="bx bx-slider"></i>Adjustment</span>
-                                </button>
-                            </div>
-                        `;
-                    }
-                }, 
-            ],
-            responsive: true
+                },
+                columns: [
+                    { "data": "order_main" },
+                    { "data": "name" },
+                    { "data": "balance" },
+                    { "data": null },
+                ],
+                columnDefs: [
+                    {
+                        targets: 0,
+                        render: function (row, type, data, meta) {
+                            return parseInt(row) + 1;
+                        }
+                    }, {
+                        targets: 1,
+                        render: function (row, type, data, meta) {
+                            // console.log(data);
+                            let walletName = `${data.parent_id ? `${data.parent.name} - ` : ''}${data.name}`;
+                            return walletName;
+                        }
+                    }, {
+                        targets: 2,
+                        sortable: false,
+                        render: function (row, type, data, meta) {
+                            return formatRupiah(row);
+                        }
+                    }, {
+                        targets: 3,
+                        searchable: false,
+                        sortable: false,
+                        render: function (row, type, data, meta) {
+                            return `
+                                <div class="">
+                                    <button type="button" class="btn btn-sm btn-secondary" x-on:click="$wire.emitTo('sys.component.wallet-balance-modal', 'editAction', '${data.uuid}')">
+                                        <span class="tw__flex tw__items-center tw__gap-2"><i class="bx bx-slider"></i>Adjustment</span>
+                                    </button>
+                                </div>
+                            `;
+                        }
+                    }, 
+                ],
+                responsive: true
+            });
+        }
+        document.addEventListener('wallet_group_wire-init', (event) => {
+            initDatatable();
         });
 
         if(document.getElementById('modal-wallet_group')){
             document.getElementById('modal-wallet_group').addEventListener('hide.bs.offcanvas', (e) => {
+                Livewire.emitTo('sys.wallet.group.show', 'refreshComponent');
+            });
+        }
+        if(document.getElementById('modal-wallet_balance')){
+            document.getElementById('modal-wallet_balance').addEventListener('hide.bs.modal', (e) => {
+                table.ajax.reload(null, false);
                 Livewire.emitTo('sys.wallet.group.show', 'refreshComponent');
             });
         }

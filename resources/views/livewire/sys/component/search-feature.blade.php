@@ -140,7 +140,6 @@
             searchResult.innerHTML = `
                 <span class=" tw__flex tw__items-center tw__gap-2"><i class='bx bx-loader-alt tw__animate-spin'></i>Loading...</span>
             `;
-            // console.log(searchResult);
         }
     </script>
 @endpush

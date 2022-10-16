@@ -19,7 +19,7 @@
         </a>
     </div>
     {{-- Be like water. --}}
-    <div class="card tw__mt-4">
+    <div class="card tw__mt-4" wire:ignore>
         <div class="card-body datatable">
             <table class="table table-hover table-striped table-bordered" id="table-wallet_group">
                 <thead>

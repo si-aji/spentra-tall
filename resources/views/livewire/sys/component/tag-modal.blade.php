@@ -31,9 +31,6 @@
 @push('javascript')
     <script>
         window.addEventListener('tag_wire-init', (event) => {
-            console.log("Tag Component Init");
-            console.log(event);
-
             document.getElementById('modal-tag').addEventListener('hidden.bs.offcanvas', (e) => {
                 Livewire.emitTo('sys.component.tag-modal', 'closeModal');
             });

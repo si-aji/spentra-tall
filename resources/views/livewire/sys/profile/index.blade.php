@@ -96,7 +96,7 @@
 					<input class="form-check-input" type="checkbox" name="confirm" id="input-confirm" x-on:change="disabled = !(event.target.checked)"/>
 					<label class="form-check-label" for="input-confirm">I confirm my account deactivation</label>
 				</div>
-				<button type="submit" class="btn btn-danger deactivate-account" x-bind:disabled="disabled">Deactivate Account</button>
+				<button type="button" class="btn btn-danger deactivate-account" x-on:click="deleteAccount()" x-bind:disabled="disabled">Deactivate Account</button>
 			</form>
 		</div>
 	</div>
@@ -121,6 +121,54 @@
 			setTimeout(() => {
 				Livewire.emitTo('sys.component.search-feature', 'refreshComponent');
 			}, 500);
+		}
+		function deleteAccount(){
+			Swal.fire({
+                title: 'Warning',
+                icon: 'warning',
+                text: `Please type your password to proceed!`,
+                showCancelButton: true,
+                reverseButtons: true,
+                confirmButtonText: 'Remove',
+				input: 'password',
+				inputPlaceholder: 'Type your current password!',
+				inputAttributes: {
+					autocapitalize: 'off'
+				},
+				inputValidator: (value) => {
+					return new Promise((resolve) => {
+						Swal.showLoading();
+						if (value === '') {
+							Swal.hideLoading();
+							resolve('Please type your current password to proceed');
+						} else {
+							@this.set('deletePassword', value);
+							let action = @this.call('checkAccount')
+								.then((response) => {
+									console.log(response);
+									if(!response.result){
+										Swal.hideLoading();
+										resolve('Missmatch password');
+									}
+
+									Swal.hideLoading();
+									resolve();
+								});
+						}
+					});
+				},
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((e) => {
+				if(e.value){
+					Swal.fire({
+						'title': 'Action: Success',
+						'icon': 'success',
+						'text': `It's sad to see you go, but you can always back anytime :)`
+					}).then((e) => {
+						@this.call('deleteAccount');
+					});
+				}
+			});
 		}
 	</script>
 @endsection
