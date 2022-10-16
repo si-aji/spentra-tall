@@ -1,6 +1,6 @@
 @section('title', 'Sign in to your account')
 
-<div>
+<div x-init="@this.set('user_timezone', Intl.DateTimeFormat().resolvedOptions().timeZone);@this.set('user_timezone_offset', new Date().getTimezoneOffset())">
     <div class="sm:tw__mx-auto sm:tw__w-full sm:tw__max-w-md">
         <a href="{{ route('home') }}">
             <x-logo class="tw__w-auto tw__h-16 tw__mx-auto tw__text-indigo-600" />
@@ -22,7 +22,7 @@
     <div class="tw__mt-8 sm:tw__mx-auto sm:tw__w-full sm:tw__max-w-md">
         <div class="tw__px-4 tw__py-8 tw__bg-white tw__shadow sm:tw__rounded-lg sm:tw__px-10">
             <form wire:submit.prevent="authenticate">
-                <div>
+                <div class=" tw__mb-4">
                     <label for="email" class="tw__block tw__text-sm tw__font-medium tw__text-gray-700 tw__leading-5">
                         Email / Username
                     </label>
@@ -36,7 +36,7 @@
                     @enderror
                 </div>
 
-                <div class="mt-6">
+                <div>
                     <label for="password" class="tw__block tw__text-sm tw__font-medium tw__text-gray-700 tw__leading-5">
                         Password
                     </label>

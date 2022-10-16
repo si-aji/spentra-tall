@@ -17,6 +17,10 @@ class Login extends Component
     /** @var bool */
     public $remember = false;
 
+    /** @var string */
+    public $user_timezone = '';
+    public $user_timezone_offset = '';
+
     protected $rules = [
         'email' => ['required'],
         'password' => ['required'],
@@ -32,6 +36,9 @@ class Login extends Component
 
             return;
         }
+
+        $globalProperties = new \App\Http\Livewire\GlobalProperties();
+        $globalProperties->setUserTimezone($this->user_timezone, $this->user_timezone_offset);
 
         return redirect()->intended(route('sys.index'));
     }

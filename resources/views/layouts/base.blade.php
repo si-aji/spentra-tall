@@ -29,6 +29,21 @@
         @livewireStyles
         @livewireScripts
 
+        {{-- <script>
+            Livewire.onLoad(() => {
+                let tz = '{{ \Session::get('SAUSER_TZ') ?? '' }}';
+                let tzActual = (Intl.DateTimeFormat().resolvedOptions().timeZone).toString();
+                let offset = '{{ \Session::get('SAUSER_TZ_OFFSET') ?? '' }}';
+                let offsetActual = (new Date().getTimezoneOffset()).toString();
+
+                console.log(`Tz: ${tz} / Actual: ${tzActual}`);
+                console.log(`Offset: ${offset} / Actual: ${offsetActual}`);
+
+                if(tz !== (Intl.DateTimeFormat().resolvedOptions().timeZone).toString() || offset !== (new Date().getTimezoneOffset()).toString()){
+                    Livewire.emitTo('global-properties', 'setUserTimezone', tz, offset);
+                }
+            });
+        </script> --}}
         @stack('javascript')
 
         <!-- CSRF Token -->

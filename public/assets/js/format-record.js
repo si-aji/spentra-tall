@@ -10,7 +10,7 @@ function recordContainerFormat(val, index){
     return `
         <div class=" tw__p-4 tw__text-center">
             <!-- This is for date -->
-            <div class="tw__sticky tw__top-24 md:tw__top-40">
+            <div class="tw__sticky lg:tw__top-24 tw__top-40">
                 <span class="tw__font-semibold">${momentDateTime(val.datetime, 'ddd')}</span>
                 <div class=" tw__min-h-[40px] tw__min-w-[40px] tw__bg-[#7166ef] tw__bg-opacity-60 tw__rounded-full tw__flex tw__leading-none tw__items-center tw__justify-center tw__align-middle">
                     <p class="tw__mb-0 tw__font-bold tw__text-xl tw__text-white">${momentDateTime(val.datetime, 'DD')}</p>

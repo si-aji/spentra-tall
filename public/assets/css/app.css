@@ -628,14 +628,17 @@ input:invalid, textarea:invalid, select:invalid {
 .tw__sticky {
   position: sticky !important;
 }
-.tw__top-24 {
-  top: 6rem !important;
+.tw__top-40 {
+  top: 10rem !important;
 }
 .tw__top-0 {
   top: 0px !important;
 }
 .tw__right-0 {
   right: 0px !important;
+}
+.tw__top-24 {
+  top: 6rem !important;
 }
 .tw__z-\[1050\] {
   z-index: 1050 !important;
@@ -1323,6 +1326,9 @@ input:invalid, textarea:invalid, select:invalid {
   }
 }
 @media (min-width: 1024px) {
+  .lg\:tw__top-24 {
+    top: 6rem !important;
+  }
   .lg\:tw__mt-2 {
     margin-top: 0.5rem !important;
   }

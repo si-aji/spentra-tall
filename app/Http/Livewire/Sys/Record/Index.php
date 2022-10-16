@@ -11,6 +11,7 @@ class Index extends Component
 
     // Load More Conf
     public $loadPerPage = 10;
+    public $user_timezone = '';
 
     // List
     public $listWallet = null;
@@ -61,8 +62,10 @@ class Index extends Component
         $this->dataRecord = \App\Models\Record::with('wallet.parent', 'walletTransferTarget.parent', 'category.parent')
             ->where('user_id', \Auth::user()->id)
             ->where('status', 'complete')
-            ->whereMonth('date', date('m', strtotime($this->dataSelectedMonth)))
-            ->whereYear('date', date('Y', strtotime($this->dataSelectedMonth)))
+            // ->whereMonth('date', date('m', strtotime($this->dataSelectedMonth)))
+            // ->whereYear('date', date('Y', strtotime($this->dataSelectedMonth)))
+            ->whereMonth(\DB::raw("CONVERT_TZ(datetime, 'UTC', '".(\Session::get('SAUSER_TZ') ?? 'Asia/Jakarta')."')"), date('m', strtotime($this->dataSelectedMonth)))
+            ->whereYear(\DB::raw("CONVERT_TZ(datetime, 'UTC', '".(\Session::get('SAUSER_TZ') ?? 'Asia/Jakarta')."')"), date('Y', strtotime($this->dataSelectedMonth)))
             ->orderBy('datetime', 'desc')
             ->paginate($this->loadPerPage);
         $paginate = $this->dataRecord;

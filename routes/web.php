@@ -21,7 +21,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::view('/', 'welcome')->name('home');
+Route::get('/', function(){
+    \Session::forget('SAUSER_TZ');
+    \Session::forget('SAUSER_TZ_OFFSET');
+    return view('welcome');
+})->name('home');
 
 Route::middleware('guest')->group(function () {
     Route::get('login', Login::class)
