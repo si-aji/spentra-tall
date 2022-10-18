@@ -657,6 +657,10 @@ input:invalid, textarea:invalid, select:invalid {
   margin-left: auto !important;
   margin-right: auto !important;
 }
+.tw__mx-4 {
+  margin-left: 1rem !important;
+  margin-right: 1rem !important;
+}
 .tw__my-auto {
   margin-top: auto !important;
   margin-bottom: auto !important;
@@ -1019,6 +1023,12 @@ input:invalid, textarea:invalid, select:invalid {
   padding-top: 0.25rem !important;
   padding-bottom: 0.25rem !important;
 }
+.tw__pt-8 {
+  padding-top: 2rem !important;
+}
+.tw__pb-40 {
+  padding-bottom: 10rem !important;
+}
 .tw__pb-2 {
   padding-bottom: 0.5rem !important;
 }
@@ -1333,6 +1343,12 @@ input:invalid, textarea:invalid, select:invalid {
   }
   .md\:tw__items-center {
     align-items: center !important;
+  }
+  .md\:tw__pt-6 {
+    padding-top: 1.5rem !important;
+  }
+  .md\:tw__pb-12 {
+    padding-bottom: 3rem !important;
   }
 }
 @media (min-width: 1024px) {

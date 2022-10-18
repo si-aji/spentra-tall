@@ -19,7 +19,7 @@
         @endif
     </div>
 
-    <div class="tw__mt-8 sm:tw__mx-auto sm:tw__w-full sm:tw__max-w-md">
+    <div class="tw__mt-8 tw__mx-4 sm:tw__mx-auto sm:tw__w-full sm:tw__max-w-md">
         <div class="tw__px-4 tw__py-8 tw__bg-white tw__shadow sm:tw__rounded-lg sm:tw__px-10">
             <form wire:submit.prevent="authenticate">
                 <div class=" tw__mb-4">

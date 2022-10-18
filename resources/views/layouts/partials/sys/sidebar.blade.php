@@ -66,7 +66,7 @@
 
     <div class="menu-inner-shadow" style="display: block !important"></div>
 
-    <ul class="menu-inner tw__pt-4 tw__pb-40 md:tw__pb-12">
+    <ul class="menu-inner tw__pt-8 md:tw__pt-6 tw__pb-40 md:tw__pb-12">
 		@if (config('siaji.sys.sidebar') && config('siaji.sys.sidebar')->count() > 0)
 			@foreach (config('siaji.sys.sidebar')->all() as $menu)
 				@if (isset($menu['is_header']) && $menu['is_header'])
