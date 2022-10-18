@@ -13,6 +13,11 @@
 @endsection
 
 <div>
+    <div class=" tw__mb-4">
+        <a href="javascript:void(0)" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-record">
+            <span class=" tw__flex tw__items-center tw__gap-2"><i class="bx bx-plus"></i>Add new</span>
+        </a>
+    </div>
     {{-- If your happiness depends on money, you will never be happy with yourself. --}}
     <div class="card">
         <div class="card-header tw__flex tw__items-center tw__justify-between">
@@ -24,7 +29,8 @@
         </div>
         <div class="card-body">
             <div class="row">
-                <div class="col-12 col-lg-4 tw__mb-4">
+                {{-- Filter - Year --}}
+                <div class="col-12 col-lg-3 tw__mb-4">
                     <label for="filter-year">Year</label>
                     <select class="form-control" id="filter-year" placeholder="Search for Year Filter" x-on:change="$wire.localUpdate('dataSelectedYear', $event.target.value)">
                         @for ($i = date("Y-01-01"); $i >= date("Y-01-01", strtotime(\Auth::user()->getFirstYearRecord().'-01-01')); $i = date("Y-01-01", strtotime($i.' -1 years')))
@@ -32,7 +38,19 @@
                         @endfor
                     </select>
                 </div>
-                <div class="col-12 col-lg-4 tw__mb-4">
+                {{-- Filter - Type --}}
+                <div class="col-12 col-lg-3 tw__mb-4">
+                    <label for="filter-type">Type</label>
+                    <select class="form-control" id="filter-type" placeholder="Search for Type Filter" x-on:change="$wire.localUpdate('dataSelectedType', $event.target.value)">
+                        <option value="">Search for Record Type</option>
+                        <option value="income" {{ $dataSelectedType === 'income' ? 'selected' : '' }}>Income</option>
+                        <option value="expense" {{ $dataSelectedType === 'expense' ? 'selected' : '' }}>Expense</option>
+                        <option value="transfer" {{ $dataSelectedType === 'transfer' ? 'selected' : '' }}>Transfer</option>
+                    </select>
+                </div>
+
+                {{-- Filter - Wallet --}}
+                <div class="col-12 col-lg-3 tw__mb-4">
                     <label for="filter-wallet">Wallet</label>
                     <select class="form-control" id="filter-wallet" placeholder="Search for Wallet Data" multiple>
                         <option value="">Search for Wallet Data</option>
@@ -48,7 +66,8 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-12 col-lg-4 tw__mb-4">
+                {{-- Filter - Category --}}
+                <div class="col-12 col-lg-3 tw__mb-4">
                     <label for="filter-category">Category</label>
                     <select class="form-control" id="filter-category" placeholder="Search for Category Data">
                         <option value="" selected>Search for Category Data</option>
@@ -64,9 +83,10 @@
                         @endforeach
                     </select>
                 </div>
+                {{-- Filter - Keyword --}}
                 <div class="col-12">
-                    <label for="filter-note">Notes keyword</label>
-                    <input type="text" class="form-control" name="filter_keyword" placeholder="Search notes keyword">
+                    <label for="filter-note">Notes Keyword</label>
+                    <input type="text" class="form-control" name="filter_keyword" placeholder="Search notes keyword" wire:model.lazy="dataSelectedNote">
                 </div>
             </div>
         </div>
@@ -82,29 +102,38 @@
                         @endfor
                     </div>
                 </div>
-                <div class="tab-content tw__pt-4 tw__px-4" id="monthly-record">
-                    <div wire:loading.block>
-                        @for ($i = 0; $i < 3; $i++)
-                            <div class=" tw__px-4 tw__flex tw__flex-col">
-                                <div class="list-wrapper tw__flex tw__gap-2 tw__mb-4 last:tw__mb-0">
-                                    <div class=" tw__p-4 tw__text-center">
-                                        <div class="tw__sticky tw__top-24 md:tw__top-40 tw__flex tw__items-center tw__flex-col">
-                                            <span class="tw__font-semibold tw__bg-gray-300 tw__animate-pulse tw__h-4 tw__w-8 tw__block tw__rounded tw__mr-0 tw__mb-2"></span>
-                                            <div class=" tw__min-h-[40px] tw__min-w-[40px] tw__bg-gray-300 tw__bg-opacity-60 tw__rounded-full tw__flex tw__leading-none tw__items-center tw__justify-center tw__align-middle tw__animate-pulse">
-                                                <p class="tw__mb-0 tw__font-bold tw__text-xl tw__text-white"></p>
-                                            </div>
-                                            <span class="tw__font-semibold tw__bg-gray-300 tw__animate-pulse tw__h-3 tw__w-12 tw__block tw__rounded tw__mr-0 tw__mt-1"></span>
+            </nav>
+
+            <div class="tab-content tw__pt-4 tw__px-4" id="monthly-record">
+                <div wire:loading.block>
+                    @for ($i = 0; $i < 3; $i++)
+                        <div class=" tw__px-4 tw__flex tw__flex-col">
+                            <div class="list-wrapper tw__flex tw__gap-2 tw__mb-4 last:tw__mb-0">
+                                <div class=" tw__p-4 tw__text-center">
+                                    <div class="tw__sticky tw__top-24 md:tw__top-40 tw__flex tw__items-center tw__flex-col">
+                                        <span class="tw__font-semibold tw__bg-gray-300 tw__animate-pulse tw__h-4 tw__w-8 tw__block tw__rounded tw__mr-0 tw__mb-2"></span>
+                                        <div class=" tw__min-h-[40px] tw__min-w-[40px] tw__bg-gray-300 tw__bg-opacity-60 tw__rounded-full tw__flex tw__leading-none tw__items-center tw__justify-center tw__align-middle tw__animate-pulse">
+                                            <p class="tw__mb-0 tw__font-bold tw__text-xl tw__text-white"></p>
                                         </div>
+                                        <span class="tw__font-semibold tw__bg-gray-300 tw__animate-pulse tw__h-3 tw__w-12 tw__block tw__rounded tw__mr-0 tw__mt-1"></span>
                                     </div>
-                                    <div class=" tw__bg-gray-300 tw__rounded-lg tw__w-full content-list tw__p-4 tw__h-20 tw__animate-pulse tw__self-center"></div>
+                                </div>
+                                <div class=" tw__bg-gray-300 tw__rounded-lg tw__w-full content-list tw__p-4 tw__h-20 tw__animate-pulse tw__self-center">
+                                    
                                 </div>
                             </div>
-                        @endfor
-                    </div>
-
-                    <div wire:loading.remove class=" tw__px-4" id="record-container"></div>
+                        </div>
+                    @endfor
                 </div>
-            </nav>
+
+                <div wire:loading.remove class=" tw__px-4" id="record-container"></div>
+            </div>
+        </div>
+        <div class="card-footer tw__pt-0">
+            <div class=" tw__flex tw__items-center tw__justify-between">
+                <button type="button" class="btn btn-primary disabled:tw__cursor-not-allowed" {{ $paginate->hasMorePages() ? '' : 'disabled' }} x-on:click="@this.loadMore()">Load more</button>
+                <span>Showing {{ $paginate->count() }} of {{ $paginate->total() }} entries</span>
+            </div>
         </div>
     </div>
 </div>
@@ -117,6 +146,7 @@
     <script>
         document.addEventListener('record_wire-init', (e) => {
             let recordFilterYearChoice = null;
+            let recordFilterTypeChoice = null;
             let recordFilterWalletChoice = null;
             let recordFilterCategoryChoice = null;
             if(document.getElementById('filter-year')){
@@ -127,6 +157,17 @@
                     searchPlaceholderValue: "Search for Year Filter",
                     placeholder: true,
                     placeholderValue: 'Search for Year Filter',
+                    shouldSort: false
+                });
+            }
+            if(document.getElementById('filter-type')){
+                const filterTypeEl = document.getElementById('filter-type');
+                recordFilterTypeChoice = new Choices(filterTypeEl, {
+                    allowHTML: true,
+                    removeItemButton: true,
+                    searchPlaceholderValue: "Search for Record Type Filter",
+                    placeholder: true,
+                    placeholderValue: 'Search for Record Type Filter',
                     shouldSort: false
                 });
             }

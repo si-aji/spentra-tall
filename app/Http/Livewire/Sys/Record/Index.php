@@ -20,6 +20,8 @@ class Index extends Component
     // List Data
     public $dataSelectedYear = '';
     public $dataSelectedMonth = '';
+    public $dataSelectedType = '';
+    public $dataSelectedNote = '';
     public $dataRecord;
 
     protected $listeners = [
@@ -65,8 +67,22 @@ class Index extends Component
             // ->whereMonth('date', date('m', strtotime($this->dataSelectedMonth)))
             // ->whereYear('date', date('Y', strtotime($this->dataSelectedMonth)))
             ->whereMonth(\DB::raw("CONVERT_TZ(datetime, 'UTC', '".(\Session::get('SAUSER_TZ') ?? 'Asia/Jakarta')."')"), date('m', strtotime($this->dataSelectedMonth)))
-            ->whereYear(\DB::raw("CONVERT_TZ(datetime, 'UTC', '".(\Session::get('SAUSER_TZ') ?? 'Asia/Jakarta')."')"), date('Y', strtotime($this->dataSelectedMonth)))
-            ->orderBy('datetime', 'desc')
+            ->whereYear(\DB::raw("CONVERT_TZ(datetime, 'UTC', '".(\Session::get('SAUSER_TZ') ?? 'Asia/Jakarta')."')"), date('Y', strtotime($this->dataSelectedMonth)));
+
+        // Apply Filter
+        if($this->dataSelectedType !== ''){
+            if($this->dataSelectedType === 'transfer'){
+                $this->dataRecord->whereNotNull('to_wallet_id');
+            } else {
+                $this->dataRecord->where('type', $this->dataSelectedType);
+            }
+        }
+        if($this->dataSelectedNote !== ''){
+            $this->dataRecord->where('note', 'like', '%'.$this->dataSelectedNote.'%');
+        }
+
+        $this->dataRecord = $this->dataRecord->orderBy('datetime', 'desc')
+            ->orderBy('type', 'desc')
             ->paginate($this->loadPerPage);
         $paginate = $this->dataRecord;
         $this->dataRecord = collect($this->dataRecord->items());
@@ -98,6 +114,9 @@ class Index extends Component
                 $this->dataSelectedYear = $value;
                 $this->dataSelectedMonth = date("Y-m-01", strtotime($this->dataSelectedYear.'-'.($this->dataSelectedYear != date("Y") ? '12' : date("m") ).'-01'));
                 break;
+            case 'dataSelectedType':
+                $this->dataSelectedType = $value;
+                break;
         }
     }
 
@@ -109,7 +128,6 @@ class Index extends Component
             ->firstOrFail();
 
         if(!empty($record->to_wallet_id)){
-            \Log::debug("A");
             $record->getRelatedTransferRecord()->delete();
         }
         $record->delete();

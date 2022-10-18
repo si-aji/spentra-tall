@@ -83,6 +83,10 @@
 
     {{-- Record Modal --}}
     @livewire(\App\Http\Livewire\Sys\Component\RecordModal::class, ['user' => \Auth::user()], key(\Auth::user()->id))
+    @if (isset($componentRecordTemplate) && $componentRecordTemplate)
+        {{-- Record Template --}}
+        @livewire(\App\Http\Livewire\Sys\Component\RecordTemplateModal::class, ['user' => \Auth::user()], key(\Auth::user()->id))
+    @endif
 
     @if (isset($componentWallet) && $componentWallet)
         {{-- Wallet Modal --}}

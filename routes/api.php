@@ -40,6 +40,15 @@ Route::group([
 
             // Tags
             Route::get('tag', [\App\Http\Controllers\Api\Sys\v0\TagController::class, 'list'])->name('tag.list');
+
+            // Record
+            Route::group([
+                'prefix' => 'record',
+                'as' => 'record.'
+            ], function(){
+                // Template
+                Route::get('template', [\App\Http\Controllers\Api\Sys\v0\RecordTemplateController::class, 'list'])->name('template.list');
+            });
         });
     });
 });

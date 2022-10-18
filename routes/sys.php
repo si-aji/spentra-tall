@@ -41,6 +41,16 @@ Route::group([
         ->name('index');
 
     // Record
+    Route::group([
+        'as' => 'record.',
+        'prefix' => 'record'
+    ], function(){
+        // Template
+        Route::get('template/{uuid}', \App\Http\Livewire\Sys\Record\Template\Show::class)
+            ->name('template.show');
+        Route::get('template', \App\Http\Livewire\Sys\Record\Template\Index::class)
+            ->name('template.index');
+    });
     Route::get('record/{uuid}', \App\Http\Livewire\Sys\Record\Show::class)
         ->name('record.show');
     Route::get('record', \App\Http\Livewire\Sys\Record\Index::class)

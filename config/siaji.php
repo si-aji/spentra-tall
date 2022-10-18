@@ -67,9 +67,9 @@ return [
             ], [
                 'name' => 'Record Template',
                 'icon' => 'bx bxs-book-content',
-                'route' => null,
+                'route' => 'sys.record.template.index',
                 'is_header' => false,
-                'state' => null,
+                'state' => 'record-template',
                 'sub' => collect([])
             ], [
                 'name' => 'Wallet',

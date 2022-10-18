@@ -61,6 +61,38 @@ class ReOrder extends Component
     {
         $numorder = 0;
         $numorderMain = 0;
+
+        if($order === null){
+            // Create Category Re-Order Request
+            $allParentCategory = \App\Models\Category::whereNull('parent_id')
+                ->orderBy('order', 'asc')
+                ->get();
+            $formatedRequest = [];
+            foreach ($allParentCategory as $category) {
+                $arr = [
+                    'id' => $category->uuid,
+                ];
+
+                if ($category->child()->exists()) {
+                    $childArr = [];
+                    foreach ($category->child()->orderBy('order', 'asc')->get() as $child) {
+                        $childArr[] = [
+                            'id' => $child->uuid,
+                        ];
+                    }
+
+                    $arr = [
+                        'id' => $category->uuid,
+                        'child' => $childArr,
+                    ];
+                }
+
+                $formatedRequest[] = $arr;
+            }
+
+            $order = $formatedRequest;
+        }
+
         foreach ($order as $hierarchy) {
             // Update Main Order
             $category = \App\Models\Category::where(\DB::raw('BINARY `uuid`'), $hierarchy['id'])->firstOrFail();

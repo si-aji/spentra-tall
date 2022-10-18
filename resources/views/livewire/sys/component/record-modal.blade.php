@@ -24,7 +24,7 @@
                                 {{-- Record Template --}}
                                 <div class="form-group tw__mb-4">
                                     <label for="input-template">Template</label>
-                                    <select class="form-control" id="input-template_id" name="template_id" placeholder="Search for Template Data" disabled>
+                                    <select class="form-control" id="input-template_id" name="template_id" placeholder="Search for Template Data" x-on:change="@this.fetchDataTemplate($event.target.value)">
                                         <option value="" {{ $recordTemplate == '' ? 'selected' : '' }}>Search for Template Data</option>
                                         @foreach ($listTemplate as $template)
                                             <option value="{{ $template->uuid }}" {{ !empty($recordTemplate) && $template->uuid === $recordTemplate ? 'selected' : '' }}>{{ $template->name }}</option>
@@ -407,8 +407,6 @@
 
             document.getElementById('modal-record').addEventListener('hidden.bs.modal', (e) => {
                 @this.removeReceipt();
-            });
-            document.getElementById('input-period').addEventListener('change', (e) => {
             });
         });
 

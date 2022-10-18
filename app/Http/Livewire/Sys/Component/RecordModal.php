@@ -48,6 +48,47 @@ class RecordModal extends Component
         'editAction' => 'editAction'
     ];
 
+    // Fetch Data
+    public function fetchDataTemplate($uuid = null)
+    {
+        if($uuid == ''){
+            $this->recordTemplate = '';
+            $this->reset($this->recordResetField);
+            return false;
+        }
+
+        $data = \App\Models\RecordTemplate::where('user_id', \Auth::user()->id)
+            ->where(\DB::raw('BINARY `uuid`'), $uuid)
+            ->firstOrFail();
+
+        $key = array_search('recordTemplate', $this->recordResetField);
+        if($key !== false){
+            unset($this->recordResetField[$key]);
+        }
+        $this->reset($this->recordResetField);
+
+        $this->recordType = $data->type;
+        $this->recordCategory = $data->category()->exists() ? $data->category->uuid : '';
+        $this->recordWallet = $data->wallet->uuid;
+        if($data->type === 'transfer'){
+            $this->recordWalletTransfer = $data->walletTransferTarget->uuid;
+        }
+        $this->recordAmount = $data->amount;
+        $this->recordExtraAmount = $data->extra_type === 'amount' ? $data->extra_amount : $data->extra_percentage;
+        $this->recordExtraType = $data->extra_type;
+
+        $calculateFinal = $data->amount + $data->extra_amount;
+        $this->recordFinalAmount = $calculateFinal;
+        $this->recordNote = $data->note;
+
+        $this->dispatchBrowserEvent('trigger-event', [
+            'recordType' => $this->recordType,
+            'recordExtraType' => $this->recordExtraType,
+            'recordAmount' => $this->recordAmount,
+            'recordExtraAmount' => $this->recordExtraAmount
+        ]);
+    }
+
     // Fetch List
     public function fetchListTemplate()
     {
@@ -191,6 +232,7 @@ class RecordModal extends Component
         ]);
 
         \Log::debug("Debug on Record Modal Store", [
+            'uuid' => $this->recordUuid,
             'wallet' => $this->recordWallet,
             'recordAmount' => $this->recordAmount,
             'type' => $this->recordType,
@@ -395,8 +437,6 @@ class RecordModal extends Component
                 unset($this->recordResetField[$key]);
             }
         }
-        $this->reset($this->recordResetField);
-        $this->emit('refreshComponent');
         $this->dispatchBrowserEvent('trigger-event', [
             'recordType' => $this->recordType,
             'recordExtraType' => $this->recordExtraType,
@@ -407,8 +447,10 @@ class RecordModal extends Component
         $this->dispatchBrowserEvent('wire-action', [
             'status' => 'success',
             'action' => 'Success',
-            'message' => 'Successfully '.(empty($this->walletUuid) ? 'store new' : 'update').' Record Data'
+            'message' => 'Successfully '.(empty($this->recordUuid) ? 'store new' : 'update').' Record Data'
         ]);
+        $this->emit('refreshComponent');
+        $this->reset($this->recordResetField);
     }
 
     // Update Model / Variable
@@ -453,6 +495,7 @@ class RecordModal extends Component
                 break;
         }
     }
+
     public function removeReceipt(): void
     {
         if($this->recordReceipt){

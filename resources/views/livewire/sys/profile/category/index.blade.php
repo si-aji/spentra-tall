@@ -34,9 +34,14 @@
         <a href="{{ route('sys.category.re-order') }}" class="btn btn-secondary">
             <span class=" tw__flex tw__items-center tw__gap-2"><i class='bx bx-sort-a-z'></i>Re-order</span>
         </a>
+        @if (!(\Auth::user()->category()->exists()))
+            <a href="javascript:void(0)" class="btn btn-info" id="btn_category-generate_default">
+                <span class=" tw__flex tw__items-center tw__gap-2"><i class="bx bx-plus"></i>Generate Default</span>
+            </a>
+        @endif
     </div>
     {{-- Be like water. --}}
-    <div class="card tw__mt-4">
+    <div class="card tw__mt-4" wire:ignore>
         <div class="card-body datatable">
             <table class="table table-hover table-striped table-bordered" id="table-category">
                 <thead>
@@ -110,6 +115,32 @@
             document.getElementById('modal-category').addEventListener('hide.bs.offcanvas', (e) => {
                 console.log("Refresh datatable");
                 table.ajax.reload(null, false);
+            });
+        }
+
+        if(document.getElementById('btn_category-generate_default')){
+            document.getElementById('btn_category-generate_default').addEventListener('click', (e) => {
+                Swal.fire({
+                    title: 'Info',
+                    icon: 'info',
+                    text: `We'll generate a default category for you, after the process is done, you can modify it to match with yours!`,
+                    showCancelButton: true,
+                    reverseButtons: true,
+                    confirmButtonText: 'Generate',
+                    showLoaderOnConfirm: true,
+                    preConfirm: (request) => {
+                        return @this.call('generateDefaultCategory').then((e) => {
+                            Swal.fire({
+                                'title': 'Action: Success',
+                                'icon': 'success',
+                                'text': 'Default Category data was successfully generated'
+                            }).then((e) => {
+                                table.ajax.reload();
+                            });
+                        });
+                    },
+                    allowOutsideClick: () => !Swal.isLoading()
+                });
             });
         }
     </script>

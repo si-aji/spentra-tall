@@ -183,7 +183,7 @@ class Record extends Model
                     ->where('wallet_id', $this->to_wallet_id);
             }
 
-            $related = $related->first();
+            $related = $related->first()->load('wallet.parent', 'walletTransferTarget.parent', 'category.parent');
         }
 
         return $related;

@@ -43,6 +43,22 @@ class User extends Authenticatable
     ];
 
     /**
+     * Primary Key Relation
+     *
+     * @return model
+     */
+    public function category()
+    {
+        return $this->hasMany(\App\Models\Category::class, 'user_id');
+    }
+
+    /**
+     * Foreign Key Relation
+     *
+     * @return model
+     */
+
+    /**
      * Scope
      * 
      */
