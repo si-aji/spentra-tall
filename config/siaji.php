@@ -111,12 +111,12 @@ return [
                         'name' => 'Category',
                         'route' => 'sys.category.index',
                         'state' => 'category',
-                        'icon' => 'bx bx-wallet-alt',
+                        'icon' => 'bx bxs-category',
                     ],  [
                         'name' => 'Tags',
                         'route' => 'sys.tag.index',
                         'state' => 'tag',
-                        'icon' => 'bx bx-wallet-alt',
+                        'icon' => 'bx bx-purchase-tag',
                     ], 
                 ])
             ], 

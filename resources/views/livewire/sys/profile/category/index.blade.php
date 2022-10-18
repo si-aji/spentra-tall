@@ -27,7 +27,7 @@
         </div>
     </div>
 
-    <div class=" tw__mt-4">
+    <div class=" tw__mt-4 tw__flex tw__items-center tw__gap-4 tw__flex-wrap">
         <a href="javascript:void(0)" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#modal-category">
             <span class=" tw__flex tw__items-center tw__gap-2"><i class="bx bx-plus"></i>Add new</span>
         </a>
