@@ -22,7 +22,11 @@ jobs:
             pwd
             echo "========= Github Action for Pulling Data"
             cd ~/public_html/spentra-tall/main-apps
-            pwd
+            git checkout main
+            git reset --hard
+            git pull origin main
+            # Copy Remote .env
+            cp .env.remote .env
   deploy:
     name: Deploy App
     runs-on: ubuntu-latest
@@ -38,9 +42,12 @@ jobs:
           script: |
             whoami
             pwd
-            echo "========= Sync Public Directory (Except index.php)"
+            echo "========= Sync Public Directory (Except index.php, etc)"
             cd ~/public_html/spentra-tall
-            pwd
+            rm -rf assets mix-manifest.json
+            cd ~/public_html/spentra-tall/main-apps
+            shopt -s extglob
+            mv ~/public_html/spentra-tall/main-apps/public/!(index.php|files|livewire-tmp|.htaccess) ~/public_html/spentra-tall
       - name: Cleaning Cache, etc
         uses: appleboy/ssh-action@master
         with:
@@ -52,4 +59,7 @@ jobs:
             whoami
             pwd
             cd ~/public_html/spentra-tall/main-apps
-            pwd
+            echo "========= Clear Laravel Cache"
+            php artisan config:clear
+            php artisan cache:clear
+            php artisan view:clear
