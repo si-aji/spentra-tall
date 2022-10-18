@@ -52,7 +52,7 @@
                 {{-- Filter - Wallet --}}
                 <div class="col-12 col-lg-3 tw__mb-4">
                     <label for="filter-wallet">Wallet</label>
-                    <select class="form-control" id="filter-wallet" placeholder="Search for Wallet Data" multiple>
+                    <select class="form-control" id="filter-wallet" placeholder="Search for Wallet Data" multiple disabled>
                         <option value="">Search for Wallet Data</option>
                         @foreach ($listWallet as $wallet)
                             <optgroup label="{{ $wallet->name }}">
@@ -69,7 +69,7 @@
                 {{-- Filter - Category --}}
                 <div class="col-12 col-lg-3 tw__mb-4">
                     <label for="filter-category">Category</label>
-                    <select class="form-control" id="filter-category" placeholder="Search for Category Data">
+                    <select class="form-control" id="filter-category" placeholder="Search for Category Data" disabled>
                         <option value="" selected>Search for Category Data</option>
                         @foreach ($listCategory as $category)
                             <optgroup label="{{ $category->name }}">
