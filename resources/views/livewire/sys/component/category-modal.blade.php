@@ -47,7 +47,7 @@
 @push('javascript')
     <script>
         window.addEventListener('category_wire-init', (event) => {
-            let categoryChoice =null;
+            let categoryChoice = null;
             if(document.getElementById('input_category-category_id')){
                 const categoryEl = document.getElementById('input_category-category_id');
                 categoryChoice = new Choices(categoryEl, {

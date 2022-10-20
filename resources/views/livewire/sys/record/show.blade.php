@@ -30,14 +30,14 @@
                     <td data-period="{{ $recordData->datetime }}">-</td>
                 </tr>
                 <tr>
-                    <th>Category</th>
-                    <td>{{ $recordData->category()->exists() ? ($recordData->category->parent()->exists() ? $recordData->category->parent->name.' - ' : '').$recordData->category->name : '-' }}</td>
-                </tr>
-                <tr>
                     <th>Type</th>
                     <td>
                         <span class="badge bg-label-{{ !empty($recordData->to_wallet_id) ? 'secondary' : ($recordData->type === 'income' ? 'success' : 'danger') }}">{{ (!empty($recordData->to_wallet_id) ? 'Transfer - ' : '').ucwords($recordData->type) }}</span>
                     </td>
+                </tr>
+                <tr>
+                    <th>Category</th>
+                    <td>{{ $recordData->category()->exists() ? ($recordData->category->parent()->exists() ? $recordData->category->parent->name.' - ' : '').$recordData->category->name : '-' }}</td>
                 </tr>
                 <tr>
                     <th>{{ !empty($recordData->to_wallet_id) ? 'From' : 'Wallet' }}</th>

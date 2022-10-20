@@ -98,14 +98,14 @@
                 <div class=" tw__w-full tw__flex tw__overflow-x-auto tw__pb-2">
                     <div class=" nav nav-tabs tw__flex-nowrap tw__flex-row-reverse md:tw__flex-row md:tw__min-w-full" id="monthly-key" role="tablist">
                         @for ($i = date('Y-01-01', strtotime($dataSelectedYear.'-01-01')); $i <= date('Y-m-01', strtotime($dataSelectedYear."-".($dataSelectedYear !== date("Y") ? '12' : date("m"))."-01")); $i = date("Y-m-01", strtotime($i.' +1 months')))
-                            <button type="button" class="tabbed-month nav-link {{ date("Y-m-01", strtotime($dataSelectedMonth)) === date("Y-m-01", strtotime($i)) ? 'active' : '' }}" data-date="{{ date("Y-m-01", strtotime($i)) }}" data-bs-toggle="tab" role="tab" x-on:click="$wire.localUpdate('dataSelectedMonth', $event.target.dataset.date)">{{ date('M', strtotime($i)) }}</button>
+                            <button type="button" class="tabbed-month nav-link {{ date("Y-m-01", strtotime($dataSelectedMonth)) === date("Y-m-01", strtotime($i)) ? 'active' : '' }}" data-date="{{ date("Y-m-01", strtotime($i)) }}" data-bs-toggle="tab" role="tab" wire:click="monthChanged" x-on:click="$wire.localUpdate('dataSelectedMonth', $event.target.dataset.date)">{{ date('M', strtotime($i)) }}</button>
                         @endfor
                     </div>
                 </div>
             </nav>
 
             <div class="tab-content tw__pt-4 tw__px-4" id="monthly-record">
-                <div wire:loading.block>
+                <div wire:loading.block wire:target="monthChanged">
                     @for ($i = 0; $i < 3; $i++)
                         <div class=" tw__px-4 tw__flex tw__flex-col">
                             <div class="list-wrapper tw__flex tw__gap-2 tw__mb-4 last:tw__mb-0">
@@ -126,7 +126,7 @@
                     @endfor
                 </div>
 
-                <div wire:loading.remove class=" tw__px-4" id="record-container"></div>
+                <div wire:loading.remove wire:target="monthChanged" class=" tw__px-4" id="record-container"></div>
             </div>
         </div>
         <div class="card-footer tw__pt-0">

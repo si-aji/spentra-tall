@@ -39,9 +39,9 @@ return [
             ], [
                 'name' => 'Planned Payment',
                 'icon' => 'bx bx-calendar-event',
-                'route' => null,
+                'route' => 'sys.planned-payment.index',
                 'is_header' => false,
-                'state' => null,
+                'state' => 'planned-payment',
                 'sub' => collect([])
             ], [
                 'name' => 'Record',

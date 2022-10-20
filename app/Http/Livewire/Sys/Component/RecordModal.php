@@ -209,7 +209,7 @@ class RecordModal extends Component
         $this->dispatchBrowserEvent('open-modal');
     }
     // Handle Data
-    public function store()
+    public function store($quitely = false, $plannedPaymentRecord = null)
     {
         // Reset Field if Transfer
         if($this->recordType === 'transfer'){
@@ -286,7 +286,7 @@ class RecordModal extends Component
             $wallet = $walletData->id;
         }
 
-        \DB::transaction(function () use ($category, $wallet, $datetime, $file) {
+        \DB::transaction(function () use ($category, $wallet, $datetime, $file, $plannedPaymentRecord) {
             if($this->recordUuid){
                 // Update update Function
                 $record = \App\Models\Record::where('user_id', \Auth::user()->id)
@@ -404,6 +404,16 @@ class RecordModal extends Component
                         $data->receipt = $file;
                         $data->timezone_offset = $this->user_timezone;
                         $data->save();
+
+                        if($plannedPaymentRecord !== null){
+                            if($typ === 'expense'){
+                                $plannedPaymentRecord->record_id = $data->id;
+                            } else if($typ === 'income'){
+                                $plannedPaymentRecord->to_record_id = $data->id;
+                            }
+
+                            $plannedPaymentRecord->save();
+                        }
                     }
                 } else {
                     $data = new \App\Models\Record();
@@ -424,6 +434,11 @@ class RecordModal extends Component
                     $data->receipt = $file;
                     $data->timezone_offset = $this->user_timezone;
                     $data->save();
+
+                    if($plannedPaymentRecord !== null){
+                        $plannedPaymentRecord->record_id = $data->id;
+                        $plannedPaymentRecord->save();
+                    }
                 }
             }
         });
@@ -437,18 +452,21 @@ class RecordModal extends Component
                 unset($this->recordResetField[$key]);
             }
         }
-        $this->dispatchBrowserEvent('trigger-event', [
-            'recordType' => $this->recordType,
-            'recordExtraType' => $this->recordExtraType,
-            'recordAmount' => $this->recordAmount,
-            'recordExtraAmount' => $this->recordExtraAmount
-        ]);
 
-        $this->dispatchBrowserEvent('wire-action', [
-            'status' => 'success',
-            'action' => 'Success',
-            'message' => 'Successfully '.(empty($this->recordUuid) ? 'store new' : 'update').' Record Data'
-        ]);
+        if(!$quitely){
+            $this->dispatchBrowserEvent('trigger-event', [
+                'recordType' => $this->recordType,
+                'recordExtraType' => $this->recordExtraType,
+                'recordAmount' => $this->recordAmount,
+                'recordExtraAmount' => $this->recordExtraAmount
+            ]);
+            $this->dispatchBrowserEvent('wire-action', [
+                'status' => 'success',
+                'action' => 'Success',
+                'message' => 'Successfully '.(empty($this->recordUuid) ? 'store new' : 'update').' Record Data'
+            ]);
+        }
+        
         $this->emit('refreshComponent');
         $this->reset($this->recordResetField);
     }

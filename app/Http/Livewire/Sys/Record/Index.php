@@ -102,6 +102,10 @@ class Index extends Component
     {
         $this->loadPerPage += $limit;
     }
+    public function monthChanged()
+    {
+        
+    }
 
     // Update Model / Variable
     public function localUpdate($key, $value): void

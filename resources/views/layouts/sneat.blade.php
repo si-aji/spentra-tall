@@ -98,6 +98,13 @@
         {{-- Wallet Group Modal --}}
         @livewire(\App\Http\Livewire\Sys\Component\WalletGroupModal::class, ['user' => \Auth::user()], key(\Auth::user()->id))
     @endif
+
+    {{-- Planned Payment Record --}}
+    @livewire(\App\Http\Livewire\Sys\Component\PlannedPaymentRecordModal::class, ['user' => \Auth::user()], key(\Auth::user()->id))
+    @if (isset($componentPlannedPayment) && $componentPlannedPayment)
+        {{-- Planned Payment Modal --}}
+        @livewire(\App\Http\Livewire\Sys\Component\PlannedPaymentModal::class, ['user' => \Auth::user()], key(\Auth::user()->id))
+    @endif
     @if (isset($componentCategory) && $componentCategory)
         {{-- Category Modal --}}
         @livewire(\App\Http\Livewire\Sys\Component\CategoryModal::class, ['user' => \Auth::user()], key(\Auth::user()->id))

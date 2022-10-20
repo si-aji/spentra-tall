@@ -40,6 +40,12 @@ Route::group([
     Route::get('/', \App\Http\Livewire\Sys\Dashboard\Index::class)
         ->name('index');
 
+    // Planned Payment
+    Route::get('planned-payment/{uuid}', \App\Http\Livewire\Sys\PlannedPayment\Show::class)
+        ->name('planned-payment.show');
+    Route::get('planned-payment', \App\Http\Livewire\Sys\PlannedPayment\Index::class)
+        ->name('planned-payment.index');
+
     // Record
     Route::group([
         'as' => 'record.',

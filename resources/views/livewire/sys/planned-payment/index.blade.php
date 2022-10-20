@@ -1,0 +1,195 @@
+@section('title', 'Planned Payment List')
+@section('breadcrumb')
+    <h4 class="tw__fw-bold tw__py-3 tw__mb-4 tw__text-2xl breadcrumb">
+        <span>
+            <a href="{{ route('sys.index') }}">Dashboard</a>
+        </span>
+        <span class="active">Planned Payment: List</span>
+    </h4>
+@endsection
+
+<div>
+    {{-- The Master doesn't talk, he acts. --}}
+    <div class="">
+        <a href="javascript:void(0)" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-plannedPayment">
+            <span class=" tw__flex tw__items-center tw__gap-2"><i class="bx bx-plus"></i>Add new</span>
+        </a>
+    </div>
+
+    {{-- Filter --}}
+    <div class="card tw__mt-4">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12 col-lg-3">
+                    <div class="form-group tw__mb-4 lg:tw__mb-0">
+                        <label>Sort by</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- List --}}
+    <div class="card mt-4">
+        <div class="card-body" id="plannedPayment-container"></div>
+        <div class="card-footer tw__pt-0">
+            <div class=" tw__flex tw__items-center tw__justify-between">
+                <button type="button" class="btn btn-primary disabled:tw__cursor-not-allowed" {{ $paginate->hasMorePages() ? '' : 'disabled' }} x-on:click="@this.loadMore()">Load more</button>
+                <span>Showing {{ $paginate->count() }} of {{ $paginate->total() }} entries</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section('js_inline')
+    <script>
+        document.addEventListener('plannedPayment_wire-init', (e) => {
+            generateList();
+        });
+
+        const generateList = () => {
+            let data = @this.get('dataPlannedPayment');
+            let paneEl = document.getElementById('plannedPayment-container');
+            let plannedContent = null;
+            if(data.length > 0){
+                paneEl.innerHTML = ``;
+
+                if(!paneEl.querySelector(`.content-wrapper`)){
+                    plannedContent = document.createElement('div');
+                    plannedContent.classList.add('content-wrapper');
+                    plannedContent.classList.add('tw__flex', 'tw__gap-4');
+                    paneEl.appendChild(plannedContent);
+                } else {
+                    plannedContent = paneEl.querySelector('.content-wrapper');
+                }
+
+                data.forEach((val, index) => {
+                    let listContainer = document.createElement('div');
+                    listContainer.classList.add('list-wrapper', 'tw__flex', 'tw__gap-4');
+                    plannedContent.appendChild(listContainer);
+
+                    let action = [];
+                    action.push(`
+                        <li>
+                            <a class="dropdown-item tw__text-yellow-400" href="javascript:void(0)" data-uuid="${val.uuid}" onclick="Livewire.emitTo('sys.component.planned-payment-modal', 'editAction', '${val.uuid}')">
+                                <span class=" tw__flex tw__items-center"><i class="bx bx-edit tw__mr-2"></i>Edit</span>
+                            </a>
+                        </li>
+                    `);
+                    action.push(`
+                        <li>
+                            <a class="dropdown-item tw__text-blue-400" href="{{ route('sys.planned-payment.index') }}/${val.uuid}" data-uuid="${val.uuid}">
+                                <span class=" tw__flex tw__items-center"><i class="bx bx-show tw__mr-2"></i>Detail</span>
+                            </a>
+                        </li>
+                    `);
+                    // Handle Action
+                    let actionBtn = '';
+                    if(action.length > 0){
+                        actionBtn = `
+                            <div class="dropdown tw__leading-none tw__flex">
+                                <button class="dropdown-toggle arrow-none" type="button" data-bs-auto-close="outside" id="record_dropdown-${index}" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="record_dropdown-${index}">
+                                    ${action.join('')}
+                                </ul>
+                            </div>
+                        `;
+                    }
+                    // Wallet
+                    let walletName = `${val.wallet.parent ? `${val.wallet.parent.name} - ` : ''}${val.wallet.name}`;
+                    let toWalletName = val.to_wallet_id ? `${val.wallet_transfer_target.parent ? `${val.wallet_transfer_target.parent.name} - ` : ''}${val.wallet_transfer_target.name}` : null;
+                    // Extra Information
+                    let smallInformation = [];
+                    if(val.category){
+                        smallInformation.push(`<span><small class="tw__text-[#293240]"><i class="bx bxs-category tw__mr-1"></i>${val.category.parent_id ? `${val.category.parent.name} - ` : ''}${val.category.name}</small></span>`);
+                    }
+                    if(val.receipt !== null){
+                        smallInformation.push(`<span><small class="tw__text-[#293240]"><i class="bx bx-paperclip bx-rotate-90 tw__mr-1"></i>Receipt</small></span>`);
+                    }
+                    if(val.note !== null){
+                        smallInformation.push(`<span><small class="tw__text-[#293240]"><i class="bx bx-paragraph tw__mr-1"></i>Note</small></span>`);
+                    }
+                    if(val.tags !== null && val.tags !== undefined && val.tags.length > 0){
+                        smallInformation.push(`<span><small class="tw__text-[#293240]"><i class="bx bxs-tag-alt tw__mr-1"></i>Tags</small></span>`);
+                    }
+                    // Alert
+                    let alert = '';
+                    if(moment() > moment(val.next_date)){
+                        alert = `
+                            <small class="tw__bg-red-400 tw__bg-opacity-75 tw__px-2 tw__py-1 tw__rounded tw__mb-2 tw__text-white tw__inline-block"><span class="tw__flex tw__items-center tw__gap-2">
+                                <i class='bx bx-info-circle'></i>Overdue</span>
+                            </small>
+                        `;
+                    }
+
+                    // Content
+                    listContainer.innerHTML = `
+                        <div class=" tw__bg-gray-50 hover:tw__bg-gray-100 tw__transition tw__transition-all tw__rounded-lg tw__w-full content-list tw__p-4">
+                            <div class="tw__flex tw__items-center tw__leading-none tw__gap-1">
+                                <small class="tw__flex tw__flex-col md:tw__flex-row md:tw__items-center tw__gap-1">
+                                    <span class="tw__text-gray-500 tw__flex tw__items-center tw__gap-2"><i class="bx bx-time"></i>${momentDateTime(val.next_date, 'DD MMM, YYYY')}</span>
+                                    <span class="tw__hidden md:tw__block"><i class="bi bi-dot"></i></span>
+                                    <span class="tw__flex tw__items-center tw__leading-none tw__gap-1 tw__flex-wrap tw__text-[#293240]"><span class=""><i class="bx bx-wallet-alt"></i></span>${walletName} ${toWalletName !== null ? `<small><i class="bx bx-caret-right"></i></small>${toWalletName}` : ''}</span>
+                                </small>
+
+                                <div class="tw__ml-auto tw__flex itw__items-center tw__gap-2">
+                                    <span class="${val.type === 'income' ? 'tw__text-green-600' : val.type === 'transfer' ? 'tw__text-gray-600' : 'tw__text-red-600'} tw__text-base tw__hidden md:tw__block">${val.type !== 'income' ? `(${formatRupiah(parseFloat(val.amount) + parseFloat(val.extra_amount))})` : formatRupiah(parseFloat(val.amount) + parseFloat(val.extra_amount))}</span>
+                                    ${actionBtn}
+                                </div>
+                            </div>
+                            <div class="tw__my-2 tw__mt-4 lg:tw__mt-2">
+                                <div class="md:tw__hidden">
+                                    ${alert}
+                                </div>
+                                <div class="tw__flex tw__items-center tw__gap-4">
+                                    <div class="tw__min-h-[35px] tw__min-w-[35px] tw__rounded-full tw__text-white ${val.to_wallet_id ? 'tw__bg-gray-400' : (val.type === 'expense' ? 'tw__bg-red-400' : 'tw__bg-green-400')} tw__bg-opacity-75 tw__flex tw__items-center tw__justify-center">
+                                        <i class="bx bx${val.to_wallet_id ? 's-arrow-to-bottom' : (val.type === 'expense' ? 's-arrow-from-bottom' : '-transfer bx-rotate-90')}"></i>
+                                    </div>
+                                    <div class="tw__flex tw__items-center tw__gap-4 tw__w-full">
+                                        <div class="tw__mr-auto">
+                                            <p class="tw__text-base tw__text-semibold tw__mb-0 tw__text-[#293240]">${val.name}</p>
+                                            <small class="tw__italic tw__text-gray-500">
+                                                ${ucwords(val.type)}
+                                            </small>
+                                        </div>
+                                    </div>
+                                    <div class="tw__hidden md:tw__block">
+                                        ${alert}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class=" lg:tw__hidden">
+                                <small class="tw__italic tw__text-gray-500">
+                                    <i class='bx bx-align-left'></i>
+                                    <span>${val.note ? val.note : 'No description'}</span>
+                                </small>
+                            </div>
+
+                            <div class="md:tw__hidden tw__mt-4">
+                                <span class="${val.type === 'income' ? 'tw__text-green-600' : (val.type === 'transfer' ? 'tw__text-gray-600' : 'tw__text-red-600')} tw__text-base">${val.type === 'expense' ? `(${formatRupiah(parseFloat(val.amount) + parseFloat(val.extra_amount))})` : formatRupiah(parseFloat(val.amount) + parseFloat(val.extra_amount))}</span>
+                            </div>
+                            ${smallInformation.length > 0 ? `<div class=" tw__leading-none tw__flex tw__items-center tw__gap-2 tw__flex-wrap tw__mt-2 lg:tw__mt-0">${smallInformation.join('<i class="bi bi-slash"></i>')}</div>` : ''}
+                        </div>
+                    `;
+                });
+            } else {
+                plannedContent = document.createElement('div');
+                plannedContent.classList.add('alert', 'alert-primary', 'tw__mb-0');
+                plannedContent.setAttribute('role', 'alert');
+                plannedContent.innerHTML = `
+                    <div class=" tw__flex tw__items-center">
+                        <i class="bx bx-error tw__mr-2"></i>
+                        <div class="tw__block tw__font-bold tw__uppercase">
+                            Attention!
+                        </div>
+                    </div>
+                    <span class="tw__block tw__italic">No data found</span>
+                `;
+
+                paneEl.appendChild(plannedContent);
+            }
+        };
+    </script>
+@endsection

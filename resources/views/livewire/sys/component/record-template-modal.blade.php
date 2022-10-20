@@ -21,9 +21,9 @@
                                 {{-- Record Type --}}
                                 <div class=" tw__text-center tw__mb-4">
                                     <div class="btn-group">
-                                        <a href="javascript:void(0)" class="record-type btn" x-on:click="selectedRecordType = 'income';@this.set('recordTemplateType', 'income')" :class="selectedRecordType === 'income' ? 'btn-secondary' : 'btn-outline-secondary'">Income</a>
-                                        <a href="javascript:void(0)" class="record-type btn" x-on:click="selectedRecordType = 'transfer';@this.set('recordTemplateType', 'transfer')" :class="selectedRecordType === 'transfer' ? 'btn-secondary' : 'btn-outline-secondary'">Transfer</a>
-                                        <a href="javascript:void(0)" class="record-type btn" x-on:click="selectedRecordType = 'expense';@this.set('recordTemplateType', 'expense')" :class="selectedRecordType === 'expense' ? 'btn-secondary' : 'btn-outline-secondary'">Expense</a>
+                                        <a href="javascript:void(0)" class="record-type btn" x-on:click="selectedRecordType = 'income';@this.set('recordTemplateType', 'income')" :class="[(selectedRecordType === 'income' ? 'btn-secondary' : 'btn-outline-secondary'), (is_mobile ? 'btn-sm' : '')]">Income</a>
+                                        <a href="javascript:void(0)" class="record-type btn" x-on:click="selectedRecordType = 'transfer';@this.set('recordTemplateType', 'transfer')" :class="[(selectedRecordType === 'transfer' ? 'btn-secondary' : 'btn-outline-secondary'), (is_mobile ? 'btn-sm' : '')]">Transfer</a>
+                                        <a href="javascript:void(0)" class="record-type btn" x-on:click="selectedRecordType = 'expense';@this.set('recordTemplateType', 'expense')" :class="[(selectedRecordType === 'expense' ? 'btn-secondary' : 'btn-outline-secondary'), (is_mobile ? 'btn-sm' : '')]">Expense</a>
                                     </div>
                                 </div>
 
