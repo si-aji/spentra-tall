@@ -746,14 +746,23 @@ input:invalid, textarea:invalid, select:invalid {
 .tw__h-\[140px\] {
   height: 140px !important;
 }
-.tw__h-24 {
-  height: 6rem !important;
+.tw__h-6 {
+  height: 1.5rem !important;
+}
+.tw__h-11 {
+  height: 2.75rem !important;
+}
+.tw__h-5 {
+  height: 1.25rem !important;
 }
 .tw__h-3 {
   height: 0.75rem !important;
 }
 .tw__h-20 {
   height: 5rem !important;
+}
+.tw__h-24 {
+  height: 6rem !important;
 }
 .tw__min-h-\[40px\] {
   min-height: 40px !important;
@@ -779,11 +788,23 @@ input:invalid, textarea:invalid, select:invalid {
 .tw__w-24 {
   width: 6rem !important;
 }
-.tw__w-8 {
-  width: 2rem !important;
-}
 .tw__w-12 {
   width: 3rem !important;
+}
+.tw__w-16 {
+  width: 4rem !important;
+}
+.tw__w-11 {
+  width: 2.75rem !important;
+}
+.tw__w-20 {
+  width: 5rem !important;
+}
+.tw__w-14 {
+  width: 3.5rem !important;
+}
+.tw__w-8 {
+  width: 2rem !important;
 }
 .tw__min-w-\[40px\] {
   min-width: 40px !important;

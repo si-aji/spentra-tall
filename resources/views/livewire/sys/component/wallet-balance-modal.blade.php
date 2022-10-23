@@ -9,10 +9,12 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" wire:click="closeModal"></button>
                     </div>
                     <div class="modal-body">
+                        {{-- Current Balance --}}
                         <div class="form-group tw__mb-4" id="form-current">
                             <label for="input_wallet_balance-amount">Current Balance</label>
                             <input type="text" inputmode="numeric" class="form-control" name="current" id="input_wallet_balance-current" placeholder="Current Balance" readonly>
                         </div>
+                        {{-- Actual Balance --}}
                         <div class="form-group" id="form-actual">
                             <label for="input_wallet_balance-amount">Actual Balance</label>
                             <input type="text" inputmode="numeric" class="form-control @error('walletActualBalance') is-invalid @enderror" name="actual" id="input_wallet_balance-actual" placeholder="Actual Balance">
@@ -68,6 +70,7 @@
 
             document.getElementById('modal-wallet_balance').addEventListener('shown.bs.modal', (e) => {
                 document.getElementById('input_wallet_balance-actual').focus();
+                document.getElementById('input_wallet_balance-actual').select();
             });
         });
 
@@ -80,7 +83,7 @@
                     @this.set('walletActualBalance', amount);
                     @this.set('user_timezone', document.getElementById('user_timezone').value);
                     @this.set('recordPeriod', moment().format('YYYY-MM-DD HH:mm:ss'))
-                    @this.store();
+                    @this.save();
                 });
             }
         });

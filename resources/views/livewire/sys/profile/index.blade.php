@@ -9,7 +9,12 @@
     </h4>
 @endsection
 
-<div>
+<div x-data="{
+		init(){
+			this.uploadState = false;
+			this.uploadProgress = 0;
+		}
+	}">
     <div class="card">
 		<div class="card-body">
 			<ul class="nav nav-pills flex-column flex-md-row">
@@ -22,12 +27,12 @@
 		</div>
 	</div>
 
-	<form id="form-profile" method="POST" wire:submit.prevent="store" x-on:submit="refreshNavbar()" class="card mb-4 tw__mt-4">
+	<form id="form-profile" method="POST" wire:submit.prevent="save" x-on:submit="refreshNavbar()" class="card mb-4 tw__mt-4">
 		@csrf
         <h5 class="card-header">Profile Details</h5>
         <!-- Account -->
         <div class="card-body">
-            <div class="d-flex align-items-start align-items-sm-center gap-4">
+            <div class="d-flex align-items-start align-items-sm-center gap-4" x-on:livewire-upload-start="uploadState = true;uploadProgress = 0;$wire.removePhoto()" x-on:livewire-upload-progress="uploadProgress = $event.detail.progress" x-on:livewire-upload-finish="uploadState = false">
 				@if (empty($photo))
 					<a data-fslightbox href="{{ $avatar }}">
 						<img src="{{ $avatar }}" data-src="{{ \Auth::user()->getProfilePicture() }}" alt="user-avatar" class="d-block rounded tw__object-cover tw__h-24 tw__w-24 tw__border-2 tw__border-[#696cff]" height="100" width="100" id="uploadedAvatar" />
@@ -43,10 +48,15 @@
                         <i class="bx bx-upload d-block d-sm-none"></i>
                         <input type="file" wire:model.lazy="photo" id="upload" class="account-file-input" hidden accept="image/png, image/jpeg"/>
                     </label>
-                    <button type="button" class="btn btn-outline-secondary account-image-reset mb-4">
+                    <button type="button" class="btn btn-outline-secondary account-image-reset mb-4" x-on:click="$wire.removePhoto()">
                         <i class="bx bx-reset d-block d-sm-none"></i>
                         <span class="d-none d-sm-block">Reset</span>
                     </button>
+					<div class=" tw__mt-2" x-show="uploadState">
+						<div class="progress">
+							<div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" style="width: 20%" x-bind:style="{width: `${uploadProgress}%`}" aria-valuemin="0" aria-valuemax="100"></div>
+						</div>
+					</div>
                     <p class="text-muted mb-0">Allowed JPG, GIF or PNG. Max size of 800K</p>
                 </div>
             </div>
@@ -76,8 +86,8 @@
 			</div>
 
 			<div class="mt-2">
-				<button type="submit" class="btn btn-primary me-2">Save changes</button>
-				<button type="reset" class="btn btn-outline-secondary">Cancel</button>
+				<button type="submit" class="btn btn-primary me-2" x-bind:disabled="uploadState">Save changes</button>
+				<button type="reset" class="btn btn-outline-secondary" x-on:click="$wire.removePhoto()">Cancel</button>
 			</div>
         </div>
         <!-- /Account -->

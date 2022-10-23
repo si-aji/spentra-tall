@@ -91,12 +91,12 @@ class PlannedPaymentModal extends Component
         $this->fetchListCategory();
         $this->fetchListWallet();
 
-        $this->dispatchBrowserEvent('plannedPayment_wire-init');
+        $this->dispatchBrowserEvent('plannedPaymentModal_wire-init');
         return view('livewire.sys.component.planned-payment-modal');
     }
 
     // Handle Data
-    public function store()
+    public function save()
     {
         // Reset Field if Transfer
         if($this->plannedPaymentType === 'transfer'){
@@ -192,7 +192,9 @@ class PlannedPaymentModal extends Component
             $plannedPayment->extra_percentage = $this->plannedPaymentExtraType === 'percentage' ? $this->plannedPaymentExtraAmount : null;
             $plannedPayment->extra_amount = $this->plannedPaymentExtraType === 'percentage' ? ($this->plannedPaymentAmount * ($this->plannedPaymentExtraAmount / 100)) : ($this->plannedPaymentExtraAmount != '' ? $this->plannedPaymentExtraAmount : 0);
             $plannedPayment->start_date = $datetime;
-            $plannedPayment->next_date = date("Y-m-d", strtotime('+'.$this->plannedPaymentRepeat.' '.(new \App\Models\PlannedPayment())->getRepeatType($this->plannedPaymentRepeatType)));
+            if(empty($this->plannedPaymentUuid)){
+                $plannedPayment->next_date = $datetime;
+            }
             $plannedPayment->repeat_type = $this->plannedPaymentRepeatType;
             $plannedPayment->repeat_every = $this->plannedPaymentRepeat;
             $plannedPayment->until_type = 'forever';

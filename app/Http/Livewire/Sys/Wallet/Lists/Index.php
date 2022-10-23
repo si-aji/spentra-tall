@@ -15,6 +15,10 @@ class Index extends Component
         $this->submenuState = 'list';
     }
 
+    /**
+     * Render component livewire view
+     * 
+     */
     public function render()
     {
         $this->dispatchBrowserEvent('wallet_list-init');

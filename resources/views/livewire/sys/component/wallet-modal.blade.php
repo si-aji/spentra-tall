@@ -1,12 +1,13 @@
 <div>
     {{-- If your happiness depends on money, you will never be happy with yourself. --}}
-    <form id="wallet-form" wire:submit.prevent="store('{{ $walletUuid }}')">
+    <form id="wallet-form" wire:submit.prevent="save()">
         <div class="offcanvas offcanvas-end" tabindex="-1" id="modal-wallet" aria-labelledby="offcanvasLabel" wire:init="" wire:ignore.self x-data="">
             <div class="offcanvas-header">
                 <h5 id="offcanvasLabel" class="offcanvas-title">Wallet: {{ $walletTitle }}</h5>
                 <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div class="offcanvas-body">
+                {{-- Parent --}}
                 <div class="form-group tw__mb-4">
                     <label for="input_wallet-wallet_id" data-selected="{{ $walletParent }}">Parent</label>
                     <select class="form-control @error('walletParent') is-invalid @enderror" id="input_wallet-wallet_id" name="wallet_id" placeholder="Search for Wallet Data" x-on:change="$wire.localUpdate('walletParent', $event.target.value)" {{ isset($walletUuid) && !empty($walletUuid) ? 'disabled' : '' }}>
@@ -23,6 +24,7 @@
                     @endif
                 </div>
     
+                {{-- Name --}}
                 <div class="form-group tw__mb-4">
                     <label for="input_wallet-name">Name</label>
                     <input type="text" class="form-control @error('walletName') is-invalid @enderror" name="name" id="input_wallet-name" placeholder="Name" wire:model.defer="walletName" value="{{ $walletName }}">
@@ -47,6 +49,7 @@
 @push('javascript')
     <script>
         window.addEventListener('wallet_wire-init', (event) => {
+            // Choices
             let walletChoice =null;
             if(document.getElementById('input_wallet-wallet_id')){
                 const walletEl = document.getElementById('input_wallet-wallet_id');
@@ -59,6 +62,7 @@
                     shouldSort: false
                 });
             }
+
             document.getElementById('modal-wallet').addEventListener('hidden.bs.offcanvas', (e) => {
                 Livewire.emitTo('sys.component.wallet-modal', 'closeModal');
             });

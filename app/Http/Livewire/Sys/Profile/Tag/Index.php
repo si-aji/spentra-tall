@@ -26,12 +26,17 @@ class Index extends Component
         }
     }
 
+    /**
+     * Render component livewire view
+     * 
+     */
     public function render()
     {
-        return view('livewire.sys.profile.tag.index')->extends('layouts.sneat', [
-            'menuState' => $this->menuState,
-            'submenuState' => $this->submenuState,
-            'componentTag' => true
-        ]);
+        return view('livewire.sys.profile.tag.index')
+            ->extends('layouts.sneat', [
+                'menuState' => $this->menuState,
+                'submenuState' => $this->submenuState,
+                'componentTag' => true
+            ]);
     }
 }

@@ -28,14 +28,16 @@ return [
                 'route' => null,
                 'is_header' => false,
                 'state' => null,
-                'sub' => collect([])
+                'sub' => collect([]),
+                'disabled' => true
             ], [
                 'name' => 'Goals',
                 'icon' => 'bx bx-bullseye',
                 'route' => null,
                 'is_header' => false,
                 'state' => null,
-                'sub' => collect([])
+                'sub' => collect([]),
+                'disabled' => true
             ], [
                 'name' => 'Planned Payment',
                 'icon' => 'bx bx-calendar-event',
@@ -56,7 +58,8 @@ return [
                 'route' => null,
                 'is_header' => false,
                 'state' => null,
-                'sub' => collect([])
+                'sub' => collect([]),
+                'disabled' => true
             ], [
                 'name' => 'Master Data',
                 'icon' => null,
@@ -86,6 +89,11 @@ return [
                         'name' => 'Group',
                         'route' => 'sys.wallet.group.index',
                         'state' => 'group',
+                    ], [
+                        'name' => 'Share',
+                        'route' => null,
+                        'state' => 'share',
+                        'disabled' => true
                     ]
                 ])
             ], [

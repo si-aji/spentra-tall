@@ -89,7 +89,8 @@ class Index extends Component
 
         $this->fetchMainCategory();
         $this->fetchMainWallet();
-        $this->dispatchBrowserEvent('record_wire-init');
+        $this->dispatchBrowserEvent('recordPluginsInit');
+        $this->dispatchBrowserEvent('recordLoadData');
         return view('livewire.sys.record.index', [
             'paginate' => $paginate
         ])->extends('layouts.sneat', [

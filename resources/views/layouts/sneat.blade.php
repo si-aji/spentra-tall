@@ -64,7 +64,10 @@
                     <!-- Content -->
                     <div class="container-xxl flex-grow-1 container-p-y">
                         @yield('breadcrumb')
-                        @yield('content')
+
+                        <div class="content-wrapper">
+                            @yield('content')
+                        </div>
                     </div>
 
                     <!-- Layout Footer -->

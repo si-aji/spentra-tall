@@ -150,18 +150,16 @@ class RecordModal extends Component
         //     'walletTransfer' => $this->recordWalletTransfer,
         // ]);
 
-        $this->dispatchBrowserEvent('record_wire-init');
+        $this->dispatchBrowserEvent('recordModal_wire-init');
         return view('livewire.sys.component.record-modal');
     }
 
-    public function updatedRecordPeriod()
-    {
-        \Log::debug("Debug on Record Period changed", [
-            'value' => $this->recordPeriod
-        ]);
-    }
     public function updatedRecordReceipt()
     {
+        \Log::debug("Updated Receipt", [
+            '!empty' => $this->recordReceipt ? 'true' : 'false'
+        ]);
+
         if($this->recordReceipt){
             if(round($this->recordReceipt->getSize()) / 1024.4 > 100){
                 throw \Illuminate\Validation\ValidationException::withMessages([
@@ -209,7 +207,7 @@ class RecordModal extends Component
         $this->dispatchBrowserEvent('open-modal');
     }
     // Handle Data
-    public function store($quitely = false, $plannedPaymentRecord = null)
+    public function save($quitely = false, $plannedPaymentRecord = null)
     {
         // Reset Field if Transfer
         if($this->recordType === 'transfer'){
@@ -516,6 +514,9 @@ class RecordModal extends Component
 
     public function removeReceipt(): void
     {
+        \Log::debug("Remove Receipt", [
+            '!empty' => $this->recordReceipt ? 'true' : 'false'
+        ]);
         if($this->recordReceipt){
             if(\File::exists('livewire-tmp'.'/'.$this->recordReceipt->getFilename())){
                 \Storage::delete('livewire-tmp'.'/'.$this->recordReceipt->getFilename());

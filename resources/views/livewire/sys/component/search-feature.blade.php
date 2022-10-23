@@ -1,6 +1,6 @@
-<div>
+<div x-data="{result: false}">
     {{-- Nothing in the world is as soft and yielding as water. --}}
-    <div class=" tw__fixed tw__pt-4 tw__z-[1050] tw__w-full lg:tw__w-[calc(100%-calc(0.625rem*2)-15rem)]" x-data="{result: false}">
+    <div class=" tw__fixed tw__pt-4 tw__z-[1050] tw__w-full lg:tw__w-[calc(100%-calc(0.625rem*2)-15rem)]">
         <div class="container-xxl">
             <!-- Navbar -->
             <nav class=" tw__w-full layout-navbar navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme tw__inline-flex tw__m-0" id="layout-navbar">
@@ -105,7 +105,7 @@
             </nav>
             <!-- / Navbar -->
         
-            <div class=" tw__mt-2" id="search-result" x-show="result">
+            <div class=" tw__mt-2" id="search-result" x-show="result" style="display: none;">
                 <!-- Search Result -->
                 <div class=" tw__bg-white tw__rounded tw__p-4">
                     <div class="search-result">

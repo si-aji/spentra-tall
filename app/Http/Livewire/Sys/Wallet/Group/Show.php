@@ -26,9 +26,13 @@ class Show extends Component
             ->firstOrFail();
     }
 
+    /**
+     * Render component livewire view
+     * 
+     */
     public function render()
     {
-        $this->dispatchBrowserEvent('wallet_group_wire-init');
+        $this->dispatchBrowserEvent('walletGroupShow-loadData');
 
         return view('livewire.sys.wallet.group.show')->extends('layouts.sneat', [
             'menuState' => $this->menuState,

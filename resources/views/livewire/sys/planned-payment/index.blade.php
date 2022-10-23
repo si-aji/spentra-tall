@@ -8,7 +8,7 @@
     </h4>
 @endsection
 
-<div>
+<div wire:init="loadListData()">
     {{-- The Master doesn't talk, he acts. --}}
     <div class="">
         <a href="javascript:void(0)" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-plannedPayment">
@@ -31,7 +31,33 @@
 
     {{-- List --}}
     <div class="card mt-4">
-        <div class="card-body" id="plannedPayment-container"></div>
+        <div class="card-body" id="plannedPayment-container">
+            @for ($i = 0; $i < 3; $i++)
+                <div class=" tw__flex tw__flex-col tw__mb-4 last:tw__mb-0">
+                    <div class="list-wrapper">
+                        <div class=" tw__bg-gray-300 tw__rounded-lg tw__w-full content-list tw__p-4 tw__animate-pulse tw__self-center">
+                            <div class=" tw__flex tw__justify-between">
+                                <div class="tw__flex tw__gap-4">
+                                    <span class=" tw__bg-gray-400 tw__rounded tw__h-6 tw__w-24"></span>
+                                    <span class=" tw__bg-gray-400 tw__rounded tw__h-6 tw__w-12"></span>
+                                </div>
+                                <div class=" tw__flex tw__gap-4">
+                                    <span class=" tw__bg-gray-400 tw__rounded tw__h-6 tw__w-16"></span>
+                                    <span class=" tw__bg-gray-400 tw__rounded tw__h-6 tw__w-4"></span>
+                                </div>
+                            </div>
+                            <div class=" tw__flex tw__gap-4 tw__mt-2 tw__items-center">
+                                <span class=" tw__bg-gray-400 tw__w-11 tw__h-11 tw__rounded-full"></span>
+                                <div class=" tw__flex tw__flex-col tw__gap-2">
+                                    <span class=" tw__bg-gray-400 tw__rounded tw__w-20 tw__h-5"></span>
+                                    <span class=" tw__bg-gray-400 tw__rounded tw__w-14 tw__h-3"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endfor
+        </div>
         <div class="card-footer tw__pt-0">
             <div class=" tw__flex tw__items-center tw__justify-between">
                 <button type="button" class="btn btn-primary disabled:tw__cursor-not-allowed" {{ $paginate->hasMorePages() ? '' : 'disabled' }} x-on:click="@this.loadMore()">Load more</button>
@@ -43,17 +69,36 @@
 
 @section('js_inline')
     <script>
-        document.addEventListener('plannedPayment_wire-init', (e) => {
-            generateList();
+        document.addEventListener('DOMContentLoaded', (e) => {
+            window.dispatchEvent(new Event('plannedPaymentLoadData'));
         });
 
+        if(document.getElementById('modal-plannedPayment')){
+            document.getElementById('modal-plannedPayment').addEventListener('hide.bs.modal', (e) => {
+                window.dispatchEvent(new Event('plannedPaymentLoadData'));
+            });
+        }
+
+        // Listen to Load Event
+        window.addEventListener('plannedPaymentLoadData', (e) => {
+            if(document.getElementById('plannedPayment-container')){
+                document.getElementById('plannedPayment-container').innerHTML = ``;
+                generateList();
+            }
+        });
+
+        // Generate Planned Payment List
         const generateList = () => {
+            // Get data from Component
             let data = @this.get('dataPlannedPayment');
+            // Define container
             let paneEl = document.getElementById('plannedPayment-container');
             let plannedContent = null;
             if(data.length > 0){
+                // Empty Container - Skeleton
                 paneEl.innerHTML = ``;
 
+                // Generate Wrapper
                 if(!paneEl.querySelector(`.content-wrapper`)){
                     plannedContent = document.createElement('div');
                     plannedContent.classList.add('content-wrapper');
@@ -63,11 +108,13 @@
                     plannedContent = paneEl.querySelector('.content-wrapper');
                 }
 
+                // Loop through data
                 data.forEach((val, index) => {
                     let listContainer = document.createElement('div');
                     listContainer.classList.add('list-wrapper', 'tw__flex', 'tw__gap-4');
                     plannedContent.appendChild(listContainer);
 
+                    // Generate Action button
                     let action = [];
                     action.push(`
                         <li>
@@ -83,7 +130,7 @@
                             </a>
                         </li>
                     `);
-                    // Handle Action
+                    // Handle Action wrapper
                     let actionBtn = '';
                     if(action.length > 0){
                         actionBtn = `
@@ -97,6 +144,10 @@
                             </div>
                         `;
                     }
+
+                    /**
+                     * Generate List Format
+                     * */
                     // Wallet
                     let walletName = `${val.wallet.parent ? `${val.wallet.parent.name} - ` : ''}${val.wallet.name}`;
                     let toWalletName = val.to_wallet_id ? `${val.wallet_transfer_target.parent ? `${val.wallet_transfer_target.parent.name} - ` : ''}${val.wallet_transfer_target.name}` : null;
@@ -108,7 +159,7 @@
                     if(val.receipt !== null){
                         smallInformation.push(`<span><small class="tw__text-[#293240]"><i class="bx bx-paperclip bx-rotate-90 tw__mr-1"></i>Receipt</small></span>`);
                     }
-                    if(val.note !== null){
+                    if(val.note !== null && val.note !== ''){
                         smallInformation.push(`<span><small class="tw__text-[#293240]"><i class="bx bx-paragraph tw__mr-1"></i>Note</small></span>`);
                     }
                     if(val.tags !== null && val.tags !== undefined && val.tags.length > 0){
@@ -175,6 +226,7 @@
                     `;
                 });
             } else {
+                // Data is empty
                 plannedContent = document.createElement('div');
                 plannedContent.classList.add('alert', 'alert-primary', 'tw__mb-0');
                 plannedContent.setAttribute('role', 'alert');

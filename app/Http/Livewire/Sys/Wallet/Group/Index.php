@@ -14,6 +14,10 @@ class Index extends Component
         $this->submenuState = 'group';
     }
 
+    /**
+     * Render component livewire view
+     * 
+     */
     public function render()
     {
         $this->dispatchBrowserEvent('wallet_group_wire-init');

@@ -66,37 +66,19 @@ class WalletModal extends Component
         return view('livewire.sys.component.wallet-modal');
     }
 
-    public function store()
+    public function save()
     {
-        \Log::debug("Debug on Wallet Modal Component ~ \App\Http\Livewire\Sys\Component\WalletModal", [
-            'parent' => $this->walletParent,
-            'name' => $this->walletName,
-            'balance' => $this->walletBalance,
-            'modalState' => $this->walletModalState,
-            'uuid' => $this->walletUuid
-        ]);
+        // \Log::debug("Debug on Wallet Modal Component ~ \App\Http\Livewire\Sys\Component\WalletModal", [
+        //     'parent' => $this->walletParent,
+        //     'name' => $this->walletName,
+        //     'balance' => $this->walletBalance,
+        //     'modalState' => $this->walletModalState,
+        //     'uuid' => $this->walletUuid
+        // ]);
         $parent = null;
         if(!empty($this->walletParent)){
             $parent = \App\Models\Wallet::where(\DB::raw('BINARY `uuid`'), $this->walletParent)
                 ->firstOrFail();
-        }
-
-        // Get Last Order
-        $order = 0;
-        $lastOrder = \App\Models\Wallet::query()
-            ->where('user_id', \Auth::user()->id);
-        if (!empty($parent)) {
-            $lastOrder->where('parent_id', $parent->id);
-        } else {
-            $lastOrder->whereNull('parent_id');
-        }
-        $lastOrder = $lastOrder->orderBy('order_main', 'desc')->first();
-        \Log::debug("Last Order", [
-            'order' => $order,
-            'lastOrder' => !empty($lastOrder) ? $lastOrder->order_main : 'null'
-        ]);
-        if (! empty($lastOrder)) {
-            $order = $lastOrder->order_main;
         }
 
         $this->validate();
@@ -105,13 +87,28 @@ class WalletModal extends Component
             $data = \App\Models\Wallet::where(\DB::raw('BINARY `uuid`'), $this->walletUuid)
                 ->firstOrFail();
             $parent = $data->parent()->exists() ? $data->parent : null;
+        } else {
+            // Get Last Order
+            $order = 0;
+            $lastOrder = \App\Models\Wallet::query()
+                ->where('user_id', \Auth::user()->id);
+            if (!empty($parent)) {
+                $lastOrder->where('parent_id', $parent->id);
+            } else {
+                $lastOrder->whereNull('parent_id');
+            }
+            $lastOrder = $lastOrder->orderBy('order_main', 'desc')->first();
+            if (! empty($lastOrder)) {
+                $order = $lastOrder->order_main;
+            }
+
+            $data->order = $order + 1;
         }
 
         $data->user_id = \Auth::user()->id;
         $data->parent_id = !empty($parent) ? $parent->id : null;
         $data->name = $this->walletName;
         $data->type = 'general';
-        $data->order = $order + 1;
         $data->save();
 
         $this->fetchMainWallet();
@@ -123,37 +120,8 @@ class WalletModal extends Component
         $this->reset($this->walletResetField);
         $this->emit('refreshComponent');
 
-        // Create Wallet Re-Order Request
-        $allParentWallet = \App\Models\Wallet::whereNull('parent_id')
-            // ->orderBy('order_main', 'asc')
-            ->orderByRaw('ISNULL(order_main), order_main ASC')
-            ->get();
-        $formatedRequest = [];
-        if (count($allParentWallet) > 0) {
-            foreach ($allParentWallet as $wallet) {
-                $arr = [
-                    'id' => $wallet->uuid,
-                ];
-
-                if ($wallet->child()->exists()) {
-                    $childArr = [];
-                    foreach ($wallet->child()->orderBy('order', 'asc')->get() as $child) {
-                        $childArr[] = [
-                            'id' => $child->uuid,
-                        ];
-                    }
-
-                    $arr = [
-                        'id' => $wallet->uuid,
-                        'child' => $childArr,
-                    ];
-                }
-
-                $formatedRequest[] = $arr;
-            }
-
-            (new \App\Http\Livewire\Sys\Wallet\Lists\ReOrder())->reOrder($formatedRequest);
-        }
+        // Re-Order
+        (new \App\Http\Livewire\Sys\Wallet\Lists\ReOrder())->reOrder();
     }
 
     /**

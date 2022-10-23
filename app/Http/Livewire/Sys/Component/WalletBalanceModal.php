@@ -60,7 +60,7 @@ class WalletBalanceModal extends Component
 
         $this->dispatchBrowserEvent('wallet_balance_wire-modalShow');
     }
-    public function store()
+    public function save()
     {
         // if($this->walletBalance == $this->walletActualBalance){
         //     throw \Illuminate\Validation\ValidationException::withMessages([
@@ -77,7 +77,7 @@ class WalletBalanceModal extends Component
                 $record->user_timezone = $this->user_timezone;
                 $record->recordPeriod = $this->recordPeriod;
                 $record->recordNote = 'Wallet Balance adjustment';
-                $record->store();
+                $record->save();
             });
         }
 

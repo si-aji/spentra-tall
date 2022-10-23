@@ -17,6 +17,7 @@ class Index extends Component
     public $submenuState = null;
     public $extraMenu = [];
 
+    // Form Field
     public $name = '';
     public $username = '';
     public $email = '';
@@ -53,15 +54,24 @@ class Index extends Component
         }
     }
 
+    /**
+     * Render component livewire view
+     * 
+     */
     public function render()
     {
-        return view('livewire.sys.profile.index')->extends('layouts.sneat', [
-            'menuState' => $this->menuState,
-            'submenuState' => $this->submenuState
-        ]);
+        return view('livewire.sys.profile.index')
+            ->extends('layouts.sneat', [
+                'menuState' => $this->menuState,
+                'submenuState' => $this->submenuState
+            ]);
     }
 
-    public function store()
+    /**
+     * Function to save to database
+     * 
+     */
+    public function save()
     {
         $this->validate();
 
@@ -95,6 +105,9 @@ class Index extends Component
         ]);
     }
 
+    /**
+     * Check if password is match
+     */
     public function checkAccount()
     {
         $checkPassword = \Hash::check($this->deletePassword, \Auth::user()->password);
@@ -107,5 +120,17 @@ class Index extends Component
     {
         \Auth::logout();
         return redirect()->route('home');
+    }
+
+    // Remove temp file
+    public function removePhoto(): void
+    {
+        if($this->photo){
+            if(\File::exists('livewire-tmp'.'/'.$this->photo->getFilename())){
+                \Storage::delete('livewire-tmp'.'/'.$this->photo->getFilename());
+            }
+
+            $this->photo = null;
+        }
     }
 }

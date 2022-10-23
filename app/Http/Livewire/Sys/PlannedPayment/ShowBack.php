@@ -4,18 +4,17 @@ namespace App\Http\Livewire\Sys\PlannedPayment;
 
 use Livewire\Component;
 
-class Show extends Component
+class ShowBack extends Component
 {
-    public $menuState = null;
-    public $submenuState = null;
-
-    // Data
     public $plannedPaymentUuid;
     public $plannedPaymentData = '';
     public $plannedPaymentRecordData;
 
     // Load More Conf
-    public $loadPerPage = 10;
+    public $loadPerPage = 1;
+
+    public $menuState = null;
+    public $submenuState = null;
 
     protected $listeners = [
         'refreshComponent' => '$refresh',
@@ -34,9 +33,8 @@ class Show extends Component
         $this->plannedPaymentData = \App\Models\PlannedPayment::where('user_id', \Auth::user()->id)
             ->where(\DB::raw('BINARY `uuid`'), $this->plannedPaymentUuid)
             ->firstOrFail();
-        $this->plannedPaymentRecordData = \App\Models\PlannedPaymentRecord::whereHas('plannedPayment', function($q){
-                return $q->where(\DB::raw('BINARY `uuid`'), $this->plannedPaymentUuid);
-            })
+        $this->plannedPaymentRecordData = $this->plannedPaymentData
+            ->plannedPaymentRecord()
             ->with('plannedPayment.category.parent', 'wallet.parent', 'walletTransferTarget.parent', 'record.category.parent', 'recordTransferTarget')
             ->orderBy('period', 'desc');
 
@@ -44,15 +42,8 @@ class Show extends Component
         $paginate = $this->plannedPaymentRecordData;
         $this->plannedPaymentRecordData = collect($this->plannedPaymentRecordData->items());
 
-        \Log::debug("Debug on Planned Payment show", [
-            'perPage' => $this->loadPerPage,
-            'data' => count($this->plannedPaymentRecordData),
-            'uuid' => $this->plannedPaymentUuid,
-            'plannedData' => $this->plannedPaymentData
-        ]);
-
-        $this->dispatchBrowserEvent('plannedPaymentShowLoadData');
-        return view('livewire.sys.planned-payment.show', [
+        $this->dispatchBrowserEvent('plannedPayment_wire-inita');
+        return view('livewire.sys.planned-payment.show-back', [
             'paginate' => $paginate
         ])->extends('layouts.sneat', [
             'menuState' => $this->menuState,

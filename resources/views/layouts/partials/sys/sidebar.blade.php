@@ -89,7 +89,7 @@
 							<ul class="menu-sub">
 								@foreach ($menu['sub'] as $submenu)
 									<li class="menu-item {{ isset($submenuState) && isset($submenu['state']) && $submenuState === $submenu['state'] ? 'active' : '' }}">
-										<a href="{{ $submenu['route'] ? route($submenu['route']) : 'javascript:void(0)' }}" class="menu-link">
+										<a href="{{ $submenu['route'] ? route($submenu['route']) : 'javascript:void(0)' }}" class="menu-link {{ isset($submenu['disabled']) && $submenu['disabled'] ? 'disabled' : '' }}">
 											<span>{{ $submenu['name'] }}</span>
 										</a>
 									</li>
@@ -97,7 +97,7 @@
 							</ul>
 						@else
 							{{-- Standalone --}}
-							<a href="{{ $menu['route'] ? route($menu['route']) : 'javascript:void(0)' }}" class="menu-link">
+							<a href="{{ $menu['route'] ? route($menu['route']) : 'javascript:void(0)' }}" class="menu-link {{ isset($menu['disabled']) && $menu['disabled'] ? 'disabled' : '' }}">
 								@if (isset($menu['icon']) && !empty($menu['icon']))
 									<i class="menu-icon tf-icons {{ $menu['icon'] }}"></i>
 								@endif

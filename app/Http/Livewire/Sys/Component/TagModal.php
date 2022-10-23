@@ -40,13 +40,21 @@ class TagModal extends Component
         ];
     }
 
+    /**
+     * Render component livewire view
+     * 
+     */
     public function render()
     {
         $this->dispatchBrowserEvent('tag_wire-init');
         return view('livewire.sys.component.tag-modal');
     }
 
-    public function store()
+    /**
+     * Function to save to database
+     * 
+     */
+    public function save()
     {
         $this->validate();
         $data = new \App\Models\Tag();
@@ -96,10 +104,6 @@ class TagModal extends Component
     // Update Model / Variable
     public function localUpdate($key, $value): void
     {
-        // \Log::debug("Debug on Local Update function", [
-        //     'key' => $key,
-        //     'value' => $value
-        // ]);
         switch($key){
             case 'tagModalState':
                 $this->tagModalState = $value;

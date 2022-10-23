@@ -1,12 +1,13 @@
 <div>
     {{-- If your happiness depends on money, you will never be happy with yourself. --}}
-    <form id="wallet_group-form" wire:submit.prevent="store()">
+    <form id="wallet_group-form" wire:submit.prevent="save()">
         <div class="offcanvas offcanvas-end" tabindex="-1" id="modal-wallet_group" aria-labelledby="offcanvasLabel" wire:init="" wire:ignore.self x-data="">
             <div class="offcanvas-header">
                 <h5 id="offcanvasLabel" class="offcanvas-title">Wallet Group: {{ $walletGroupTitle }}</h5>
                 <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div class="offcanvas-body">
+                {{-- Name --}}
                 <div class="form-group tw__mb-4">
                     <label for="input_wallet_group-name">Name</label>
                     <input type="text" class="form-control @error('walletGroupName') is-invalid @enderror" name="name" id="input_wallet_group-name" placeholder="Name" wire:model.defer="walletGroupName" value="{{ $walletGroupName }}">
@@ -15,6 +16,7 @@
                     @enderror
                 </div>
 
+                {{-- Wallet List --}}
                 <div class="form-group tw__mb-4">
                     <label for="input_wallet_group-wallet_id">List</label>
                     <select class="form-control @error('walletGroupList') is-invalid @enderror" id="input_wallet_group-wallet_id" name="wallet_id[]" placeholder="Search for Wallet Data" multiple>

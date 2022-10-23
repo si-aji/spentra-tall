@@ -10,6 +10,7 @@ class Index extends Component
     public $submenuState = null;
     public $extraMenu = [];
 
+    // List / Select
     public $listCategoryDefault = [
         [
             'name' => 'Income',
@@ -157,15 +158,23 @@ class Index extends Component
         }
     }
 
+    /**
+     * Render component livewire view
+     * 
+     */
     public function render()
     {
-        return view('livewire.sys.profile.category.index')->extends('layouts.sneat', [
-            'menuState' => $this->menuState,
-            'submenuState' => $this->submenuState,
-            'componentCategory' => true
-        ]);
+        return view('livewire.sys.profile.category.index')
+            ->extends('layouts.sneat', [
+                'menuState' => $this->menuState,
+                'submenuState' => $this->submenuState,
+                'componentCategory' => true
+            ]);
     }
 
+    /**
+     * Generate Default Category
+     */
     public function generateDefaultCategory()
     {
         $orderMain = 0;

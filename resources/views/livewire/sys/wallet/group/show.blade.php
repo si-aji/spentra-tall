@@ -144,7 +144,11 @@
                 responsive: true
             });
         }
-        document.addEventListener('wallet_group_wire-init', (event) => {
+
+        document.addEventListener('DOMContentLoaded', (e) => {
+            document.dispatchEvent(new Event('walletGroupShowLoadData'));
+        });
+        document.addEventListener('walletGroupShowLoadData', (event) => {
             initDatatable();
         });
 

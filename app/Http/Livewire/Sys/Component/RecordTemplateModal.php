@@ -9,16 +9,16 @@ class RecordTemplateModal extends Component
     public $menuState = null;
     public $submenuState = null;
 
+    // List / Select
+    public $listCategory;
+    public $listWallet;
+
     // Modal
     public $recordTemplateModalState = true;
     public $recordTemplateUuid = null;
     public $recordTemplateTitle = 'Add new Record Template';
 
-    // List
-    public $listCategory;
-    public $listWallet;
-
-    // Field
+    // Form Field
     public $recordTemplateType = 'income';
     public $recordTemplateCategory = '';
     public $recordTemplateWallet = '';
@@ -39,7 +39,9 @@ class RecordTemplateModal extends Component
         'editAction' => 'editAction'
     ];
 
-    // Fetch List
+    /**
+     * FetchList Data
+     */
     public function fetchListCategory()
     {
         // Category
@@ -76,6 +78,10 @@ class RecordTemplateModal extends Component
         ];
     }
 
+    /**
+     * Render component livewire view
+     * 
+     */
     public function render()
     {
         $this->fetchListCategory();
@@ -86,7 +92,7 @@ class RecordTemplateModal extends Component
     }
 
     // Handle Data
-    public function store()
+    public function save()
     {
         // Reset Field if Transfer
         if($this->recordTemplateType === 'transfer'){
@@ -107,24 +113,24 @@ class RecordTemplateModal extends Component
             'recordTemplateNote' => ['nullable'],
         ]);
 
-        \Log::debug("Debug on Record Template", [
-            'name' => $this->recordTemplateName,
-            'type' => $this->recordTemplateType,
-            'category' => $this->recordTemplateCategory,
-            'wallet' => [
-                'from' => $this->recordTemplateWallet,
-                'to' => $this->recordTemplateWalletTransfer
-            ],
-            'amount' => [
-                'base' => $this->recordTemplateAmount,
-                'extra' => [
-                    'type' => $this->recordTemplateExtraType,
-                    'amount' => $this->recordTemplateExtraAmount,
-                ],
-                'final' => $this->recordTemplateFinalAmount
-            ],
-            'note' => $this->recordTemplateNote
-        ]);
+        // \Log::debug("Debug on Record Template", [
+        //     'name' => $this->recordTemplateName,
+        //     'type' => $this->recordTemplateType,
+        //     'category' => $this->recordTemplateCategory,
+        //     'wallet' => [
+        //         'from' => $this->recordTemplateWallet,
+        //         'to' => $this->recordTemplateWalletTransfer
+        //     ],
+        //     'amount' => [
+        //         'base' => $this->recordTemplateAmount,
+        //         'extra' => [
+        //             'type' => $this->recordTemplateExtraType,
+        //             'amount' => $this->recordTemplateExtraAmount,
+        //         ],
+        //         'final' => $this->recordTemplateFinalAmount
+        //     ],
+        //     'note' => $this->recordTemplateNote
+        // ]);
 
         \DB::transaction(function () {
             // Category
@@ -187,6 +193,7 @@ class RecordTemplateModal extends Component
         ]);
         $this->reset($this->recordResetField);
     }
+    
     /**
      * Handle edit request data
      */

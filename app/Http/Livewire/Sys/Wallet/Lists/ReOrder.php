@@ -17,6 +17,9 @@ class ReOrder extends Component
         'refreshComponent' => '$refresh',
     ];
 
+    /**
+     * Fetch List Data
+     */
     public function fetchMainWallet()
     {
         // Wallet
@@ -26,12 +29,17 @@ class ReOrder extends Component
             ->orderBy('order_main', 'asc')
             ->get();
     }
+
     public function mount()
     {
         $this->menuState = 'wallet';
         $this->submenuState = 'list';
     }
 
+    /**
+     * Render component livewire view
+     * 
+     */
     public function render()
     {
         $this->fetchMainWallet();
@@ -53,6 +61,40 @@ class ReOrder extends Component
         \Log::debug("Debug on Re Order function ~ \App\Http\Livewire\Sys\Wallet\Lists\ReOrder", [
             'order' => $order
         ]);
+
+        if($order === null){
+            // Create Wallet Re-Order Request
+            $allParentWallet = \App\Models\Wallet::whereNull('parent_id')
+                // ->orderBy('order_main', 'asc')
+                ->orderByRaw('ISNULL(order_main), order_main ASC')
+                ->get();
+            $formatedRequest = [];
+            if (count($allParentWallet) > 0) {
+                foreach ($allParentWallet as $wallet) {
+                    $arr = [
+                        'id' => $wallet->uuid,
+                    ];
+
+                    if ($wallet->child()->exists()) {
+                        $childArr = [];
+                        foreach ($wallet->child()->orderBy('order', 'asc')->get() as $child) {
+                            $childArr[] = [
+                                'id' => $child->uuid,
+                            ];
+                        }
+
+                        $arr = [
+                            'id' => $wallet->uuid,
+                            'child' => $childArr,
+                        ];
+                    }
+
+                    $formatedRequest[] = $arr;
+                }
+            }
+
+            $order = $formatedRequest;
+        }
 
         $numorder = 0;
         $numorderMain = 0;

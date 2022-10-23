@@ -30,16 +30,16 @@
                                 {{-- Record Type --}}
                                 <div class=" tw__text-center tw__mb-4">
                                     <div class="btn-group">
-                                        <a href="javascript:void(0)" class="planned_payment-type btn" x-on:click="selectedRecordType = 'income';@this.set('plannedPaymentType', 'income')" :class="[(selectedRecordType === 'income' ? 'btn-secondary' : 'btn-outline-secondary'), (is_mobile ? 'btn-sm' : '')]">Income</a>
-                                        <a href="javascript:void(0)" class="planned_payment-type btn" x-on:click="selectedRecordType = 'transfer';@this.set('plannedPaymentType', 'transfer')" :class="[selectedRecordType === 'transfer' ? 'btn-secondary' : 'btn-outline-secondary', (is_mobile ? 'btn-sm' : '')]">Transfer</a>
-                                        <a href="javascript:void(0)" class="planned_payment-type btn" x-on:click="selectedRecordType = 'expense';@this.set('plannedPaymentType', 'expense')" :class="[selectedRecordType === 'expense' ? 'btn-secondary' : 'btn-outline-secondary', (is_mobile ? 'btn-sm' : '')]">Expense</a>
+                                        <a href="javascript:void(0)" class="planned_payment-type btn" data-value="income" x-on:click="selectedRecordType = 'income'" :class="[(selectedRecordType === 'income' ? 'btn-secondary' : 'btn-outline-secondary'), (is_mobile ? 'btn-sm' : '')]">Income</a>
+                                        <a href="javascript:void(0)" class="planned_payment-type btn" data-value="transfer" x-on:click="selectedRecordType = 'transfer'" :class="[selectedRecordType === 'transfer' ? 'btn-secondary' : 'btn-outline-secondary', (is_mobile ? 'btn-sm' : '')]">Transfer</a>
+                                        <a href="javascript:void(0)" class="planned_payment-type btn" data-value="expense" x-on:click="selectedRecordType = 'expense'" :class="[selectedRecordType === 'expense' ? 'btn-secondary' : 'btn-outline-secondary', (is_mobile ? 'btn-sm' : '')]">Expense</a>
                                     </div>
                                 </div>
 
                                 {{-- Category --}}
                                 <div class="form-group tw__mb-4" x-show="selectedRecordType !== 'transfer' ? true : false">
                                     <label for="input_planned_payment-category_id">Category</label>
-                                    <select class="form-control" id="input_planned_payment-category_id" name="category_id" placeholder="Search for Category Data" x-on:change="@this.set('plannedPaymentCategory', $event.target.value)">
+                                    <select class="form-control" id="input_planned_payment-category_id" name="category_id" placeholder="Search for Category Data">
                                         <option value="" {{ $plannedPaymentCategory == '' ? 'selected' : '' }}>Search for Category Data</option>
                                         @foreach ($listCategory as $category)
                                             <optgroup label="{{ $category->name }}">
@@ -61,7 +61,7 @@
                                 {{-- Wallet --}}
                                 <div class="form-group tw__mb-4">
                                     <label for="input_planned_payment-wallet_id" x-text="selectedRecordType === 'income' || selectedRecordType === 'expense' ? 'Wallet' : 'From'"></label>
-                                    <select class="form-control" id="input_planned_payment-wallet_id" name="wallet_id" placeholder="Search for Wallet Data" x-on:change="@this.set('plannedPaymentWallet', $event.target.value)">
+                                    <select class="form-control" id="input_planned_payment-wallet_id" name="wallet_id" placeholder="Search for Wallet Data">
                                         <option value="" {{ $plannedPaymentWallet == '' ? 'selected' : '' }}>Search for Wallet Data</option>
                                         @foreach ($listWallet as $wallet)
                                             <optgroup label="{{ $wallet->name }}">
@@ -83,14 +83,14 @@
                                 {{-- Wallet Transfer --}}
                                 <div class="" x-show="selectedRecordType === 'transfer' ? true : false">
                                     <div class=" tw__mb-4">
-                                        <a href="javascript:void(0)" class="btn btn-sm btn-primary" x-on:click="@this.set('plannedPaymentWallet', document.getElementById('input_planned_payment-wallet_transfer_id').value);@this.set('plannedPaymentWalletTransfer', document.getElementById('input_planned_payment-wallet_id').value);">
+                                        <a href="javascript:void(0)" class="btn btn-sm btn-primary" id="btn_plannedPayment-switch">
                                             <span class="tw__flex tw__items-center tw__gap-2"><i class='bx bx-transfer-alt bx-rotate-90' ></i>Switch</span>
                                         </a>
                                     </div>
 
                                     <div class="form-group tw__mb-4" id="form-transfer">
                                         <label for="input_planned_payment-target">To</label>
-                                        <select class="form-control" id="input_planned_payment-wallet_transfer_id" name="wallet_transfer_id" placeholder="Search for Wallet Target Data" x-on:change="@this.set('plannedPaymentWalletTransfer', $event.target.value)">
+                                        <select class="form-control" id="input_planned_payment-wallet_transfer_id" name="wallet_transfer_id" placeholder="Search for Wallet Target Data">
                                             <option value="" {{ $plannedPaymentWalletTransfer == '' ? 'selected' : '' }}>Search for Wallet Target Data</option>
                                             @foreach ($listWallet as $wallet)
                                                 <optgroup label="{{ $wallet->name }}">
@@ -142,9 +142,9 @@
                                     <div class="col-12">
                                         <small class="text-muted">
                                             <span>(</span>
-                                            <a href="javascript:void(0)" class="planned_payment_extra-type" x-on:click="selectedExtraType = 'amount';plannedPaymentCalculateFinal(selectedExtraType);@this.set('plannedPaymentExtraType', 'amount')" :class="selectedExtraType !== 'amount' ? 'tw__text-slate-400' : ''">Amount</a>
+                                            <a href="javascript:void(0)" class="planned_payment_extra-type" data-value="amount" x-on:click="selectedExtraType = 'amount';plannedPaymentCalculateFinal(selectedExtraType)" :class="selectedExtraType !== 'amount' ? 'tw__text-slate-400' : 'active'">Amount</a>
                                             <span>/</span>
-                                            <a href="javascript:void(0)" class="planned_payment_extra-type" x-on:click="selectedExtraType = 'percentage';plannedPaymentCalculateFinal(selectedExtraType);@this.set('plannedPaymentExtraType', 'percentage')" :class="selectedExtraType !== 'percentage' ? 'tw__text-slate-400' : ''">Percentage</a>
+                                            <a href="javascript:void(0)" class="planned_payment_extra-type" data-value="percentage" x-on:click="selectedExtraType = 'percentage';plannedPaymentCalculateFinal(selectedExtraType)" :class="selectedExtraType !== 'percentage' ? 'tw__text-slate-400' : 'active'">Percentage</a>
                                             <span>)</span>
                                         </small>
                                     </div>
@@ -173,7 +173,7 @@
                                                 @enderror
                                             </div>
                                             <div class="col-12 col-lg-8">
-                                                <select class="form-control @error('plannedPaymentRepeatType') is-invalid @enderror" id="input_planned_payment-repeat_type" name="repeat_type" placeholder="Search for Repeat Type Data" x-on:change="@this.set('plannedPaymentRepeatType', $event.target.value)">
+                                                <select class="form-control @error('plannedPaymentRepeatType') is-invalid @enderror" id="input_planned_payment-repeat_type" name="repeat_type" placeholder="Search for Repeat Type Data">
                                                     <option value="" {{ $plannedPaymentRepeatType === '' ? 'selected' : '' }}>Search for Repeat Type Data</option>
                                                     <option value="daily" {{ $plannedPaymentRepeatType === 'daily' ? 'selected' : '' }}>Daily</option>
                                                     <option value="weekly" {{ $plannedPaymentRepeatType === 'weekly' ? 'selected' : '' }}>Weekly</option>
@@ -226,7 +226,7 @@
         var plannedPaymentAmountMask = null;
         var plannedPaymentExtraAmountMask = null;
         var plannedPaymentFinalAmountMask = null;
-        window.addEventListener('plannedPayment_wire-init', (event) => {
+        window.addEventListener('plannedPaymentModal_wire-init', (event) => {
             // iMask
             if(document.getElementById('input_planned_payment-amount')){
                 plannedPaymentAmountMask = IMask(document.getElementById('input_planned_payment-amount'), {
@@ -331,10 +331,14 @@
                 dateFormat: "Y-m-d",
                 allowInput: true,
                 defaultDate: defaultDate,
-                onClose: function(selectedDates, dateStr, instance){
-                    @this.set('plannedPaymentPeriod', document.getElementById('input_planned_payment-period').value);
-                    @this.set('plannedPaymentPeriodChanged', true);
-                }
+            });
+
+            document.getElementById('btn_plannedPayment-switch').addEventListener('click', (e) => {
+                let wallet = document.getElementById('input_planned_payment-wallet_id').value;
+                let walletTransfer = document.getElementById('input_planned_payment-wallet_transfer_id').value;
+
+                walletChoice.setChoiceByValue(walletTransfer);
+                walletTransferChoice.setChoiceByValue(wallet);
             });
         });
 
@@ -355,7 +359,6 @@
             }
 
             let final = amount + extra;
-            @this.set('plannedPaymentFinalAmount', final);
             plannedPaymentFinalAmountMask.value = final.toString();
         }
 
@@ -364,12 +367,19 @@
                 e.preventDefault();
 
                 @this.set('user_timezone', document.getElementById('user_timezone').value);
+                @this.set('plannedPaymentType', document.querySelector('.planned_payment-type.btn.btn-secondary').dataset.value);
+                @this.set('plannedPaymentCategory', document.getElementById('input_planned_payment-category_id').value);
+                @this.set('plannedPaymentWallet', document.getElementById('input_planned_payment-wallet_id').value);
+                @this.set('plannedPaymentWalletTransfer', document.getElementById('input_planned_payment-wallet_transfer_id').value);
                 @this.set('plannedPaymentAmount', plannedPaymentAmountMask.unmaskedValue);
                 @this.set('plannedPaymentExtraAmount', plannedPaymentExtraAmountMask.unmaskedValue);
+                @this.set('plannedPaymentFinalAmount', plannedPaymentFinalAmountMask.unmaskedValue);
                 @this.set('plannedPaymentPeriod', document.getElementById('input_planned_payment-period').value);
+                @this.set('plannedPaymentRepeatType', document.getElementById('input_planned_payment-repeat_type').value);
+                @this.set('plannedPaymentExtraType', document.querySelector('.planned_payment_extra-type.active').dataset.value);
                 @this.set('plannedPaymentMoreState', document.getElementById('input_planned_payment-more').checked);
                 
-                @this.store();
+                @this.save();
             });
         });
 

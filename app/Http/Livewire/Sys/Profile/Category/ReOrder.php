@@ -10,6 +10,7 @@ class ReOrder extends Component
     public $submenuState = null;
     public $extraMenu = [];
 
+    // List / Select
     public $listCategory;
 
     protected $listeners = [
@@ -17,15 +18,6 @@ class ReOrder extends Component
         'reOrder' => 'reOrder',
     ];
 
-    public function fetchMainCategory()
-    {
-        // Category
-        $this->listCategory = \App\Models\Category::with('child', 'parent')
-            ->where('user_id', \Auth::user()->id)
-            ->whereNull('parent_id')
-            ->orderBy('order_main', 'asc')
-            ->get();
-    }
     public function mount()
     {
         $this->menuState = 'profile';
@@ -42,15 +34,33 @@ class ReOrder extends Component
         }
     }
 
+    /**
+     * Fetch List Data
+     */
+    public function fetchMainCategory()
+    {
+        // Category
+        $this->listCategory = \App\Models\Category::with('child', 'parent')
+            ->where('user_id', \Auth::user()->id)
+            ->whereNull('parent_id')
+            ->orderBy('order_main', 'asc')
+            ->get();
+    }
+
+    /**
+     * Render component livewire view
+     * 
+     */
     public function render()
     {
         $this->fetchMainCategory();
         $this->dispatchBrowserEvent('categoryorder_wire-init');
 
-        return view('livewire.sys.profile.category.re-order')->extends('layouts.sneat', [
-            'menuState' => $this->menuState,
-            'submenuState' => $this->submenuState
-        ]);
+        return view('livewire.sys.profile.category.re-order')
+            ->extends('layouts.sneat', [
+                'menuState' => $this->menuState,
+                'submenuState' => $this->submenuState
+            ]);
     }
 
     /**

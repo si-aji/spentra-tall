@@ -9,6 +9,15 @@
 		margin-top: 12px;
 	}
 }
+.menu-link {
+	&.disabled {
+		opacity: .3;
+
+		&:hover {
+			cursor: not-allowed;
+		}
+	}
+}
 .menu-item {
 	position: relative;
 }

@@ -21,16 +21,16 @@
                                 {{-- Record Type --}}
                                 <div class=" tw__text-center tw__mb-4">
                                     <div class="btn-group">
-                                        <a href="javascript:void(0)" class="record-type btn" x-on:click="selectedRecordType = 'income';@this.set('recordTemplateType', 'income')" :class="[(selectedRecordType === 'income' ? 'btn-secondary' : 'btn-outline-secondary'), (is_mobile ? 'btn-sm' : '')]">Income</a>
-                                        <a href="javascript:void(0)" class="record-type btn" x-on:click="selectedRecordType = 'transfer';@this.set('recordTemplateType', 'transfer')" :class="[(selectedRecordType === 'transfer' ? 'btn-secondary' : 'btn-outline-secondary'), (is_mobile ? 'btn-sm' : '')]">Transfer</a>
-                                        <a href="javascript:void(0)" class="record-type btn" x-on:click="selectedRecordType = 'expense';@this.set('recordTemplateType', 'expense')" :class="[(selectedRecordType === 'expense' ? 'btn-secondary' : 'btn-outline-secondary'), (is_mobile ? 'btn-sm' : '')]">Expense</a>
+                                        <a href="javascript:void(0)" class="record_template-type btn" data-value="income" x-on:click="selectedRecordType = 'income'" :class="[(selectedRecordType === 'income' ? 'btn-secondary' : 'btn-outline-secondary'), (is_mobile ? 'btn-sm' : '')]">Income</a>
+                                        <a href="javascript:void(0)" class="record_template-type btn" data-value="transfer" x-on:click="selectedRecordType = 'transfer'" :class="[(selectedRecordType === 'transfer' ? 'btn-secondary' : 'btn-outline-secondary'), (is_mobile ? 'btn-sm' : '')]">Transfer</a>
+                                        <a href="javascript:void(0)" class="record_template-type btn" data-value="expense" x-on:click="selectedRecordType = 'expense';" :class="[(selectedRecordType === 'expense' ? 'btn-secondary' : 'btn-outline-secondary'), (is_mobile ? 'btn-sm' : '')]">Expense</a>
                                     </div>
                                 </div>
 
                                 {{-- Category --}}
                                 <div class="form-group tw__mb-4" x-show="selectedRecordType !== 'transfer' ? true : false">
                                     <label for="input_record_template-category_id">Category</label>
-                                    <select class="form-control" id="input_record_template-category_id" name="category_id" placeholder="Search for Category Data" x-on:change="@this.set('recordTemplateCategory', $event.target.value)">
+                                    <select class="form-control" id="input_record_template-category_id" name="category_id" placeholder="Search for Category Data">
                                         <option value="" {{ $recordTemplateCategory == '' ? 'selected' : '' }}>Search for Category Data</option>
                                         @foreach ($listCategory as $category)
                                             <optgroup label="{{ $category->name }}">
@@ -52,7 +52,7 @@
                                 {{-- Wallet --}}
                                 <div class="form-group tw__mb-4">
                                     <label for="input_record_template-wallet_id" x-text="selectedRecordType === 'income' || selectedRecordType === 'expense' ? 'Wallet' : 'From'"></label>
-                                    <select class="form-control" id="input_record_template-wallet_id" name="wallet_id" placeholder="Search for Wallet Data" x-on:change="@this.set('recordTemplateWallet', $event.target.value)">
+                                    <select class="form-control" id="input_record_template-wallet_id" name="wallet_id" placeholder="Search for Wallet Data">
                                         <option value="" {{ $recordTemplateWallet == '' ? 'selected' : '' }}>Search for Wallet Data</option>
                                         @foreach ($listWallet as $wallet)
                                             <optgroup label="{{ $wallet->name }}">
@@ -74,14 +74,14 @@
                                 {{-- Wallet Transfer --}}
                                 <div class="" x-show="selectedRecordType === 'transfer' ? true : false">
                                     <div class=" tw__mb-4">
-                                        <a href="javascript:void(0)" class="btn btn-sm btn-primary" x-on:click="@this.set('recordTemplateWallet', document.getElementById('input_record_template-wallet_transfer_id').value);@this.set('recordTemplateWalletTransfer', document.getElementById('input_record_template-wallet_id').value);">
+                                        <a href="javascript:void(0)" class="btn btn-sm btn-primary" id="btn_recordTemplate-switch">
                                             <span class="tw__flex tw__items-center tw__gap-2"><i class='bx bx-transfer-alt bx-rotate-90' ></i>Switch</span>
                                         </a>
                                     </div>
 
                                     <div class="form-group tw__mb-4" id="form-transfer">
                                         <label for="input_record_template-target">To</label>
-                                        <select class="form-control" id="input_record_template-wallet_transfer_id" name="wallet_transfer_id" placeholder="Search for Wallet Target Data" x-on:change="@this.set('recordTemplateWalletTransfer', $event.target.value)">
+                                        <select class="form-control" id="input_record_template-wallet_transfer_id" name="wallet_transfer_id" placeholder="Search for Wallet Target Data">
                                             <option value="" {{ $recordTemplateWalletTransfer == '' ? 'selected' : '' }}>Search for Wallet Target Data</option>
                                             @foreach ($listWallet as $wallet)
                                                 <optgroup label="{{ $wallet->name }}">
@@ -133,9 +133,9 @@
                                     <div class="col-12">
                                         <small class="text-muted">
                                             <span>(</span>
-                                            <a href="javascript:void(0)" class="record_template_extra-type" x-on:click="selectedExtraType = 'amount';templateCalculateFinal(selectedExtraType);@this.set('recordTemplateExtraType', 'amount')" :class="selectedExtraType !== 'amount' ? 'tw__text-slate-400' : ''">Amount</a>
+                                            <a href="javascript:void(0)" class="record_template_extra-type" data-value="amount" x-on:click="selectedExtraType = 'amount';templateCalculateFinal(selectedExtraType)" :class="selectedExtraType !== 'amount' ? 'tw__text-slate-400' : 'active'">Amount</a>
                                             <span>/</span>
-                                            <a href="javascript:void(0)" class="record_template_extra-type" x-on:click="selectedExtraType = 'percentage';templateCalculateFinal(selectedExtraType);@this.set('recordTemplateExtraType', 'percentage')" :class="selectedExtraType !== 'percentage' ? 'tw__text-slate-400' : ''">Percentage</a>
+                                            <a href="javascript:void(0)" class="record_template_extra-type" data-value="percentage" x-on:click="selectedExtraType = 'percentage';templateCalculateFinal(selectedExtraType)" :class="selectedExtraType !== 'percentage' ? 'tw__text-slate-400' : 'active'">Percentage</a>
                                             <span>)</span>
                                         </small>
                                     </div>
@@ -267,18 +267,31 @@
                     shouldSort: false
                 });
             }
+
+            document.getElementById('btn_recordTemplate-switch').addEventListener('click', (e) => {
+                let wallet = document.getElementById('input_record_template-wallet_id').value;
+                let walletTransfer = document.getElementById('input_record_template-wallet_transfer_id').value;
+
+                templateWalletChoice.setChoiceByValue(walletTransfer);
+                templateWalletTransferChoice.setChoiceByValue(wallet);
+            });
         });
 
         document.addEventListener('DOMContentLoaded', (e) => {
             document.getElementById('recordTemplate-form').addEventListener('submit', (e) => {
                 e.preventDefault();
-
                 // @this.set('user_timezone', document.getElementById('user_timezone').value);
+                @this.set('recordTemplateType', document.querySelector('.record_template-type.btn.btn-secondary').dataset.value);
+                @this.set('recordTemplateCategory', document.getElementById('input_record_template-category_id').value)
+                @this.set('recordTemplateWallet', document.getElementById('input_record_template-wallet_id').value);
+                @this.set('recordTemplateWalletTransfer', document.getElementById('input_record_template-wallet_transfer_id').value)
                 @this.set('recordTemplateAmount', templateAmountMask.unmaskedValue);
+                @this.set('recordTemplateExtraType', document.querySelector('.record_template_extra-type.active').dataset.value);
                 @this.set('recordTemplateExtraAmount', templateExtraAmountMask.unmaskedValue);
+                @this.set('recordTemplateFinalAmount', templateFinalAmountMask.unmaskedValue);
                 @this.set('recordTemplateMoreState', document.getElementById('input_record_template-more').checked);
                 
-                @this.store();
+                @this.save();
             });
         });
 
@@ -296,7 +309,7 @@
             let el = event.detail;
             if(el.hasOwnProperty('recordType')){
                 let data = el.recordType;
-                document.querySelectorAll('a.record-type').forEach((el) => {
+                document.querySelectorAll('a.record_template-type').forEach((el) => {
                     if(data.toUpperCase() === el.textContent.toUpperCase()){
                         // Trigger Event Click
                         el.dispatchEvent(new Event('click'));
@@ -339,7 +352,6 @@
             }
 
             let final = amount + extra;
-            @this.set('recordTemplateFinalAmount', final);
             templateFinalAmountMask.value = final.toString();
         }
     </script>

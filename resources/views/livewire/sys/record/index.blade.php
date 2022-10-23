@@ -126,7 +126,28 @@
                     @endfor
                 </div>
 
-                <div wire:loading.remove wire:target="monthChanged" class=" tw__px-4" id="record-container"></div>
+                <div wire:loading.remove wire:target="monthChanged" class=" tw__px-4" id="record-container">
+                    <div>
+                        @for ($i = 0; $i < 3; $i++)
+                            <div class=" tw__flex tw__flex-col">
+                                <div class="list-wrapper tw__flex tw__gap-2 tw__mb-4 last:tw__mb-0">
+                                    <div class=" tw__p-4 tw__text-center">
+                                        <div class="tw__sticky tw__top-24 md:tw__top-40 tw__flex tw__items-center tw__flex-col">
+                                            <span class="tw__font-semibold tw__bg-gray-300 tw__animate-pulse tw__h-4 tw__w-8 tw__block tw__rounded tw__mr-0 tw__mb-2"></span>
+                                            <div class=" tw__min-h-[40px] tw__min-w-[40px] tw__bg-gray-300 tw__bg-opacity-60 tw__rounded-full tw__flex tw__leading-none tw__items-center tw__justify-center tw__align-middle tw__animate-pulse">
+                                                <p class="tw__mb-0 tw__font-bold tw__text-xl tw__text-white"></p>
+                                            </div>
+                                            <span class="tw__font-semibold tw__bg-gray-300 tw__animate-pulse tw__h-3 tw__w-12 tw__block tw__rounded tw__mr-0 tw__mt-1"></span>
+                                        </div>
+                                    </div>
+                                    <div class=" tw__bg-gray-300 tw__rounded-lg tw__w-full content-list tw__p-4 tw__h-20 tw__animate-pulse tw__self-center">
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        @endfor
+                    </div>
+                </div>
             </div>
         </div>
         <div class="card-footer tw__pt-0">
@@ -144,7 +165,11 @@
 
 @section('js_inline')
     <script>
-        document.addEventListener('record_wire-init', (e) => {
+        document.addEventListener('DOMContentLoaded', (e) => {
+            window.dispatchEvent(new Event('recordPluginsInit'));
+            window.dispatchEvent(new Event('recordLoadData'));
+        });
+        window.addEventListener('recordPluginsInit', (e) => {
             let recordFilterYearChoice = null;
             let recordFilterTypeChoice = null;
             let recordFilterWalletChoice = null;
@@ -157,7 +182,8 @@
                     searchPlaceholderValue: "Search for Year Filter",
                     placeholder: true,
                     placeholderValue: 'Search for Year Filter',
-                    shouldSort: false
+                    shouldSort: false,
+                    itemSelectText: ''
                 });
             }
             if(document.getElementById('filter-type')){
@@ -168,7 +194,8 @@
                     searchPlaceholderValue: "Search for Record Type Filter",
                     placeholder: true,
                     placeholderValue: 'Search for Record Type Filter',
-                    shouldSort: false
+                    shouldSort: false,
+                    itemSelectText: ''
                 });
             }
             if(document.getElementById('filter-wallet')){
@@ -179,7 +206,8 @@
                     searchPlaceholderValue: "Search for Wallet Data",
                     placeholder: true,
                     placeholderValue: 'Search for Wallet Data',
-                    shouldSort: false
+                    shouldSort: false,
+                    itemSelectText: ''
                 });
             }
             if(document.getElementById('filter-category')){
@@ -190,17 +218,26 @@
                     searchPlaceholderValue: "Search for Category Data",
                     placeholder: true,
                     placeholderValue: 'Search for Category Data',
-                    shouldSort: false
+                    shouldSort: false,
+                    itemSelectText: ''
                 });
             }
-
-            if(document.getElementById('record-container')){
-                document.getElementById('record-container').innerHTML = ``;
-            }
+        });
+        window.addEventListener('recordLoadData', (e) => {
             generateList();
         });
 
+        if(document.getElementById('modal-record')){
+            document.getElementById('modal-record').addEventListener('hide.bs.modal', (e) => {
+                window.dispatchEvent(new Event('recordLoadData'));
+            });
+        }
+
         const generateList = () => {
+            if(document.getElementById('record-container')){
+                document.getElementById('record-container').innerHTML = ``;
+            }
+
             let data = @this.get('dataRecord');
             let paneEl = document.getElementById('record-container');
 

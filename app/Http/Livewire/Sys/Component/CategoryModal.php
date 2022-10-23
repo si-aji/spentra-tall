@@ -37,15 +37,6 @@ class CategoryModal extends Component
         'categoryName' => ['required'],
     ];
 
-    public function fetchMainCategory()
-    {
-        // Category
-        $this->listCategory = \App\Models\Category::with('child', 'parent')
-            ->where('user_id', \Auth::user()->id)
-            ->whereNull('parent_id')
-            ->orderBy('order_main', 'asc')
-            ->get();
-    }
     public function mount()
     {
         $this->categoryResetField = [
@@ -56,6 +47,23 @@ class CategoryModal extends Component
         ];
     }
 
+    /**
+     * Fetch List Data
+     */
+    public function fetchMainCategory()
+    {
+        // Category
+        $this->listCategory = \App\Models\Category::with('child', 'parent')
+            ->where('user_id', \Auth::user()->id)
+            ->whereNull('parent_id')
+            ->orderBy('order_main', 'asc')
+            ->get();
+    }
+
+    /**
+     * Render component livewire view
+     * 
+     */
     public function render()
     {
         $this->fetchMainCategory();
@@ -64,46 +72,48 @@ class CategoryModal extends Component
         return view('livewire.sys.component.category-modal');
     }
 
-    public function store()
+    /**
+     * Function to save to database
+     * 
+     */
+    public function save()
     {
-        // \Log::debug("Debug on Category Modal Store function", [
-        //     'parent' => $this->categoryParent,
-        //     'name' => $this->categoryName,
-        //     'uuid' => $this->categoryUuid
-        // ]);
-
         $parent = null;
         if(!empty($this->categoryParent)){
             $parent = \App\Models\Category::where(\DB::raw('BINARY `uuid`'), $this->categoryParent)
                 ->firstOrFail();
         }
 
-        // Get Last Order
-        $order = 0;
-        $lastOrder = \App\Models\Category::query()
-            ->where('user_id', \Auth::user()->id);
-        if (! empty($parent)) {
-            $lastOrder->where('parent_id', $parent->id);
-        } else {
-            $lastOrder->whereNull('parent_id');
-        }
-        $lastOrder = $lastOrder->orderBy('order', 'desc')->first();
-        if (! empty($lastOrder)) {
-            $order = $lastOrder->order;
-        }
-
         $this->validate();
         $data = new \App\Models\Category();
         if(!empty($this->categoryUuid)){
+            // Update Data
             $data = \App\Models\Category::where(\DB::raw('BINARY `uuid`'), $this->categoryUuid)
                 ->firstOrFail();
             $parent = $data->parent()->exists() ? $data->parent : null;
+        } else {
+            // Add new Data
+
+            // Get Last Order
+            $order = 0;
+            $lastOrder = \App\Models\Category::query()
+                ->where('user_id', \Auth::user()->id);
+            if (! empty($parent)) {
+                $lastOrder->where('parent_id', $parent->id);
+            } else {
+                $lastOrder->whereNull('parent_id');
+            }
+            $lastOrder = $lastOrder->orderBy('order', 'desc')->first();
+            if (! empty($lastOrder)) {
+                $order = $lastOrder->order;
+            }
+
+            $data->order = $order;
         }
 
         $data->user_id = \Auth::user()->id;
         $data->parent_id = !empty($parent) ? $parent->id : null;
         $data->name = $this->categoryName;
-        $data->order = $order;
         $data->save();
 
         $this->fetchMainCategory();
@@ -148,10 +158,6 @@ class CategoryModal extends Component
     // Update Model / Variable
     public function localUpdate($key, $value): void
     {
-        // \Log::debug("Debug on Local Update function", [
-        //     'key' => $key,
-        //     'value' => $value
-        // ]);
         switch($key){
             case 'categoryModalState':
                 $this->categoryModalState = $value;

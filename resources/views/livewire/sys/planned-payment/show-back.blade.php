@@ -12,7 +12,6 @@
 @endsection
 
 <div>
-    {{-- Be like water. --}}
     {{-- The Master doesn't talk, he acts. --}}
     <div>
         <a href="{{ url()->previous() }}" class="btn btn-secondary">
@@ -62,8 +61,10 @@
                     <tr>
                         <th>Extra Amount</th>
                         <td>
-                            <span class=" tw__block">{{ $plannedPaymentData->extra_type === 'amount' ? formatRupiah($plannedPaymentData->extra_amount) : $plannedPaymentData->extra_percentage.'%' }}</span>
-                            <span class="badge bg-label-secondary">{{ ucwords($plannedPaymentData->extra_type) }}</span>
+                            <span>
+                                <span class="badge bg-label-secondary">{{ ucwords($plannedPaymentData->extra_type) }}</span>
+                                <span>{{ $plannedPaymentData->extra_type === 'amount' ? formatRupiah($plannedPaymentData->extra_amount) : $plannedPaymentData->extra_percentage.'%' }}</span>
+                            </span>
                         </td>
                     </tr>
                     <tr>
@@ -129,29 +130,34 @@
     </div>
 </div>
 
-@push('javascript')
+@section('js_inline')
     <script>
-        document.addEventListener('DOMContentLoaded', (e) => {
-            window.dispatchEvent(new Event('plannedPaymentShowLoadData'));
-            
-            let container = document.getElementById('plannedPayment-detail');
-            container.querySelectorAll('[data-period]').forEach((el) => {
-                el.innerHTML = moment(el.dataset.period).format('DD MMM, YYYY');
-            });
-        });
+        // document.addEventListener('DOMContentLoaded', (e) => {
+        //     let container = document.getElementById('plannedPayment-detail');
+        //     container.querySelectorAll('[data-period]').forEach((el) => {
+        //         el.innerHTML = moment(el.dataset.period).format('DD MMM, YYYY');
+        //     });
+        // });
 
-        window.addEventListener('plannedPaymentShowLoadData', (e) => {
-            generateList();
+        document.addEventListener('sampleWire-inita', (e) => {
+            console.log("A");
         });
+        // document.addEventListener('', (e) => {
+        //     console.log("Wire init");
+
+        //     if(document.getElementById('plannedPayment-recordList')){
+        //         document.getElementById('plannedPayment-recordList').innerHTML = '';
+        //         generateList();
+        //     }
+        // });
 
         const generateList = () => {
             let paneEl = document.getElementById('plannedPayment-recordList');
             let plannedPaymentRecordList = null;
-            let data = @this.get('plannedPaymentRecordData');
-            let origData = @this.get('plannedPaymentData');
+            let data = @js($plannedPaymentRecordData);
+            let origData = @js($plannedPaymentData);
             console.log(data.length);
 
-            paneEl.innerHTML = '';
             if(data.length > 0){
                 if(!paneEl.querySelector(`.content-wrapper`)){
                     plannedPaymentRecordList = document.createElement('div');
@@ -351,4 +357,4 @@
             });
         }
     </script>
-@endpush
+@endsection

@@ -38,6 +38,9 @@ class WalletGroupModal extends Component
         'walletGroupName' => ['required'],
     ];
 
+    /**
+     * Fetch List Data
+     */
     public function fetchWallet()
     {
         // Wallet
@@ -47,6 +50,7 @@ class WalletGroupModal extends Component
             ->orderBy('order_main', 'asc')
             ->get();
     }
+
     public function mount()
     {
         $this->walletGroupResetField = [
@@ -58,6 +62,10 @@ class WalletGroupModal extends Component
         ];
     }
 
+    /**
+     * Render component livewire view
+     * 
+     */
     public function render()
     {
         $this->fetchWallet();
@@ -69,7 +77,7 @@ class WalletGroupModal extends Component
     /**
      * CRUD Action
      */
-    public function store()
+    public function save()
     {
         $selectedWallet = [];
         if(!empty($this->walletGroupList)){

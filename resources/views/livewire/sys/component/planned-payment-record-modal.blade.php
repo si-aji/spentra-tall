@@ -188,7 +188,7 @@
                                                                     <span>(</span>
 
                                                                     @if (empty($plannedPaymentRecordReceiptTemp) || (!empty($plannedPaymentRecordReceiptTemp) && basename($plannedPaymentRecordReceiptTemp) !== $previewFileName))
-                                                                        <a href="javascript:void(0)" onclick="removeReceiptUpload()" class="tw__text-red-400 hover:tw__text-red-700 hover:tw__underline">Remove</a>
+                                                                        <a href="javascript:void(0)" onclick="plannedPaymentRecordRemoveReceipt()" class="tw__text-red-400 hover:tw__text-red-700 hover:tw__underline">Remove</a>
                                                                         <span>or</span>
                                                                     @endif
                                                                     
@@ -448,7 +448,7 @@
         });
 
         // Remove receipt
-        function removeReceiptUpload(){
+        function plannedPaymentRecordRemoveReceipt(){
             document.getElementById('input_planned_payment_record-receipt').value = null;
             document.getElementById('input_planned_payment_record-receipt_label_helper').textContent = 'Choose Image';
             document.getElementById('input_planned_payment_record-receipt').dispatchEvent(new Event('change'))

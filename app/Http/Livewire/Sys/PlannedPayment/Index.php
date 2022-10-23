@@ -19,7 +19,7 @@ class Index extends Component
     protected $listeners = [
         'refreshComponent' => '$refresh',
         'loadMore' => 'loadMore',
-        'removeData' => 'removeData'
+        'removeData' => 'removeData',
     ];
     
     public function mount()
@@ -35,7 +35,8 @@ class Index extends Component
         $this->dataPlannedPayment = $this->dataPlannedPayment->paginate($this->loadPerPage);
         $paginate = $this->dataPlannedPayment;
         $this->dataPlannedPayment = collect($this->dataPlannedPayment->items());
-        $this->dispatchBrowserEvent('plannedPayment_wire-init');
+
+        $this->dispatchBrowserEvent('plannedPaymentLoadData');
 
         return view('livewire.sys.planned-payment.index', [
             'paginate' => $paginate
@@ -43,11 +44,16 @@ class Index extends Component
             'menuState' => $this->menuState,
             'submenuState' => $this->submenuState,
             'componentPlannedPayment' => true
-        ]);
+        ])->section('content');
     }
 
     public function loadMore($limit = 10)
     {
         $this->loadPerPage += $limit;
+    }
+
+    public function loadListData()
+    {
+        $this->dispatchBrowserEvent('plannedPaymentLoadData', []);
     }
 }

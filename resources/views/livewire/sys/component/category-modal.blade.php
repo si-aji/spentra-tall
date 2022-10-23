@@ -1,12 +1,13 @@
 <div>
     {{-- If your happiness depends on money, you will never be happy with yourself. --}}
-    <form id="category-form" wire:submit.prevent="store()">
+    <form id="category-form" wire:submit.prevent="save()">
         <div class="offcanvas offcanvas-end" tabindex="-1" id="modal-category" aria-labelledby="offcanvasLabel" wire:init="" wire:ignore.self x-data="">
             <div class="offcanvas-header">
                 <h5 id="offcanvasLabel" class="offcanvas-title">Category: {{ $categoryTitle }}</h5>
                 <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div class="offcanvas-body">
+                {{-- Parent --}}
                 <div class="form-group tw__mb-4">
                     <label for="input_category-category_id" data-selected="{{ $categoryParent }}">Parent</label>
                     <select class="form-control @error('categoryParent') is-invalid @enderror" id="input_category-category_id" name="category_id" placeholder="Search for Category Data" x-on:change="$wire.localUpdate('categoryParent', $event.target.value)" {{ isset($categoryUuid) && !empty($categoryUuid) ? 'disabled' : '' }}>
@@ -23,6 +24,7 @@
                     @endif
                 </div>
     
+                {{-- Name --}}
                 <div class="form-group tw__mb-4">
                     <label for="input_category-name">Name</label>
                     <input type="text" class="form-control @error('categoryName') is-invalid @enderror" name="name" id="input_category-name" placeholder="Name" wire:model.defer="categoryName" value="{{ $categoryName }}">
@@ -47,6 +49,7 @@
 @push('javascript')
     <script>
         window.addEventListener('category_wire-init', (event) => {
+            // Choices
             let categoryChoice = null;
             if(document.getElementById('input_category-category_id')){
                 const categoryEl = document.getElementById('input_category-category_id');
@@ -59,6 +62,7 @@
                     shouldSort: false
                 });
             }
+
             document.getElementById('modal-category').addEventListener('hidden.bs.offcanvas', (e) => {
                 Livewire.emitTo('sys.component.category-modal', 'closeModal');
             });
