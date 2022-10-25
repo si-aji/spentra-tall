@@ -43,7 +43,7 @@ class Index extends Component
         $this->email = \Auth::user()->email;
         $this->avatar = \Auth::user()->getProfilePicture();
 
-        $extraMenu = config('siaji.sys.sidebar')
+        $extraMenu = collect(config('siaji.sys.sidebar'))
             ->where('name', 'Profile')
             ->first();
 
