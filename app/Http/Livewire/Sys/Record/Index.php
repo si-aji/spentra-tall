@@ -92,6 +92,8 @@ class Index extends Component
                 if(\Session::has('SAUSER_TZ')){
                     $recordDateTime = $recordDateTime->setTimezone(new \DateTimeZone(\Session::get('SAUSER_TZ')))->format('Y-m-d H:i:s');
                     // $recordDateTime = (new \DateTime($recordDateTime, new \DateTimeZone(\Session::get('SAUSER_TZ'))))->format('Y-m-d H:i:s');
+                } else {
+                    $recordDateTime = $recordDateTime->format('Y-m-d H:i:s');
                 }
 
                 // \Log::debug("Debug on Filter", [
