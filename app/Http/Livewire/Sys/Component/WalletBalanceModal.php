@@ -62,11 +62,11 @@ class WalletBalanceModal extends Component
     }
     public function save()
     {
-        // if($this->walletBalance == $this->walletActualBalance){
-        //     throw \Illuminate\Validation\ValidationException::withMessages([
-        //         'walletActualBalance' => 'Nothing changed'
-        //     ]);
-        // }
+        if($this->walletBalance == $this->walletActualBalance){
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'walletActualBalance' => 'Nothing changed'
+            ]);
+        }
 
         if($this->walletBalance != $this->walletActualBalance){
             \DB::transaction(function () {
