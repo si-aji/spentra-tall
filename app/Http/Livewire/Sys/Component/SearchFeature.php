@@ -2,6 +2,8 @@
 
 namespace App\Http\Livewire\Sys\Component;
 
+use DateTime;
+use DateTimeZone;
 use Livewire\Component;
 
 class SearchFeature extends Component
@@ -9,9 +11,21 @@ class SearchFeature extends Component
     public $search = '';
     public $result = null;
     public $avatar = '';
+    public $notificationState = false;
+
     public function mount()
     {
+        $datetime = date("Y-m-d H:i:s");
+        if(\Session::has('SAUSER_TZ')){
+            // Get datetime based on Timezone
+            $datetime = (new DateTime('now', new DateTimeZone(\Session::get('SAUSER_TZ'))))->format('Y-m-d H:i:s');
+        }
+        
         $this->avatar = \Auth::user()->getProfilePicture();
+        $this->notificationState = \App\Models\PlannedPayment::where('user_id', \Auth::user()->id)
+            ->where('next_date', date("Y-m-d", strtotime($datetime)))
+            ->orWhere('next_date', '<', date("Y-m-d", strtotime($datetime)))
+            ->count() > 0;
     }
 
     protected $listeners = [

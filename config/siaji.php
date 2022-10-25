@@ -7,28 +7,28 @@ return [
         ]
     ],
     'sys' => [
-        'sidebar' => collect([
+        'sidebar' => [
             [
                 'name' => 'Dashboard',
                 'icon' => 'bx bx-home-alt',
                 'route' => 'sys.index',
                 'is_header' => false,
                 'state' => 'dashboard',
-                'sub' => collect([])
+                'sub' => []
             ], [
                 'name' => 'Service',
                 'icon' => null,
                 'route' => null,
                 'is_header' => true,
                 'state' => null,
-                'sub' => collect([])
+                'sub' => []
             ], [
                 'name' => 'Budget',
                 'icon' => 'bx bx-money',
                 'route' => null,
                 'is_header' => false,
                 'state' => null,
-                'sub' => collect([]),
+                'sub' => [],
                 'disabled' => true
             ], [
                 'name' => 'Goals',
@@ -36,7 +36,7 @@ return [
                 'route' => null,
                 'is_header' => false,
                 'state' => null,
-                'sub' => collect([]),
+                'sub' => [],
                 'disabled' => true
             ], [
                 'name' => 'Planned Payment',
@@ -44,21 +44,21 @@ return [
                 'route' => 'sys.planned-payment.index',
                 'is_header' => false,
                 'state' => 'planned-payment',
-                'sub' => collect([])
+                'sub' => []
             ], [
                 'name' => 'Record',
                 'icon' => 'bx bx-book-content',
                 'route' => 'sys.record.index',
                 'is_header' => false,
                 'state' => 'record',
-                'sub' => collect([])
+                'sub' => []
             ], [
                 'name' => 'Shopping List',
                 'icon' => 'bx bx-cart-alt',
                 'route' => null,
                 'is_header' => false,
                 'state' => null,
-                'sub' => collect([]),
+                'sub' => [],
                 'disabled' => true
             ], [
                 'name' => 'Master Data',
@@ -66,21 +66,21 @@ return [
                 'route' => null,
                 'is_header' => true,
                 'state' => null,
-                'sub' => collect([])
+                'sub' => []
             ], [
                 'name' => 'Record Template',
                 'icon' => 'bx bxs-book-content',
                 'route' => 'sys.record.template.index',
                 'is_header' => false,
                 'state' => 'record-template',
-                'sub' => collect([])
+                'sub' => []
             ], [
                 'name' => 'Wallet',
                 'icon' => 'bx bx-wallet-alt',
                 'route' => null,
                 'is_header' => false,
                 'state' => 'wallet',
-                'sub' => collect([
+                'sub' => [
                     [
                         'name' => 'List',
                         'route' => 'sys.wallet.list.index',
@@ -95,21 +95,21 @@ return [
                         'state' => 'share',
                         'disabled' => true
                     ]
-                ])
+                ]
             ], [
                 'name' => 'MISCELLANEOUS',
                 'icon' => null,
                 'route' => null,
                 'is_header' => true,
                 'state' => null,
-                'sub' => collect([])
+                'sub' => []
             ],  [
                 'name' => 'Profile',
                 'icon' => 'bx bx-user-circle',
                 'route' => null,
                 'is_header' => false,
                 'state' => 'profile',
-                'sub' => collect([
+                'sub' => [
                     [
                         'name' => 'Account',
                         'route' => 'sys.profile.index',
@@ -126,8 +126,8 @@ return [
                         'state' => 'tag',
                         'icon' => 'bx bx-purchase-tag',
                     ], 
-                ])
+                ]
             ], 
-        ])
+        ]
     ]
 ];

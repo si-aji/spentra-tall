@@ -84,37 +84,40 @@
         {{ $slot }}
     @endisset
 
+    {{-- Notification --}}
+    @livewire(\App\Http\Livewire\Sys\Component\NotificationFeature::class, ['user' => \Auth::user()], key(generateRandomString()))
+
     {{-- Record Modal --}}
-    @livewire(\App\Http\Livewire\Sys\Component\RecordModal::class, ['user' => \Auth::user()], key(\Auth::user()->id))
+    @livewire(\App\Http\Livewire\Sys\Component\RecordModal::class, ['user' => \Auth::user()], key(generateRandomString()))
     @if (isset($componentRecordTemplate) && $componentRecordTemplate)
         {{-- Record Template --}}
-        @livewire(\App\Http\Livewire\Sys\Component\RecordTemplateModal::class, ['user' => \Auth::user()], key(\Auth::user()->id))
+        @livewire(\App\Http\Livewire\Sys\Component\RecordTemplateModal::class, ['user' => \Auth::user()], key(generateRandomString()))
     @endif
 
     @if (isset($componentWallet) && $componentWallet)
         {{-- Wallet Modal --}}
-        @livewire(\App\Http\Livewire\Sys\Component\WalletModal::class, ['user' => \Auth::user()], key(\Auth::user()->id))
+        @livewire(\App\Http\Livewire\Sys\Component\WalletModal::class, ['user' => \Auth::user()], key(generateRandomString()))
         {{-- Wallet Balance Modal --}}
-        @livewire(\App\Http\Livewire\Sys\Component\WalletBalanceModal::class, ['user' => \Auth::user()], key(\Auth::user()->id))
+        @livewire(\App\Http\Livewire\Sys\Component\WalletBalanceModal::class, ['user' => \Auth::user()], key(generateRandomString()))
     @endif
     @if (isset($componentWalletGroup) && $componentWalletGroup)
         {{-- Wallet Group Modal --}}
-        @livewire(\App\Http\Livewire\Sys\Component\WalletGroupModal::class, ['user' => \Auth::user()], key(\Auth::user()->id))
+        @livewire(\App\Http\Livewire\Sys\Component\WalletGroupModal::class, ['user' => \Auth::user()], key(generateRandomString()))
     @endif
 
     {{-- Planned Payment Record --}}
-    @livewire(\App\Http\Livewire\Sys\Component\PlannedPaymentRecordModal::class, ['user' => \Auth::user()], key(\Auth::user()->id))
+    @livewire(\App\Http\Livewire\Sys\Component\PlannedPaymentRecordModal::class, ['user' => \Auth::user()], key(generateRandomString()))
     @if (isset($componentPlannedPayment) && $componentPlannedPayment)
         {{-- Planned Payment Modal --}}
-        @livewire(\App\Http\Livewire\Sys\Component\PlannedPaymentModal::class, ['user' => \Auth::user()], key(\Auth::user()->id))
+        @livewire(\App\Http\Livewire\Sys\Component\PlannedPaymentModal::class, ['user' => \Auth::user()], key(generateRandomString()))
     @endif
     @if (isset($componentCategory) && $componentCategory)
         {{-- Category Modal --}}
-        @livewire(\App\Http\Livewire\Sys\Component\CategoryModal::class, ['user' => \Auth::user()], key(\Auth::user()->id))
+        @livewire(\App\Http\Livewire\Sys\Component\CategoryModal::class, ['user' => \Auth::user()], key(generateRandomString()))
     @endif
     @if (isset($componentTag) && $componentTag)
         {{-- Tag Modal --}}
-        @livewire(\App\Http\Livewire\Sys\Component\TagModal::class, ['user' => \Auth::user()], key(\Auth::user()->id))
+        @livewire(\App\Http\Livewire\Sys\Component\TagModal::class, ['user' => \Auth::user()], key(generateRandomString()))
     @endif
 @endsection
 

@@ -21,6 +21,7 @@ Route::group([
         'prefix' => 'manual',
         'as' => 'manual.'
     ], function($q){
+        // Fetch related record
         Route::get('related-record', function(){
             $id = request()->has('id') ? request()->id : 1;
             $data = \App\Models\Record::findOrFail($id);
@@ -31,6 +32,60 @@ Route::group([
                 'result' => [
                     'data' => $data,
                     'related' => $data->getRelatedTransferRecord()
+                ]
+            ]);
+        });
+
+        // Run migration from v1 to v2
+        Route::get('migrate-from-v1', function(){
+            $users = \App\Models\User::where('is_migrated', false)
+                ->whereHas('record')
+                ->get();
+            foreach($users as $user){
+                // Record
+                foreach($user->record as $record){
+                    if($record->timezone_offset == '-480'){
+                        // Modify Datetime, convert to utc
+                        $raw = date('Y-m-d H:i:00', strtotime($record->datetime));
+                        // Convert to UTC
+                        $utc = convertToUtc($raw, ($record->timezone_offset));
+                        $datetime = date('Y-m-d H:i:00', strtotime($utc));
+
+                        // Update Data
+                        $record->date = date("Y-m-d", strtotime($datetime));
+                        $record->time = date("H:i:s", strtotime($datetime));
+                        $record->datetime = date("Y-m-d H:i:s", strtotime($datetime));
+                        $record->save();
+                    }
+                }
+
+                // Planned Payment Record
+                foreach($user->plannedPayment as $plannedPayment){
+                    foreach($plannedPayment->plannedPaymentRecord as $plannedPaymentRecord){
+                        if(!empty($plannedPaymentRecord->confirmed_at)){
+                            // Modify Datetime, convert to utc
+                            $raw = date('Y-m-d H:i:00', strtotime($plannedPaymentRecord->confirmed_at));
+                            // Convert to UTC
+                            $utc = convertToUtc($raw, ($plannedPaymentRecord->timezone_offset));
+                            $datetime = date('Y-m-d H:i:00', strtotime($utc));
+
+                            // Update Data
+                            $plannedPaymentRecord->confirmed_at = date("Y-m-d H:i:s", strtotime($datetime));
+                            $plannedPaymentRecord->save();
+                        }
+                    }
+                }
+
+                // State that user already migrated
+                $user->is_migrated = true;
+                $user->save();
+            }
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Data Updated',
+                'result' => [
+                    'count' => count($users)
                 ]
             ]);
         });

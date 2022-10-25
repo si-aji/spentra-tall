@@ -31,7 +31,8 @@ class Index extends Component
     public function render()
     {
         $this->dataPlannedPayment = \App\Models\PlannedPayment::with('category.parent', 'wallet.parent', 'walletTransferTarget.parent')
-            ->where('user_id', \Auth::user()->id);
+            ->where('user_id', \Auth::user()->id)
+            ->orderBy('next_date', 'asc');
         $this->dataPlannedPayment = $this->dataPlannedPayment->paginate($this->loadPerPage);
         $paginate = $this->dataPlannedPayment;
         $this->dataPlannedPayment = collect($this->dataPlannedPayment->items());

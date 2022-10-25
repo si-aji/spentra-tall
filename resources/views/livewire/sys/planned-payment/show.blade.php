@@ -12,7 +12,6 @@
 @endsection
 
 <div>
-    {{-- Be like water. --}}
     {{-- The Master doesn't talk, he acts. --}}
     <div>
         <a href="{{ url()->previous() }}" class="btn btn-secondary">
@@ -22,7 +21,7 @@
             <span class="tw__flex tw__items-center tw__gap-2"><i class='bx bx-edit'></i>Edit</span>
         </button>
     </div>
-    
+
     <div class="card tw__mt-4" id="plannedPayment-detail">
         <div class="card-body">
             <table class="table table-hover">
@@ -129,10 +128,10 @@
     </div>
 </div>
 
-@push('javascript')
+@section('js_inline')
     <script>
         document.addEventListener('DOMContentLoaded', (e) => {
-            window.dispatchEvent(new Event('plannedPaymentShowLoadData'));
+            document.dispatchEvent(new Event('plannedPaymentShowLoadData'));
             
             let container = document.getElementById('plannedPayment-detail');
             container.querySelectorAll('[data-period]').forEach((el) => {
@@ -140,7 +139,7 @@
             });
         });
 
-        window.addEventListener('plannedPaymentShowLoadData', (e) => {
+        document.addEventListener('plannedPaymentShowLoadData', (e) => {
             generateList();
         });
 
@@ -149,7 +148,6 @@
             let plannedPaymentRecordList = null;
             let data = @this.get('plannedPaymentRecordData');
             let origData = @this.get('plannedPaymentData');
-            console.log(data.length);
 
             paneEl.innerHTML = '';
             if(data.length > 0){
@@ -172,7 +170,7 @@
                         let listContainer = document.createElement('div');
                         listContainer.classList.add('list-wrapper', 'tw__flex', 'tw__gap-4', 'tw__mb-4', 'last:tw__mb-0');
                         listContainer.innerHTML = `
-                            <div class=" tw__p-4 tw__text-center">
+                            <div class=" tw__p-4 tw__text-center" wire:id="${index}-${val.uuid}">
                                 <!-- This is for date -->
                                 <div class="tw__sticky lg:tw__top-24 tw__top-40">
                                     <span class="tw__font-semibold">${moment(val.period).format('ddd')}</span>
@@ -195,8 +193,14 @@
                     if(contentContainer){
                         let item = document.createElement('div');
                         item.classList.add('tw__border-b', 'last:tw__border-b-0', 'tw__py-4', 'first:tw__pt-0', 'last:tw__pb-0');
+                        // Wallet
+                        let walletName = `${val.wallet.parent ? `${val.wallet.parent.name} - ` : ''}${val.wallet.name}`;
+                        let toWalletName = val.to_wallet_id ? `${val.wallet_transfer_target.parent ? `${val.wallet_transfer_target.parent.name} - ` : ''}${val.wallet_transfer_target.name}` : null;
                         // Note
-                        val.note = origData.note;
+                        let note = val.note;
+                        if(val.record){
+                            note = val.record.note;
+                        }
                         // Append Action
                         let action = [];
                         if(val.status === 'pending'){
@@ -215,23 +219,6 @@
                                 </li>
                             `);
                         }
-                        // Append Small Information
-                        let smallInformation = [];
-                        console.log(val);
-                        if(val.record && val.record.category){
-                            smallInformation.push(`<span><small class="tw__text-[#293240]"><i class="bx bxs-category tw__mr-1"></i>${val.record.category.parent_id ? `${val.record.category.parent.name} - ` : ''}${val.record.category.name}</small></span>`);
-                        } else if(val.planned_payment && val.planned_payment.category){
-                            smallInformation.push(`<span><small class="tw__text-[#293240]"><i class="bx bxs-category tw__mr-1"></i>${val.planned_payment.category.parent_id ? `${val.planned_payment.category.parent.name} - ` : ''}${val.planned_payment.category.name}</small></span>`);
-                        }
-                        if(val.record && val.record.receipt !== null){
-                            smallInformation.push(`<span><small class="tw__text-[#293240]"><i class="bx bx-paperclip bx-rotate-90 tw__mr-1"></i>Receipt</small></span>`);
-                        }
-                        if(val.note !== null){
-                            smallInformation.push(`<span><small class="tw__text-[#293240]"><i class="bx bx-paragraph tw__mr-1"></i>Note</small></span>`);
-                        }
-                        // Wallet
-                        let walletName = `${val.wallet.parent ? `${val.wallet.parent.name} - ` : ''}${val.wallet.name}`;
-                        let toWalletName = val.to_wallet_id ? `${val.wallet_transfer_target.parent ? `${val.wallet_transfer_target.parent.name} - ` : ''}${val.wallet_transfer_target.name}` : null;
                         // Handle Action
                         let actionBtn = '';
                         if(action.length > 0){
@@ -246,6 +233,19 @@
                                 </div>
                             `;
                         }
+                        // Append Small Information
+                        let smallInformation = [];
+                        if(val.record && val.record.category){
+                            smallInformation.push(`<span><small class="tw__text-[#293240]"><i class="bx bxs-category tw__mr-1"></i>${val.record.category.parent_id ? `${val.record.category.parent.name} - ` : ''}${val.record.category.name}</small></span>`);
+                        } else if(val.planned_payment && val.planned_payment.category){
+                            smallInformation.push(`<span><small class="tw__text-[#293240]"><i class="bx bxs-category tw__mr-1"></i>${val.planned_payment.category.parent_id ? `${val.planned_payment.category.parent.name} - ` : ''}${val.planned_payment.category.name}</small></span>`);
+                        }
+                        if(val.record && val.record.receipt !== null){
+                            smallInformation.push(`<span><small class="tw__text-[#293240]"><i class="bx bx-paperclip bx-rotate-90 tw__mr-1"></i>Receipt</small></span>`);
+                        }
+                        if(note !== null){
+                            smallInformation.push(`<span><small class="tw__text-[#293240]"><i class="bx bx-paragraph tw__mr-1"></i>Note</small></span>`);
+                        }
                         // Alert
                         let alert = '';
                         if(val.status !== 'pending'){
@@ -255,6 +255,7 @@
                                 </small>
                             `;
                         }
+
                         // Append Item
                         item.innerHTML = `
                             <div class="tw__flex tw__items-center tw__leading-none tw__gap-1">
@@ -284,7 +285,7 @@
                                             <p class="tw__text-base tw__text-semibold tw__mb-0 tw__text-[#293240]">${val.to_wallet_id ? 'Transfer - ' : ''}${ucwords(val.type)}</p>
                                             <small class="tw__italic tw__text-gray-500 tw__hidden lg:tw__inline">
                                                 <i class='bx bx-align-left'></i>
-                                                <span>${val.note ? val.note : 'No description'}</span>
+                                                <span>${note ? note : 'No description'}</span>
                                             </small>
                                         </div>
                                     </div>
@@ -296,7 +297,7 @@
                             <div class=" lg:tw__hidden">
                                 <small class="tw__italic tw__text-gray-500">
                                     <i class='bx bx-align-left'></i>
-                                    <span>${val.note ? val.note : 'No description'}</span>
+                                    <span>${note ? note : 'No description'}</span>
                                 </small>
                             </div>
 
@@ -325,7 +326,7 @@
 
                 paneEl.appendChild(plannedPaymentRecordList);
             }
-        }
+        };
 
         function skipRecord(uuid){
             Swal.fire({
@@ -343,7 +344,7 @@
                             'icon': 'success',
                             'text': 'Record period successfully skipped'
                         }).then((e) => {
-                            Livewire.emitTo('sys.planned-payment.show', 'refreshComponent');
+                            // Livewire.emitTo('sys.planned-payment.show', 'refreshComponent');
                         });
                     });
                 },
@@ -351,4 +352,4 @@
             });
         }
     </script>
-@endpush
+@endsection

@@ -12,6 +12,7 @@
 @endsection
 
 <div>
+    {{-- Be like water. --}}
     {{-- The Master doesn't talk, he acts. --}}
     <div>
         <a href="{{ url()->previous() }}" class="btn btn-secondary">
@@ -61,10 +62,8 @@
                     <tr>
                         <th>Extra Amount</th>
                         <td>
-                            <span>
-                                <span class="badge bg-label-secondary">{{ ucwords($plannedPaymentData->extra_type) }}</span>
-                                <span>{{ $plannedPaymentData->extra_type === 'amount' ? formatRupiah($plannedPaymentData->extra_amount) : $plannedPaymentData->extra_percentage.'%' }}</span>
-                            </span>
+                            <span class=" tw__block">{{ $plannedPaymentData->extra_type === 'amount' ? formatRupiah($plannedPaymentData->extra_amount) : $plannedPaymentData->extra_percentage.'%' }}</span>
+                            <span class="badge bg-label-secondary">{{ ucwords($plannedPaymentData->extra_type) }}</span>
                         </td>
                     </tr>
                     <tr>
@@ -130,34 +129,29 @@
     </div>
 </div>
 
-@section('js_inline')
+@push('javascript')
     <script>
-        // document.addEventListener('DOMContentLoaded', (e) => {
-        //     let container = document.getElementById('plannedPayment-detail');
-        //     container.querySelectorAll('[data-period]').forEach((el) => {
-        //         el.innerHTML = moment(el.dataset.period).format('DD MMM, YYYY');
-        //     });
-        // });
-
-        document.addEventListener('sampleWire-inita', (e) => {
-            console.log("A");
+        document.addEventListener('DOMContentLoaded', (e) => {
+            window.dispatchEvent(new Event('plannedPaymentShowLoadData'));
+            
+            let container = document.getElementById('plannedPayment-detail');
+            container.querySelectorAll('[data-period]').forEach((el) => {
+                el.innerHTML = moment(el.dataset.period).format('DD MMM, YYYY');
+            });
         });
-        // document.addEventListener('', (e) => {
-        //     console.log("Wire init");
 
-        //     if(document.getElementById('plannedPayment-recordList')){
-        //         document.getElementById('plannedPayment-recordList').innerHTML = '';
-        //         generateList();
-        //     }
-        // });
+        window.addEventListener('plannedPaymentShowLoadData', (e) => {
+            generateList();
+        });
 
         const generateList = () => {
             let paneEl = document.getElementById('plannedPayment-recordList');
             let plannedPaymentRecordList = null;
-            let data = @js($plannedPaymentRecordData);
-            let origData = @js($plannedPaymentData);
+            let data = @this.get('plannedPaymentRecordData');
+            let origData = @this.get('plannedPaymentData');
             console.log(data.length);
 
+            paneEl.innerHTML = '';
             if(data.length > 0){
                 if(!paneEl.querySelector(`.content-wrapper`)){
                     plannedPaymentRecordList = document.createElement('div');
@@ -178,7 +172,7 @@
                         let listContainer = document.createElement('div');
                         listContainer.classList.add('list-wrapper', 'tw__flex', 'tw__gap-4', 'tw__mb-4', 'last:tw__mb-0');
                         listContainer.innerHTML = `
-                            <div class=" tw__p-4 tw__text-center">
+                            <div class=" tw__p-4 tw__text-center" wire:id="${index}-${val.uuid}">
                                 <!-- This is for date -->
                                 <div class="tw__sticky lg:tw__top-24 tw__top-40">
                                     <span class="tw__font-semibold">${moment(val.period).format('ddd')}</span>
@@ -203,6 +197,9 @@
                         item.classList.add('tw__border-b', 'last:tw__border-b-0', 'tw__py-4', 'first:tw__pt-0', 'last:tw__pb-0');
                         // Note
                         val.note = origData.note;
+                        if(val.record){
+                            val.note = val.record.note;
+                        }
                         // Append Action
                         let action = [];
                         if(val.status === 'pending'){
@@ -223,7 +220,6 @@
                         }
                         // Append Small Information
                         let smallInformation = [];
-                        console.log(val);
                         if(val.record && val.record.category){
                             smallInformation.push(`<span><small class="tw__text-[#293240]"><i class="bx bxs-category tw__mr-1"></i>${val.record.category.parent_id ? `${val.record.category.parent.name} - ` : ''}${val.record.category.name}</small></span>`);
                         } else if(val.planned_payment && val.planned_payment.category){
@@ -357,4 +353,4 @@
             });
         }
     </script>
-@endsection
+@endpush

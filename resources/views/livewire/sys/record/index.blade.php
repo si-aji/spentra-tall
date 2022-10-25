@@ -255,7 +255,7 @@
                 data.forEach((val, index) => {
                     let date = val.datetime;
                     let original = val.datetime;
-                    let recordDate = val.date;
+                    let recordDate = momentDateTime(val.datetime, 'YYYY-MM-DD');
 
                     if(recordDate != prevDate){
                         let listContainer = document.createElement('div');

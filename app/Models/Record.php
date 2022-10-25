@@ -171,7 +171,8 @@ class Record extends Model
             $related = $this->where('user_id', $this->user_id)
                 ->where('id', '!=', $this->id)
                 ->where('receipt', $this->receipt)
-                ->where('amount', $this->amount);
+                ->where('amount', $this->amount)
+                ->where('datetime', $this->datetime);
 
             if($this->type === 'expense'){
                 // Get related income

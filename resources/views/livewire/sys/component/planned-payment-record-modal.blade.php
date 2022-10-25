@@ -362,11 +362,11 @@
 
         // Calculate Final after adding extra amount
         function plannedPaymentRecordCalculateFinal(type){
-            let amount = parseFloat(plannedPaymentAmountMask.unmaskedValue);
+            let amount = parseFloat(plannedPaymentRecordAmountMask.unmaskedValue);
             if(isNaN(amount)){
                 amount = 0;
             }
-            let extraAmount = parseFloat(plannedPaymentExtraAmountMask.unmaskedValue);
+            let extraAmount = parseFloat(plannedPaymentRecordExtraAmountMask.unmaskedValue);
             if(isNaN(extraAmount)){
                 extraAmount = 0;
             }
@@ -390,7 +390,7 @@
                 @this.set('plannedPaymentRecordExtraAmount', plannedPaymentRecordExtraAmountMask.unmaskedValue);
                 @this.set('plannedPaymentRecordPeriod', document.getElementById('input_planned_payment_record-period').value);
                 
-                @this.store();
+                @this.save();
             });
 
             // Receipt Change

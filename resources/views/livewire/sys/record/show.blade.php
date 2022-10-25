@@ -106,9 +106,7 @@
                 <h5 class="card-title">Related Record</h5>
             </div>
             <div class="card-body">
-                <div class="">
-
-                </div>
+                <div class=""></div>
             </div>
         </div>
     @endif

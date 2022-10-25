@@ -111,7 +111,7 @@ class PlannedPaymentRecordModal extends Component
             'plannedPaymentRecordReceipt' => 'mimes:jpg,jpeg,png,pdf|max:100',
         ]);
     }
-    public function store()
+    public function save()
     {
         // Reset Field if Transfer
         if($this->plannedPaymentRecordType === 'transfer'){
@@ -186,7 +186,7 @@ class PlannedPaymentRecordModal extends Component
             $recordLivewire->recordPeriod = $this->plannedPaymentRecordPeriod;
             $recordLivewire->recordNote = $this->plannedPaymentRecordNote;
             $recordLivewire->recordReceipt = $this->plannedPaymentRecordReceipt;
-            $recordLivewire->store(true, $plannedRecord);
+            $recordLivewire->save(true, $plannedRecord);
         });
 
         $this->dispatchBrowserEvent('close-modalPlannedPaymentRecord');
