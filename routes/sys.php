@@ -89,6 +89,28 @@ Route::group([
                 ]
             ]);
         });
+
+        // Get Balance
+        Route::get('get-balance', function(){
+            $walletId = [1];
+            $data = \App\Models\Wallet::whereIn('id', $walletId)
+                ->get();
+            // Record
+            $record = \App\Models\Record::whereIn('wallet_id', $walletId)
+                ->sum(\DB::raw('(amount + extra_amount) * IF(type = "expense", -1, 1)'));
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Data Fetched',
+                'result' => [
+                    'wallet' => [
+                        'id' => $walletId,
+                        'data' => $data
+                    ],
+                    'record' => $record
+                ]
+            ]);
+        });
     });
 
     // Dashboard

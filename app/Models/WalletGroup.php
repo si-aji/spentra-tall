@@ -116,7 +116,7 @@ class WalletGroup extends Model
         $balance->orderBy('datetime', 'desc')
             ->orderBy('created_at', 'desc');
 
-        return !empty($balance->first()) ? $balance->first()->balance : 0;
+        return $balance->sum(\DB::raw('(amount + extra_amount) * IF(type = "expense", -1, 1)'));
     }
     public function scopeGetBalanceByType($query, $type = 'income', $walletList = null, $period = null)
     {

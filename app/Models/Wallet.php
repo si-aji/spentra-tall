@@ -117,7 +117,7 @@ class Wallet extends Model
     public function scopeGetBalance($query, $period = null)
     {
         $balance = $this->record()
-            ->select(\DB::raw('IFNULL(SUM((amount + extra_amount) * IF(type = "expense", -1, 1)), 0) as balance'))
+            // ->select(\DB::raw('IFNULL(SUM((amount + extra_amount) * IF(type = "expense", -1, 1)), 0) as balance'))
             // ->where('wallet_id', $this->id)
             ->where('status', 'complete');
 
@@ -126,9 +126,8 @@ class Wallet extends Model
         }
 
         $balance->orderBy('datetime', 'desc')
-            ->orderBy('created_at', 'desc')
-            ->groupBy('amount');
+            ->orderBy('created_at', 'desc');
 
-        return $balance->first() ? $balance->first()->balance : 0;
+        return $balance->sum(\DB::raw('(amount + extra_amount) * IF(type = "expense", -1, 1)'));
     }
 }
