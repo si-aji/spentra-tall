@@ -126,8 +126,8 @@ class Wallet extends Model
         }
 
         $balance->orderBy('datetime', 'desc')
-            ->orderBy('created_at', 'desc');
-            // ->groupBy('amount');
+            ->orderBy('created_at', 'desc')
+            ->groupBy('amount');
 
         return $balance->first() ? $balance->first()->balance : 0;
     }
