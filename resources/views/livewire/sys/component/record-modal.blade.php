@@ -93,7 +93,7 @@
                                         </a>
                                     </div>
 
-                                    <div class="form-group tw__mb-4" id="form-transfer" wire:ignore.self>
+                                    <div class="form-group tw__mb-4" id="form-transfer" wire:ignore>
                                         <label for="input_record-target">To</label>
                                         <select class="form-control" id="input_record-wallet_transfer_id" name="wallet_transfer_id" placeholder="Search for Wallet Target Data">
                                             <option value="" {{ $recordWalletTransfer == '' ? 'selected' : '' }}>Search for Wallet Target Data</option>
