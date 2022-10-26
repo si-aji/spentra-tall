@@ -93,7 +93,7 @@
                                 <button type="button" class="btn btn-sm btn-warning" x-on:click="$wire.emitTo('sys.component.record-template-modal', 'editAction', '${data.uuid}')">
                                     <span class="tw__flex tw__items-center tw__gap-2"><i class="bx bx-edit"></i>Edit</span>    
                                 </button>
-                                <a href="{{ route('sys.record.template.index') }}/${data.uuid}" class="btn btn-sm tw__bg-blue-400">
+                                <a href="{{ route('sys.record.template.index') }}/${data.uuid}" class="btn btn-sm btn-primary">
                                     <span class="tw__flex tw__items-center tw__gap-2 tw__text-white"><i class="bx bx-show"></i>Detail</span>    
                                 </a>
                             </div>

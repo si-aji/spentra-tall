@@ -19,6 +19,7 @@ class Show extends Component
 
     public function mount($uuid)
     {
+        $this->menuState = 'planned-payment';
         $this->plannedPaymentUuid = $uuid;
     }
 

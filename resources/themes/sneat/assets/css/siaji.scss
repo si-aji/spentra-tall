@@ -341,6 +341,14 @@ h4 {
 				padding-right: 1.5rem;
 			}
 		}
+		@media (max-width: 1199px) {
+			.dataTables_length, .dataTables_info {
+				padding-left: 1rem;
+			}
+			.dataTables_filter, .dataTables_paginate {
+				padding-right: 1rem;
+			}
+		}
 		.dataTables_length {
 			select {
 				border-radius: .375rem;

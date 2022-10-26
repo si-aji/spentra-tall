@@ -33,9 +33,9 @@
                     <td>{{ $walletGroup->name }}</td>
                 </tr>
                 <tr>
-                    <th>Account</th>
+                    <th>Account(s)</th>
                     <td>
-                        <small class=" tw__flex tw__items-center tw__gap-2 tw__mt-2">
+                        <small class=" tw__flex tw__flex-wrap tw__items-center tw__gap-2 tw__mt-2">
                             @foreach ($walletGroup->walletGroupList as $item)
                                 <small class=" bg-primary tw__px-2 tw__py-1 tw__rounded tw__text-white">{{ ($item->parent()->exists() ? $item->parent->name.' - ' : '').$item->name }}</small>
                             @endforeach
@@ -80,10 +80,8 @@
     <script>
         let table = null;
         const initDatatable = () => {
-            console.log("Initialize Datatable");
             if(table != null){
                 table.destroy();
-                console.log(table);
             }
             table = new DataTable('#table-wallet_group_list', {
                 order: [0, 'asc'],
@@ -111,7 +109,7 @@
                     {
                         targets: 0,
                         render: function (row, type, data, meta) {
-                            return parseInt(row) + 1;
+                            return parseInt(meta.row) + 1;
                         }
                     }, {
                         targets: 1,
@@ -154,6 +152,7 @@
 
         if(document.getElementById('modal-wallet_group')){
             document.getElementById('modal-wallet_group').addEventListener('hide.bs.offcanvas', (e) => {
+                table.ajax.reload(null, false);
                 Livewire.emitTo('sys.wallet.group.show', 'refreshComponent');
             });
         }
@@ -163,8 +162,14 @@
                 Livewire.emitTo('sys.wallet.group.show', 'refreshComponent');
             });
         }
-        if(document.getElementById('modal-record') && table !== null){
+        if(document.getElementById('modal-record')){
             document.getElementById('modal-record').addEventListener('hide.bs.modal', (e) => {
+                table.ajax.reload(null, false);
+                Livewire.emitTo('sys.wallet.group.show', 'refreshComponent');
+            });
+        }
+        if(document.getElementById('modal-plannedPaymentRecord')){
+            document.getElementById('modal-plannedPaymentRecord').addEventListener('hide.bs.modal', (e) => {
                 table.ajax.reload(null, false);
                 Livewire.emitTo('sys.wallet.group.show', 'refreshComponent');
             });

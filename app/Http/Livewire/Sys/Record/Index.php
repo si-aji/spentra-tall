@@ -23,6 +23,7 @@ class Index extends Component
     public $dataSelectedType = '';
     public $dataSelectedNote = '';
     public $dataRecord;
+    protected $recordPaginate;
 
     protected $listeners = [
         'refreshComponent' => '$refresh',
@@ -49,25 +50,27 @@ class Index extends Component
             ->orderBy('order_main', 'asc')
             ->get();
     }
-    public function mount()
+    public function fetchRecordData($selectedWallet = null) : void
     {
-        $this->dataSelectedYear = date("Y");
-        $this->dataSelectedMonth = date("Y-m-01", strtotime($this->dataSelectedYear.'-'.($this->dataSelectedYear !== date("Y") ? '12' : date("m")).'-01'));
-        
-        $this->menuState = 'record';
-        $this->submenuState = null;
-    }
-
-    public function render()
-    {
-        // Get Record Data
         $this->dataRecord = \App\Models\Record::with('wallet.parent', 'walletTransferTarget.parent', 'category.parent')
             ->where('user_id', \Auth::user()->id)
             ->where('status', 'complete');
-            // ->whereMonth('date', date('m', strtotime($this->dataSelectedMonth)))
-            // ->whereYear('date', date('Y', strtotime($this->dataSelectedMonth)))
-            // ->whereMonth(\DB::raw("CONVERT_TZ(datetime, 'UTC', '".(\Session::get('SAUSER_TZ') ?? 'Asia/Jakarta')."')"), date('m', strtotime($this->dataSelectedMonth)))
-            // ->whereYear(\DB::raw("CONVERT_TZ(datetime, 'UTC', '".(\Session::get('SAUSER_TZ') ?? 'Asia/Jakarta')."')"), date('Y', strtotime($this->dataSelectedMonth)));
+
+        // Apply Selected Wallet (from Wallet Show or Wallet Group Show)
+        if(!empty($selectedWallet)){
+            if(is_array($selectedWallet)){
+                // Is array, from wallet group
+                $this->dataRecord->where(function($q) use ($selectedWallet){
+                    return $q->whereIn('wallet_id', $selectedWallet)
+                        ->orWhereIn('to_wallet_id', $selectedWallet);
+                });
+            } else {
+                $this->dataRecord->where(function($q) use ($selectedWallet){
+                    return $q->where('wallet_id', $selectedWallet)
+                        ->orWhere('to_wallet_id', $selectedWallet);
+                });
+            }
+        }
 
         // Apply Filter
         if($this->dataSelectedType !== ''){
@@ -83,10 +86,10 @@ class Index extends Component
 
         $this->dataRecord = $this->dataRecord->orderBy('datetime', 'desc')
             ->orderBy('type', 'desc')
-            ->paginate($this->loadPerPage);
-        $paginate = $this->dataRecord;
-        $this->dataRecord = collect($this->dataRecord->items())
-            ->filter(function($record){
+            ->get();
+        $this->dataRecord = collect($this->dataRecord);
+        if($this->dataSelectedMonth){
+            $this->dataRecord = $this->dataRecord->filter(function($record){
                 // Compromize can't use convert_tz on shared hosting
                 $recordDateTime = new \DateTime(date("Y-m-d H:i:s", strtotime($record->datetime)));
                 if(\Session::has('SAUSER_TZ')){
@@ -102,18 +105,45 @@ class Index extends Component
                 //     'session' => [
                 //         'has_tz' => \Session::has('SAUSER_TZ'),
                 //         'tz' => \Session::get('SAUSER_TZ')
+                //     ],
+                //     'validate' => [
+                //         'date' => [
+                //             'month' => date("m", strtotime($recordDateTime)),
+                //             'year' => date("Y", strtotime($recordDateTime))
+                //         ],
+                //         'filter' => [
+                //             'month' => date("m", strtotime($this->dataSelectedMonth)),
+                //             'year' => date("Y", strtotime($this->dataSelectedMonth))
+                //         ]
                 //     ]
                 // ]);
                 
                 return (date("m", strtotime($recordDateTime)) === date("m", strtotime($this->dataSelectedMonth))) && date("Y", strtotime($recordDateTime)) === date("Y", strtotime($this->dataSelectedMonth));
-            });;
+            });
+        }
+        $this->recordPaginate = $this->dataRecord->paginate($this->loadPerPage);
+        $this->dataRecord = $this->dataRecord->values()->take($this->loadPerPage);
+    }
+    public function mount()
+    {
+        $this->dataSelectedYear = date("Y");
+        $this->dataSelectedMonth = date("Y-m-01", strtotime($this->dataSelectedYear.'-'.($this->dataSelectedYear !== date("Y") ? '12' : date("m")).'-01'));
+        
+        $this->menuState = 'record';
+        $this->submenuState = null;
+    }
 
+    public function render()
+    {
+        // Get Record Data
+        $this->fetchRecordData();
+        
         $this->fetchMainCategory();
         $this->fetchMainWallet();
         $this->dispatchBrowserEvent('recordPluginsInit');
         $this->dispatchBrowserEvent('recordLoadData');
         return view('livewire.sys.record.index', [
-            'paginate' => $paginate
+            'paginate' => $this->recordPaginate
         ])->extends('layouts.sneat', [
             'menuState' => $this->menuState,
             'submenuState' => $this->submenuState,
@@ -126,7 +156,9 @@ class Index extends Component
     }
     public function monthChanged()
     {
-        
+        $this->reset([
+            'loadPerPage'
+        ]);
     }
 
     // Update Model / Variable
@@ -159,5 +191,10 @@ class Index extends Component
         $record->delete();
 
         return $uuid;
+    }
+
+    public function getPaginate()
+    {
+        return $this->recordPaginate;
     }
 }

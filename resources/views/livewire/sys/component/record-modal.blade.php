@@ -421,6 +421,15 @@
             
             document.getElementById('record-form').addEventListener('submit', (e) => {
                 e.preventDefault();
+                if(e.target.querySelector('button[type="submit"]')){
+                    e.target.querySelector('button[type="submit"]').innerHTML = `
+                        <span class=" tw__flex tw__items-center tw__gap-2">
+                            <i class="bx bx-loader-alt bx-spin"></i>
+                            <span>Loading</span>    
+                        </span>
+                    `;
+                    e.target.querySelector('button[type="submit"]').disabled = true;
+                }
 
                 @this.set('user_timezone', document.getElementById('user_timezone').value);
                 @this.set('recordType', document.querySelector('.record-type.btn.btn-secondary').dataset.value);

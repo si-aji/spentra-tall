@@ -92,6 +92,9 @@
                                 <button type="button" class="btn btn-sm btn-warning" x-on:click="$wire.emitTo('sys.component.wallet-modal', 'editAction', '${data.uuid}')">
                                     <span class="tw__flex tw__items-center tw__gap-2"><i class="bx bx-edit"></i>Edit</span>    
                                 </button>
+                                <a href="{{ route('sys.wallet.list.index') }}/${data.uuid}" class="btn btn-sm btn-primary">
+                                    <span class="tw__flex tw__items-center tw__gap-2"><i class="bx bx-edit"></i>Detail</span>    
+                                </a>
                                 <button type="button" class="btn btn-sm btn-secondary" x-on:click="$wire.emitTo('sys.component.wallet-balance-modal', 'editAction', '${data.uuid}')">
                                     <span class="tw__flex tw__items-center tw__gap-2"><i class="bx bx-slider"></i>Adjustment</span>
                                 </button>

@@ -119,7 +119,15 @@
                 </div>
                 <div class="card-footer tw__pt-0">
                     <div class=" tw__flex tw__items-center tw__justify-between">
-                        <button type="button" class="btn btn-primary disabled:tw__cursor-not-allowed" {{ $paginate->hasMorePages() ? '' : 'disabled' }} x-on:click="@this.loadMore()">Load more</button>
+                        <button wire:loading.remove wire:target="loadMore" type="button" class="btn btn-primary disabled:tw__cursor-not-allowed" {{ $paginate->hasMorePages() ? '' : 'disabled' }} wire:click="loadMore">
+                            <span>Load more</span>
+                        </button>
+                        <button wire:loading.block wire:target="loadMore" type="button" class="btn btn-primary disabled:tw__cursor-not-allowed" disabled>
+                            <span class=" tw__flex tw__items-center tw__gap-2">
+                                <i class="bx bx-loader-alt bx-spin"></i>
+                                <span>Loading</span>
+                            </span>
+                        </button>
                         <span>Showing {{ $paginate->count() }} of {{ $paginate->total() }} entries</span>
                     </div>
                 </div>

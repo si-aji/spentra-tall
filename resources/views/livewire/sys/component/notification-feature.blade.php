@@ -123,8 +123,8 @@
                             <small class="tw__flex tw__items-center tw__leading-none tw__gap-1 tw__flex-wrap"><span class=""><i class="bx bx-wallet-alt tw__mr-1"></i></span>${walletName} ${toWalletName !== null ? `<small><i class="bx bx-caret-right"></i></small>${toWalletName}` : ''}</small>
                             <small class="tw__flex tw__items-center tw__gap-2"><i class="bx bx-time"></i>${momentDateTime(val.next_date, 'DD MMM, YYYY')}</small>
                             <div class=" tw__mt-1 tw__flex tw__gap-2">
-                                <button type="button" class="btn btn-sm tw__bg-[#ff3e1d]/75 hover:tw__bg-[#ff3e1d] tw__transition-all tw__text-white tw__w-full" onclick="notificationSkipRecord('${val.uuid}')">Skip</button>
                                 <button type="button" class="btn btn-sm tw__bg-[#696cff]/75 hover:tw__bg-[#696cff] tw__transition-all tw__text-white tw__w-full" onclick="@this.call('closeModal');Livewire.emitTo('sys.component.planned-payment-record-modal', 'editAction', '${val.planned_payment_record && val.planned_payment_record.length > 0 ? val.planned_payment_record[0]['uuid'] : ''}')">Approve</button>
+                                <a href="{{ route('sys.planned-payment.index') }}/${val.uuid}" class="btn btn-sm tw__bg-[#8493a3]/75 hover:tw__bg-[#8493a3] tw__transition-all tw__text-white tw__w-full">Detail</a>
                             </div>
                         </div>
                     `;

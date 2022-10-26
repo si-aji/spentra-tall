@@ -172,14 +172,10 @@ class RecordModal extends Component
         }
 
         $this->validate([
-            'recordReceipt' => 'mimes:jpg,jpeg,png,pdf|max:100',
+            'recordReceipt' => 'mimes:jpg,jpeg,png,pdf|max:1024',
         ]);
     }
     public function editAction($uuid){
-        \Log::debug("Debug on Edit Action Record Modal", [
-            'uuid' => $uuid
-        ]);
-
         $record = \App\Models\Record::with('wallet', 'walletTransferTarget', 'category')
             ->where('user_id', \Auth::user()->id)
             ->where(\DB::raw('BINARY `uuid`'), $uuid)

@@ -111,6 +111,45 @@ Route::group([
                 ]
             ]);
         });
+
+        // Get Record
+        Route::get('get-record', function(){
+            $dataSelectedMonth = request()->has('selected_month') ? date("Y-m-d", strtotime(request()->get('selected_month'))) : '2022-10-01';
+            $loadPerPage = 10;
+            // Get Record Data
+            $dataRecord = \App\Models\Record::with('wallet.parent', 'walletTransferTarget.parent', 'category.parent')
+                ->where('user_id', \Auth::user()->id)
+                ->where('status', 'complete')
+                ->orderBy('datetime', 'desc')
+                ->get();
+            $dataRecord = collect($dataRecord)
+                ->filter(function($record) use ($dataSelectedMonth){
+                    // Compromize can't use convert_tz on shared hosting
+                    $recordDateTime = new \DateTime(date("Y-m-d H:i:s", strtotime($record->datetime)));
+                    if(\Session::has('SAUSER_TZ')){
+                        $recordDateTime = $recordDateTime->setTimezone(new \DateTimeZone(\Session::get('SAUSER_TZ')))->format('Y-m-d H:i:s');
+                        // $recordDateTime = (new \DateTime($recordDateTime, new \DateTimeZone(\Session::get('SAUSER_TZ'))))->format('Y-m-d H:i:s');
+                    } else {
+                        $recordDateTime = $recordDateTime->format('Y-m-d H:i:s');
+                    }
+                    
+                    return (date("m", strtotime($recordDateTime)) === date("m", strtotime($dataSelectedMonth))) && date("Y", strtotime($recordDateTime)) === date("Y", strtotime($dataSelectedMonth));
+                });
+            $paginate = $dataRecord->paginate($loadPerPage);
+            $dataRecord = $dataRecord->take($loadPerPage);
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Data Fetched',
+                'result' => [
+                    // 'paginate' => $paginate,
+                    'record' => [
+                        'count' => count($dataRecord),
+                        'data' => $dataRecord
+                    ]
+                ]
+            ]);
+        });
     });
 
     // Dashboard
@@ -147,6 +186,8 @@ Route::group([
         // List
         Route::get('list/re-order', \App\Http\Livewire\Sys\Wallet\Lists\ReOrder::class)
             ->name('list.re-order');
+        Route::get('list/{uuid}', \App\Http\Livewire\Sys\Wallet\Lists\Show::class)
+            ->name('list.show');
         Route::get('list', \App\Http\Livewire\Sys\Wallet\Lists\Index::class)
             ->name('list.index');
         // Group

@@ -16,7 +16,7 @@
                 <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
                     <!-- Search -->
                     <div class="navbar-nav align-items-center tw__w-full">
-                        <div class="nav-item d-flex align-items-center tw__w-full tw__gap-4">
+                        <div class="nav-item d-flex align-items-center tw__w-full tw__gap-2 tw__mr-3">
                             <i class="bx bx-search fs-4 lh-0" id="toggle-search"></i>
                             <input
                                 type="text"
