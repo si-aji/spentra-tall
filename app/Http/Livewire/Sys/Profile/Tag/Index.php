@@ -15,7 +15,7 @@ class Index extends Component
         $this->menuState = 'profile';
         $this->submenuState = 'tag';
 
-        $extraMenu = config('siaji.sys.sidebar')
+        $extraMenu = collect(config('siaji.sys.sidebar'))
             ->where('name', 'Profile')
             ->first();
 

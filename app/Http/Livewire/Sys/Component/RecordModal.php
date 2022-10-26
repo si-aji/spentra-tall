@@ -31,8 +31,8 @@ class RecordModal extends Component
     public $recordWalletTransfer = '';
     public $recordAmount = '';
     public $recordExtraType = 'amount';
-    public $recordExtraAmount = 0;
-    public $recordFinalAmount = 0;
+    public $recordExtraAmount = '';
+    public $recordFinalAmount = '';
     public $recordPeriod = '';
     public $recordPeriodChanged = false;
     public $recordNote = '';
@@ -451,6 +451,7 @@ class RecordModal extends Component
             }
         }
 
+        $this->reset($this->recordResetField);
         if(!$quitely){
             $this->dispatchBrowserEvent('trigger-event', [
                 'recordType' => $this->recordType,
@@ -466,7 +467,6 @@ class RecordModal extends Component
         }
         
         $this->emit('refreshComponent');
-        $this->reset($this->recordResetField);
     }
 
     // Update Model / Variable

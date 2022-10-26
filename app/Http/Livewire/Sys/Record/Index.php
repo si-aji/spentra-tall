@@ -63,11 +63,11 @@ class Index extends Component
         // Get Record Data
         $this->dataRecord = \App\Models\Record::with('wallet.parent', 'walletTransferTarget.parent', 'category.parent')
             ->where('user_id', \Auth::user()->id)
-            ->where('status', 'complete')
+            ->where('status', 'complete');
             // ->whereMonth('date', date('m', strtotime($this->dataSelectedMonth)))
             // ->whereYear('date', date('Y', strtotime($this->dataSelectedMonth)))
-            ->whereMonth(\DB::raw("CONVERT_TZ(datetime, 'UTC', '".(\Session::get('SAUSER_TZ') ?? 'Asia/Jakarta')."')"), date('m', strtotime($this->dataSelectedMonth)))
-            ->whereYear(\DB::raw("CONVERT_TZ(datetime, 'UTC', '".(\Session::get('SAUSER_TZ') ?? 'Asia/Jakarta')."')"), date('Y', strtotime($this->dataSelectedMonth)));
+            // ->whereMonth(\DB::raw("CONVERT_TZ(datetime, 'UTC', '".(\Session::get('SAUSER_TZ') ?? 'Asia/Jakarta')."')"), date('m', strtotime($this->dataSelectedMonth)))
+            // ->whereYear(\DB::raw("CONVERT_TZ(datetime, 'UTC', '".(\Session::get('SAUSER_TZ') ?? 'Asia/Jakarta')."')"), date('Y', strtotime($this->dataSelectedMonth)));
 
         // Apply Filter
         if($this->dataSelectedType !== ''){
@@ -85,7 +85,28 @@ class Index extends Component
             ->orderBy('type', 'desc')
             ->paginate($this->loadPerPage);
         $paginate = $this->dataRecord;
-        $this->dataRecord = collect($this->dataRecord->items());
+        $this->dataRecord = collect($this->dataRecord->items())
+            ->filter(function($record){
+                // Compromize can't use convert_tz on shared hosting
+                $recordDateTime = new \DateTime(date("Y-m-d H:i:s", strtotime($record->datetime)));
+                if(\Session::has('SAUSER_TZ')){
+                    $recordDateTime = $recordDateTime->setTimezone(new \DateTimeZone(\Session::get('SAUSER_TZ')))->format('Y-m-d H:i:s');
+                    // $recordDateTime = (new \DateTime($recordDateTime, new \DateTimeZone(\Session::get('SAUSER_TZ'))))->format('Y-m-d H:i:s');
+                } else {
+                    $recordDateTime = $recordDateTime->format('Y-m-d H:i:s');
+                }
+
+                // \Log::debug("Debug on Filter", [
+                //     'raw' => $record->datetime,
+                //     'formated' => $recordDateTime,
+                //     'session' => [
+                //         'has_tz' => \Session::has('SAUSER_TZ'),
+                //         'tz' => \Session::get('SAUSER_TZ')
+                //     ]
+                // ]);
+                
+                return (date("m", strtotime($recordDateTime)) === date("m", strtotime($this->dataSelectedMonth))) && date("Y", strtotime($recordDateTime)) === date("Y", strtotime($this->dataSelectedMonth));
+            });;
 
         $this->fetchMainCategory();
         $this->fetchMainWallet();

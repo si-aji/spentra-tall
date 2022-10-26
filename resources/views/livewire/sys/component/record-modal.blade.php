@@ -399,10 +399,10 @@
                 minuteIncrement: 1,
                 allowInput: true,
                 defaultDate: defaultDate,
-                onClose: function(selectedDates, dateStr, instance){
-                    @this.localUpdate('recordPeriod', document.getElementById('input_record-period').value);
-                    @this.localUpdate('recordPeriodChanged', true);
-                }
+                // onClose: function(selectedDates, dateStr, instance){
+                //     @this.localUpdate('recordPeriod', document.getElementById('input_record-period').value);
+                //     @this.localUpdate('recordPeriodChanged', true);
+                // }
             });
 
             document.getElementById('btn_record-switch').addEventListener('click', (e) => {
@@ -423,7 +423,8 @@
                 e.preventDefault();
 
                 @this.set('user_timezone', document.getElementById('user_timezone').value);
-                @this.set('recordCategory', document.getElementById('input_record-category_id').value)
+                @this.set('recordType', document.querySelector('.record-type.btn.btn-secondary').dataset.value);
+                @this.set('recordCategory', document.getElementById('input_record-category_id').value);
                 @this.set('recordWallet', document.getElementById('input_record-wallet_id').value);
                 @this.set('recordWalletTransfer', document.getElementById('input_record-wallet_transfer_id').value)
                 @this.set('recordAmount', amountMask.unmaskedValue);

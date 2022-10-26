@@ -118,7 +118,7 @@ class Wallet extends Model
     {
         $balance = $this->record()
             ->select(\DB::raw('IFNULL(SUM((amount + extra_amount) * IF(type = "expense", -1, 1)), 0) as balance'))
-            ->where('wallet_id', $this->id)
+            // ->where('wallet_id', $this->id)
             ->where('status', 'complete');
 
         if (! empty($period) && validateDate($period, 'Y-m-d H:i:s')) {
@@ -127,6 +127,7 @@ class Wallet extends Model
 
         $balance->orderBy('datetime', 'desc')
             ->orderBy('created_at', 'desc');
+            // ->groupBy('amount');
 
         return $balance->first() ? $balance->first()->balance : 0;
     }
