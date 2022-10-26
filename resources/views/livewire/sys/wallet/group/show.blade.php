@@ -163,5 +163,11 @@
                 Livewire.emitTo('sys.wallet.group.show', 'refreshComponent');
             });
         }
+        if(document.getElementById('modal-record') && table !== null){
+            document.getElementById('modal-record').addEventListener('hide.bs.modal', (e) => {
+                table.ajax.reload(null, false);
+                Livewire.emitTo('sys.wallet.group.show', 'refreshComponent');
+            });
+        }
     </script>
 @endsection
