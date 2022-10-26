@@ -86,6 +86,7 @@ class RecordModal extends Component
             'recordExtraType' => $this->recordExtraType,
             'recordAmount' => $this->recordAmount,
             'recordExtraAmount' => $this->recordExtraAmount,
+            'recordCategory' => $this->recordCategory,
             'recordWallet' => $this->recordWallet,
             'recordWalletTransfer' => $this->recordWalletTransfer
         ]);
@@ -204,7 +205,10 @@ class RecordModal extends Component
             'recordType' => $this->recordType,
             'recordExtraType' => $this->recordExtraType,
             'recordAmount' => $this->recordAmount,
-            'recordExtraAmount' => $this->recordExtraAmount
+            'recordExtraAmount' => $this->recordExtraAmount,
+            'recordCategory' => $this->recordCategory,
+            'recordWallet' => $this->recordWallet,
+            'recordWalletTransfer' => $this->recordWalletTransfer
         ]);
         $this->dispatchBrowserEvent('open-modal');
     }
@@ -459,7 +463,10 @@ class RecordModal extends Component
                 'recordType' => $this->recordType,
                 'recordExtraType' => $this->recordExtraType,
                 'recordAmount' => $this->recordAmount,
-                'recordExtraAmount' => $this->recordExtraAmount
+                'recordExtraAmount' => $this->recordExtraAmount,
+                'recordCategory' => $this->recordCategory,
+                'recordWallet' => $this->recordWallet,
+                'recordWalletTransfer' => $this->recordWalletTransfer
             ]);
             $this->dispatchBrowserEvent('wire-action', [
                 'status' => 'success',
@@ -542,7 +549,10 @@ class RecordModal extends Component
             'recordType' => $this->recordType,
             'recordExtraType' => $this->recordExtraType,
             'recordAmount' => $this->recordAmount,
-            'recordExtraAmount' => $this->recordExtraAmount
+            'recordExtraAmount' => $this->recordExtraAmount,
+            'recordCategory' => $this->recordCategory,
+            'recordWallet' => $this->recordWallet,
+            'recordWalletTransfer' => $this->recordWalletTransfer
         ]);
     }
 }

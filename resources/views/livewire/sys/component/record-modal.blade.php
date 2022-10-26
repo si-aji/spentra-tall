@@ -480,6 +480,9 @@
                     }
                 });
             }
+            if(el.hasOwnProperty('recordCategory')){
+                recordModalCategoryChoice.setChoiceByValue(el.recordCategory);
+            }
             if(el.hasOwnProperty('recordWallet')){
                 recordModalWalletChoice.setChoiceByValue(el.recordWallet);
             }
