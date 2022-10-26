@@ -9,6 +9,12 @@ class Index extends Component
     public $menuState = null;
     public $submenuState = null;
 
+    // Filter
+    public $filterName = null;
+    // Sort
+    public $sortKey = null;
+    public $sortType = null;
+
     // Load More Conf
     public $loadPerPage = 10;
     public $user_timezone = '';
@@ -31,8 +37,22 @@ class Index extends Component
     public function render()
     {
         $this->dataPlannedPayment = \App\Models\PlannedPayment::with('category.parent', 'wallet.parent', 'walletTransferTarget.parent')
-            ->where('user_id', \Auth::user()->id)
-            ->orderBy('next_date', 'asc');
+            ->where('user_id', \Auth::user()->id);
+        // Apply Filter
+        if(!empty($this->filterName)){
+            $this->dataPlannedPayment->where('name', 'like', '%'.$this->filterName.'%');
+        }
+        // Applu Sort
+        if(!empty($this->sortKey)){
+            $sortType = 'asc';
+            if(!empty($this->sortType)){
+                $sortType = $this->sortType;
+            }
+
+            $this->dataPlannedPayment->orderBy($this->sortKey, $sortType);
+        } else {
+            $this->dataPlannedPayment->orderBy('next_date', 'asc');
+        }
         $this->dataPlannedPayment = $this->dataPlannedPayment->paginate($this->loadPerPage);
         $paginate = $this->dataPlannedPayment;
         $this->dataPlannedPayment = collect($this->dataPlannedPayment->items());

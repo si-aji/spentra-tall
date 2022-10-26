@@ -17,12 +17,34 @@
     </div>
 
     {{-- Filter --}}
-    <div class="card tw__mt-4">
+    <div class="card tw__mt-4"  wire:ignore>
         <div class="card-body">
             <div class="row">
-                <div class="col-12 col-lg-3">
-                    <div class="form-group tw__mb-4 lg:tw__mb-0">
+                <div class="col-12 col-lg-5 tw__mb-4 lg:tw__mb-0">
+                    <div class="form-group">
                         <label>Sort by</label>
+                        <div class="row">
+                            <div class="col-12 col-lg-6 tw__mb-4 lg:tw__mb-0">
+                                <select class="form-control" id="input_planned_payment-sort_key" name="sort_key" placeholder="Search for Sort Key" x-on:change="$wire.set('sortKey', $event.target.value)">
+                                    <option value="">Search for Sort Key</option>
+                                    <option value="name">Name</option>
+                                    <option value="next_date">Period</option>
+                                </select>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                                <select class="form-control" id="input_planned_payment-sort_type" name="sort_type" aria-placeholder="Search for Sort Type" x-on:change="$wire.set('sortType', $event.target.value)">
+                                    <option value="">Search for Sort Type</option>
+                                    <option value="asc">Ascending</option>
+                                    <option value="desc">Descending</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-7">
+                    <div class="form-group">
+                        <label>Search by Name</label>
+                        <input type="text" class="form-control" placeholder="Search Planned Payment based on it's Name" wire:model.debounce.500ms="filterName">
                     </div>
                 </div>
             </div>
@@ -69,6 +91,32 @@
 
 @section('js_inline')
     <script>
+        // Choices
+        let sortKeyChoice = null;
+        if(document.getElementById('input_planned_payment-sort_key')){
+            const sortKeyEl = document.getElementById('input_planned_payment-sort_key');
+            sortKeyChoice = new Choices(sortKeyEl, {
+                allowHTML: true,
+                removeItemButton: true,
+                searchPlaceholderValue: "Search for Sort Key",
+                placeholder: true,
+                placeholderValue: 'Search for Sort Key',
+                shouldSort: false
+            });
+        }
+        let sortTypeChoice = null;
+        if(document.getElementById('input_planned_payment-sort_type')){
+            const sortTypeEl = document.getElementById('input_planned_payment-sort_type');
+            sortTypeChoice = new Choices(sortTypeEl, {
+                allowHTML: true,
+                removeItemButton: true,
+                searchPlaceholderValue: "Search for Sort Type",
+                placeholder: true,
+                placeholderValue: 'Search for Sort Type',
+                shouldSort: false
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', (e) => {
             window.dispatchEvent(new Event('plannedPaymentLoadData'));
         });

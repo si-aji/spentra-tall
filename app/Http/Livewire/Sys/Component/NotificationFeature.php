@@ -15,9 +15,9 @@ class NotificationFeature extends Component
     public $notificationModalState = 'hide';
 
     // Load More Conf
-    public $loadPerPageOverdue = 1;
-    public $loadPerPageToday = 1;
-    public $loadPerPageUpcomming = 1;
+    public $loadPerPageOverdue = 3;
+    public $loadPerPageToday = 3;
+    public $loadPerPageUpcomming = 3;
 
     // Paginate
     protected $paginateOverdue = null;
