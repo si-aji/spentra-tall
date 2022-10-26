@@ -85,7 +85,9 @@ class RecordModal extends Component
             'recordType' => $this->recordType,
             'recordExtraType' => $this->recordExtraType,
             'recordAmount' => $this->recordAmount,
-            'recordExtraAmount' => $this->recordExtraAmount
+            'recordExtraAmount' => $this->recordExtraAmount,
+            'recordWallet' => $this->recordWallet,
+            'recordWalletTransfer' => $this->recordWalletTransfer
         ]);
     }
 

@@ -24,7 +24,7 @@ function recordContainerFormat(val, index){
     `;
 }
 function recordContentFormat(val, index, action = []){
-    console.log(val);
+    // console.log(val);
     // console.log(val.datetime);
     // console.log(momentDateTime(val.datetime, 'HH:mm'));
 

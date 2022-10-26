@@ -22,7 +22,7 @@
                             {{-- Left Side --}}
                             <div class=" tw__p-6 tw__col-span-2 tw__self-center">
                                 {{-- Record Template --}}
-                                <div class="form-group tw__mb-4">
+                                <div class="form-group tw__mb-4" wire:ignore>
                                     <label for="input_record-template">Template</label>
                                     <select class="form-control" id="input_record-template_id" name="template_id" placeholder="Search for Template Data" x-on:change="@this.fetchDataTemplate($event.target.value)">
                                         <option value="" {{ $recordTemplate == '' ? 'selected' : '' }}>Search for Template Data</option>
@@ -42,7 +42,7 @@
                                 </div>
 
                                 {{-- Category --}}
-                                <div class="form-group tw__mb-4" x-show="selectedRecordType !== 'transfer' ? true : false">
+                                <div class="form-group tw__mb-4" x-show="selectedRecordType !== 'transfer' ? true : false" wire:ignore>
                                     <label for="input_record-category_id">Category</label>
                                     <select class="form-control" id="input_record-category_id" name="category_id" placeholder="Search for Category Data">
                                         <option value="" {{ $recordCategory == '' ? 'selected' : '' }}>Search for Category Data</option>
@@ -64,7 +64,7 @@
                                 </div>
 
                                 {{-- Wallet --}}
-                                <div class="form-group tw__mb-4">
+                                <div class="form-group tw__mb-4" wire:ignore>
                                     <label for="input_record-wallet_id" x-text="selectedRecordType === 'income' || selectedRecordType === 'expense' ? 'Wallet' : 'From'"></label>
                                     <select class="form-control" id="input_record-wallet_id" name="wallet_id" placeholder="Search for Wallet Data">
                                         <option value="" {{ $recordWallet == '' ? 'selected' : '' }}>Search for Wallet Data</option>
@@ -93,7 +93,7 @@
                                         </a>
                                     </div>
 
-                                    <div class="form-group tw__mb-4" id="form-transfer">
+                                    <div class="form-group tw__mb-4" id="form-transfer" wire:ignore.self>
                                         <label for="input_record-target">To</label>
                                         <select class="form-control" id="input_record-wallet_transfer_id" name="wallet_transfer_id" placeholder="Search for Wallet Target Data">
                                             <option value="" {{ $recordWalletTransfer == '' ? 'selected' : '' }}>Search for Wallet Target Data</option>
@@ -288,10 +288,10 @@
         var extraAmountMask = null;
         var finalAmountMask = null;
 
-        let templateChoice = null;
-        let categoryChoice = null;
-        let walletChoice = null;
-        let walletTransferChoice = null;
+        let recordModalTemplateChoice = null;
+        let recordModalCategoryChoice = null;
+        let recordModalWalletChoice = null;
+        let recordModalWalletTransferChoice = null;
 
         window.addEventListener('recordModal_wire-init', (event) => {
             refreshFsLightbox();
@@ -325,53 +325,6 @@
                     signed: false,  // disallow negative
                     radix: '.',  // fractional delimiter
                     min: 0,
-                });
-            }
-
-            // Choices
-            if(document.getElementById('input_record-template_id')){
-                const templateEl = document.getElementById('input_record-template_id');
-                templateChoice = new Choices(templateEl, {
-                    allowHTML: true,
-                    removeItemButton: true,
-                    searchPlaceholderValue: "Search for Template Data",
-                    placeholder: true,
-                    placeholderValue: 'Search for Template Data',
-                    shouldSort: false
-                });
-            }
-            if(document.getElementById('input_record-category_id')){
-                const categoryEl = document.getElementById('input_record-category_id');
-                categoryChoice = new Choices(categoryEl, {
-                    allowHTML: true,
-                    removeItemButton: true,
-                    searchPlaceholderValue: "Search for Wallet Data",
-                    placeholder: true,
-                    placeholderValue: 'Search for Wallet Data',
-                    shouldSort: false,
-                    renderChoiceLimit: 5
-                });
-            }
-            if(document.getElementById('input_record-wallet_id')){
-                const walletEl = document.getElementById('input_record-wallet_id');
-                walletChoice = new Choices(walletEl, {
-                    allowHTML: true,
-                    removeItemButton: true,
-                    searchPlaceholderValue: "Search for Wallet Data",
-                    placeholder: true,
-                    placeholderValue: 'Search for Wallet Data',
-                    shouldSort: false
-                });
-            }
-            if(document.getElementById('input_record-wallet_transfer_id')){
-                const walletTransferEl = document.getElementById('input_record-wallet_transfer_id');
-                walletTransferChoice = new Choices(walletTransferEl, {
-                    allowHTML: true,
-                    removeItemButton: true,
-                    searchPlaceholderValue: "Search for Wallet Target Data",
-                    placeholder: true,
-                    placeholderValue: 'Search for Wallet Target Data',
-                    shouldSort: false
                 });
             }
 
@@ -419,6 +372,53 @@
         });
 
         document.addEventListener('DOMContentLoaded', (e) => {
+            // Choices
+            if(document.getElementById('input_record-template_id')){
+                const templateEl = document.getElementById('input_record-template_id');
+                recordModalTemplateChoice = new Choices(templateEl, {
+                    allowHTML: true,
+                    removeItemButton: true,
+                    searchPlaceholderValue: "Search for Template Data",
+                    placeholder: true,
+                    placeholderValue: 'Search for Template Data',
+                    shouldSort: false
+                });
+            }
+            if(document.getElementById('input_record-category_id')){
+                const categoryEl = document.getElementById('input_record-category_id');
+                recordModalCategoryChoice = new Choices(categoryEl, {
+                    allowHTML: true,
+                    removeItemButton: true,
+                    searchPlaceholderValue: "Search for Wallet Data",
+                    placeholder: true,
+                    placeholderValue: 'Search for Wallet Data',
+                    shouldSort: false,
+                    renderChoiceLimit: 5
+                });
+            }
+            if(document.getElementById('input_record-wallet_id')){
+                const walletEl = document.getElementById('input_record-wallet_id');
+                recordModalWalletChoice = new Choices(walletEl, {
+                    allowHTML: true,
+                    removeItemButton: true,
+                    searchPlaceholderValue: "Search for Wallet Data",
+                    placeholder: true,
+                    placeholderValue: 'Search for Wallet Data',
+                    shouldSort: false
+                });
+            }
+            if(document.getElementById('input_record-wallet_transfer_id')){
+                const walletTransferEl = document.getElementById('input_record-wallet_transfer_id');
+                recordModalWalletTransferChoice = new Choices(walletTransferEl, {
+                    allowHTML: true,
+                    removeItemButton: true,
+                    searchPlaceholderValue: "Search for Wallet Target Data",
+                    placeholder: true,
+                    placeholderValue: 'Search for Wallet Target Data',
+                    shouldSort: false
+                });
+            }
+            
             document.getElementById('record-form').addEventListener('submit', (e) => {
                 e.preventDefault();
 
@@ -479,6 +479,12 @@
                         el.dispatchEvent(new Event('click'));
                     }
                 });
+            }
+            if(el.hasOwnProperty('recordWallet')){
+                recordModalWalletChoice.setChoiceByValue(el.recordWallet);
+            }
+            if(el.hasOwnProperty('recordWalletTransfer')){
+                recordModalWalletTransferChoice.setChoiceByValue(el.recordWalletTransfer);
             }
         });
 
