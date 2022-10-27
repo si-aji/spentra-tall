@@ -136,7 +136,7 @@
                                 </div>
 
                                 {{-- Extra Amount --}}
-                                <div class="row" x-show="selectedRecordType !== 'transfer' ? true : false">
+                                <div class="row">
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="input_record-extra">Extra Amount</label>
@@ -159,6 +159,7 @@
                                         </small>
                                     </div>
                                 </div>
+                                <small class=" text-muted tw__italic" x-show="selectedRecordType === 'transfer'">**Extra amount will only applied to Expense Data (From wallet)</small>
                             </div>
                             {{-- Right Side --}}
                             <div class=" tw__p-6 tw__col-span-2 tw__bg-slate-100 tw__flex tw__items-center">

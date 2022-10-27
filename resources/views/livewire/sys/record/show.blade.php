@@ -32,7 +32,7 @@
                 <tr>
                     <th>Type</th>
                     <td>
-                        <span class="badge bg-label-{{ !empty($recordData->to_wallet_id) ? 'secondary' : ($recordData->type === 'income' ? 'success' : 'danger') }}">{{ (!empty($recordData->to_wallet_id) ? 'Transfer - ' : '').ucwords($recordData->type) }}</span>
+                        <span class="badge bg-label-{{ ($recordData->type === 'income' ? 'success' : 'danger') }}">{{ (!empty($recordData->to_wallet_id) ? 'Transfer - ' : '').ucwords($recordData->type) }}</span>
                     </td>
                 </tr>
                 <tr>
@@ -43,9 +43,13 @@
                     <th>{{ !empty($recordData->to_wallet_id) ? 'From' : 'Wallet' }}</th>
                     <td>
                         @if (!empty($recordData->to_wallet_id) && $recordData->type === 'income')
-                            {{ $recordData->walletTransferTarget()->exists() ? ($recordData->walletTransferTarget->parent()->exists() ? $recordData->walletTransferTarget->parent->name.' - ' : '').$recordData->walletTransferTarget->name : '-' }}
+                            <a href="{{ route('sys.wallet.list.show', $recordData->walletTransferTarget->uuid) }}">
+                                {{ $recordData->walletTransferTarget()->exists() ? ($recordData->walletTransferTarget->parent()->exists() ? $recordData->walletTransferTarget->parent->name.' - ' : '').$recordData->walletTransferTarget->name : '-' }}
+                            </a>
                         @else
-                            {{ $recordData->wallet()->exists() ? ($recordData->wallet->parent()->exists() ? $recordData->wallet->parent->name.' - ' : '').$recordData->wallet->name : '-' }}
+                            <a href="{{ route('sys.wallet.list.show', $recordData->wallet->uuid) }}">
+                                {{ $recordData->wallet()->exists() ? ($recordData->wallet->parent()->exists() ? $recordData->wallet->parent->name.' - ' : '').$recordData->wallet->name : '-' }}
+                            </a>
                         @endif
                     </td>
                 </tr>
@@ -54,9 +58,13 @@
                         <th>To</th>
                         <td>
                             @if (!empty($recordData->to_wallet_id) && $recordData->type === 'income')
-                                {{ $recordData->wallet()->exists() ? ($recordData->wallet->parent()->exists() ? $recordData->wallet->parent->name.' - ' : '').$recordData->wallet->name : '-' }}
+                                <a href="{{ route('sys.wallet.list.show', $recordData->wallet->uuid) }}">
+                                    {{ $recordData->wallet()->exists() ? ($recordData->wallet->parent()->exists() ? $recordData->wallet->parent->name.' - ' : '').$recordData->wallet->name : '-' }}
+                                </a>
                             @else
-                                {{ $recordData->walletTransferTarget()->exists() ? ($recordData->walletTransferTarget->parent()->exists() ? $recordData->walletTransferTarget->parent->name.' - ' : '').$recordData->walletTransferTarget->name : '-' }}
+                                <a href="{{ route('sys.wallet.list.show', $recordData->walletTransferTarget->uuid) }}">
+                                    {{ $recordData->walletTransferTarget()->exists() ? ($recordData->walletTransferTarget->parent()->exists() ? $recordData->walletTransferTarget->parent->name.' - ' : '').$recordData->walletTransferTarget->name : '-' }}
+                                </a>
                             @endif
                         </td>
                     </tr>
@@ -65,21 +73,19 @@
                     <th>{{ empty($recordData->to_wallet_id) ? 'Base ' : '' }}Amount</th>
                     <td>{{ formatRupiah($recordData->amount) }}</td>
                 </tr>
-                @if (empty($recordData->to_wallet_id))
-                    <tr>
-                        <th>Extra Amount</th>
-                        <td>
-                            <span>
-                                <span class="badge bg-label-secondary">{{ ucwords($recordData->extra_type) }}</span>
-                                <span>{{ $recordData->extra_type === 'amount' ? formatRupiah($recordData->extra_amount) : $recordData->extra_percentage.'%' }}</span>
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Final Amount</th>
-                        <td>{{ formatRupiah($recordData->amount + $recordData->extra_amount) }}</td>
-                    </tr>
-                @endif
+                <tr>
+                    <th>Extra Amount</th>
+                    <td>
+                        <span>
+                            <span class="badge bg-label-secondary">{{ ucwords($recordData->extra_type) }}</span>
+                            <span>{{ $recordData->extra_type === 'amount' ? formatRupiah($recordData->extra_amount) : $recordData->extra_percentage.'%' }}</span>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Final Amount</th>
+                    <td>{{ formatRupiah($recordData->amount + $recordData->extra_amount) }}</td>
+                </tr>
                 <tr>
                     <th>Note</th>
                     <td>{{ $recordData->note ?? '-' }}</td>

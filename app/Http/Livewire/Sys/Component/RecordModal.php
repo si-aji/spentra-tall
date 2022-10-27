@@ -183,10 +183,25 @@ class RecordModal extends Component
         $this->recordType = !empty($record->to_wallet_id) ? 'transfer' : $record->type;
         $this->recordWallet = !empty($record->to_wallet_id) ? ($record->type === 'expense' ? $record->wallet->uuid : $record->walletTransferTarget->uuid) : $record->wallet->uuid;
         $this->recordWalletTransfer = !empty($record->to_wallet_id) ? ($record->type === 'income' ? $record->wallet->uuid : $record->walletTransferTarget->uuid) : '';
-        $this->recordAmount = $record->amount;
-        $this->recordExtraType = $record->extra_type;
-        $this->recordExtraAmount = $record->extra_type === 'percentage' ? $record->extra_percentage : $record->extra_amount;
-        $this->recordFinalAmount = $record->amount + $record->extra_amount;
+        if(!empty($record->to_wallet_id) && $record->type !== 'expense'){
+            /**
+             * Transfer Record
+             * */ 
+
+            // Get related record
+            $relatedRecord = $record->getRelatedTransferRecord();
+
+            // Update extra amount
+            $this->recordAmount = $relatedRecord->amount;
+            $this->recordExtraType = $relatedRecord->extra_type;
+            $this->recordExtraAmount = $relatedRecord->extra_type === 'percentage' ? $relatedRecord->extra_percentage : $relatedRecord->extra_amount;
+            $this->recordFinalAmount = $relatedRecord->amount + $record->extra_amount;
+        } else {
+            $this->recordAmount = $record->amount;
+            $this->recordExtraType = $record->extra_type;
+            $this->recordExtraAmount = $record->extra_type === 'percentage' ? $record->extra_percentage : $record->extra_amount;
+            $this->recordFinalAmount = $record->amount + $record->extra_amount;
+        }
         $this->recordPeriod = $record->datetime;
         $this->recordPeriodTemp = $record->datetime;
         $this->recordNote = $record->note;
@@ -212,8 +227,8 @@ class RecordModal extends Component
         if($this->recordType === 'transfer'){
             $this->reset([
                 'recordCategory',
-                'recordExtraType',
-                'recordExtraAmount'
+                // 'recordExtraType',
+                // 'recordExtraAmount'
             ]);
         }
 
@@ -307,6 +322,16 @@ class RecordModal extends Component
                         $relatedRecord = \App\Models\Record::where(\DB::raw('BINARY `uuid`'), $record->getRelatedTransferRecord()->uuid)
                             ->firstOrFail();
                     }
+
+                    // Handle Extra Amount
+                    $extraType = 'amount';
+                    $extraPercentage = 0;
+                    $extraAmount = 0;
+                    if($record->type === 'expense'){
+                        $extraType = $this->recordExtraType;
+                        $extraPercentage =  $this->recordExtraType === 'percentage' ? $this->recordExtraAmount : 0;
+                        $extraAmount = $this->recordExtraType === 'amount' ? ($this->recordExtraAmount ?? 0) : ($this->recordAmount * ($this->recordExtraAmount / 100));
+                    }
     
                     $record->user_id = \Auth::user()->id;
                     $record->category_id = $category;
@@ -314,9 +339,9 @@ class RecordModal extends Component
                     $record->wallet_id = $record->type === 'expense' ? $wallet : $walletTransfer;
                     $record->to_wallet_id = $record->type === 'expense' ? $walletTransfer : $wallet;
                     $record->amount = $this->recordAmount;
-                    $record->extra_type = 'amount';
-                    $record->extra_percentage = 0;
-                    $record->extra_amount = 0;
+                    $record->extra_type = $extraType;
+                    $record->extra_percentage = $extraPercentage;
+                    $record->extra_amount = $extraAmount;
                     $record->date = date("Y-m-d", strtotime($datetime));
                     $record->time = date("H:i:00", strtotime($datetime));
                     $record->datetime = $datetime;
@@ -326,6 +351,15 @@ class RecordModal extends Component
                     $record->timezone_offset = $this->user_timezone;
                     $record->save();
     
+                    // Handle Extra Amount
+                    $extraType = 'amount';
+                    $extraPercentage = 0;
+                    $extraAmount = 0;
+                    if($record->type !== 'expense'){
+                        $extraType = $this->recordExtraType;
+                        $extraPercentage =  $this->recordExtraType === 'percentage' ? $this->recordExtraAmount : 0;
+                        $extraAmount = $this->recordExtraType === 'amount' ? ($this->recordExtraAmount ?? 0) : ($this->recordAmount * ($this->recordExtraAmount / 100));
+                    }
                     // Update related record
                     $relatedRecord->user_id = \Auth::user()->id;
                     $relatedRecord->category_id = $category;
@@ -333,9 +367,9 @@ class RecordModal extends Component
                     $relatedRecord->wallet_id = $record->type === 'expense' ? $walletTransfer : $wallet;
                     $relatedRecord->to_wallet_id = $record->type === 'expense' ? $wallet : $walletTransfer;
                     $relatedRecord->amount = $this->recordAmount;
-                    $relatedRecord->extra_type = 'amount';
-                    $relatedRecord->extra_percentage = 0;
-                    $relatedRecord->extra_amount = 0;
+                    $relatedRecord->extra_type = $extraType;
+                    $relatedRecord->extra_percentage = $extraPercentage;
+                    $relatedRecord->extra_amount = $extraAmount;
                     $relatedRecord->date = date("Y-m-d", strtotime($datetime));
                     $relatedRecord->time = date("H:i:00", strtotime($datetime));
                     $relatedRecord->datetime = $datetime;
@@ -382,7 +416,16 @@ class RecordModal extends Component
                         $walletTransfer = $walletTransferData->id;
                     }
     
-                    foreach($type as $typ){                    
+                    foreach($type as $typ){        
+                        $extraType = 'amount';
+                        $extraPercentage = 0;
+                        $extraAmount = 0;
+                        if($typ === 'expense'){
+                            $extraType = $this->recordExtraType;
+                            $extraPercentage =  $this->recordExtraType === 'percentage' ? $this->recordExtraAmount : 0;
+                            $extraAmount = $this->recordExtraType === 'amount' ? ($this->recordExtraAmount ?? 0) : ($this->recordAmount * ($this->recordExtraAmount / 100));
+                        }
+                        
                         $data = new \App\Models\Record();
                         $data->user_id = \Auth::user()->id;
                         $data->category_id = $category;
@@ -390,9 +433,9 @@ class RecordModal extends Component
                         $data->wallet_id = $typ === 'expense' ? $wallet : $walletTransfer;
                         $data->to_wallet_id = $typ === 'expense' ? $walletTransfer : $wallet;
                         $data->amount = $this->recordAmount;
-                        $data->extra_type = 'amount';
-                        $data->extra_percentage = 0;
-                        $data->extra_amount = 0;
+                        $data->extra_type = $extraType;
+                        $data->extra_percentage = $extraPercentage;
+                        $data->extra_amount = $extraAmount;
                         $data->date = date("Y-m-d", strtotime($datetime));
                         $data->time = date("H:i:00", strtotime($datetime));
                         $data->datetime = $datetime;

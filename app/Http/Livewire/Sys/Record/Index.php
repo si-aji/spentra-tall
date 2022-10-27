@@ -60,15 +60,17 @@ class Index extends Component
         if(!empty($selectedWallet)){
             if(is_array($selectedWallet)){
                 // Is array, from wallet group
-                $this->dataRecord->where(function($q) use ($selectedWallet){
-                    return $q->whereIn('wallet_id', $selectedWallet)
-                        ->orWhereIn('to_wallet_id', $selectedWallet);
-                });
+                // $this->dataRecord->where(function($q) use ($selectedWallet){
+                //     return $q->whereIn('wallet_id', $selectedWallet)
+                //         ->orWhereIn('to_wallet_id', $selectedWallet);
+                // });
+                $this->dataRecord->whereIn('wallet_id', $selectedWallet);
             } else {
-                $this->dataRecord->where(function($q) use ($selectedWallet){
-                    return $q->where('wallet_id', $selectedWallet)
-                        ->orWhere('to_wallet_id', $selectedWallet);
-                });
+                // $this->dataRecord->where(function($q) use ($selectedWallet){
+                //     return $q->where('wallet_id', $selectedWallet)
+                //         ->orWhere('to_wallet_id', $selectedWallet);
+                // });
+                $this->dataRecord->where('wallet_id', $selectedWallet);
             }
         }
 
