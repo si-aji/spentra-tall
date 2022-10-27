@@ -32,6 +32,7 @@ mix.js('resources/js/app.js', 'public/assets/js')
 mix.copy('resources/js/shortcut.js', 'public/assets/js/shortcut.js');
 mix.copy('resources/js/siaji.js', 'public/assets/js/siaji.js');
 mix.copy('resources/js/format-record.js', 'public/assets/js/format-record.js');
+mix.js('resources/js/serviceWorker.js', 'public');
 
 /**
  * Themes

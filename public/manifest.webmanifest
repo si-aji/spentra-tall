@@ -1,0 +1,26 @@
+{
+    "background_color": "white",
+    "description": "Record your spending, manage your money",
+    "display": "standalone",
+    "icons": [
+      {
+        "src": "/assets/img/brand/siaji-brand-128.png",
+        "sizes": "128x128",
+        "type": "image/png"
+      }, {
+        "src": "/assets/img/brand/siaji-brand-144.png",
+        "sizes": "144x144",
+        "type": "image/png"
+      }, {
+        "src": "/assets/img/brand/siaji-brand-512.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ],
+    "name": "Spending Tracker",
+    "short_name": "Spentra",
+    "start_url": "/sys",
+    "service_worker": {
+      "url": "/serviceWorker.js"
+    }
+  }
