@@ -159,17 +159,13 @@ class RecordModal extends Component
 
     public function updatedRecordReceipt()
     {
-        \Log::debug("Updated Receipt", [
-            '!empty' => $this->recordReceipt ? 'true' : 'false'
-        ]);
-
-        if($this->recordReceipt){
-            if(round($this->recordReceipt->getSize()) / 1024.4 > 100){
-                throw \Illuminate\Validation\ValidationException::withMessages([
-                    'recordReceipt' => 'The record receipt must not be greater than 100 kilobytes.'
-                ]);
-            }
-        }
+        // if($this->recordReceipt){
+        //     if(round($this->recordReceipt->getSize()) / 1024.4 > 100){
+        //         throw \Illuminate\Validation\ValidationException::withMessages([
+        //             'recordReceipt' => 'The record receipt must not be greater than 100 kilobytes.'
+        //         ]);
+        //     }
+        // }
 
         $this->validate([
             'recordReceipt' => 'mimes:jpg,jpeg,png,pdf|max:1024',
@@ -211,6 +207,7 @@ class RecordModal extends Component
     // Handle Data
     public function save($quitely = false, $plannedPaymentRecord = null)
     {
+        $this->resetValidation();
         // Reset Field if Transfer
         if($this->recordType === 'transfer'){
             $this->reset([
@@ -462,7 +459,8 @@ class RecordModal extends Component
                 'recordExtraAmount' => $this->recordExtraAmount,
                 'recordCategory' => $this->recordCategory,
                 'recordWallet' => $this->recordWallet,
-                'recordWalletTransfer' => $this->recordWalletTransfer
+                'recordWalletTransfer' => $this->recordWalletTransfer,
+                'resetPeriod' => true
             ]);
             $this->dispatchBrowserEvent('wire-action', [
                 'status' => 'success',
@@ -550,5 +548,6 @@ class RecordModal extends Component
             'recordWallet' => $this->recordWallet,
             'recordWalletTransfer' => $this->recordWalletTransfer
         ]);
+        $this->resetValidation();
     }
 }

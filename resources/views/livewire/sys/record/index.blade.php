@@ -248,8 +248,6 @@
 
             let data = @this.get('dataRecord');
             let paneEl = document.getElementById('record-container');
-            console.log(data);
-
             if(data.length > 0){
                 if(!paneEl.querySelector(`.content-wrapper`)){
                     recordContent = document.createElement('div');

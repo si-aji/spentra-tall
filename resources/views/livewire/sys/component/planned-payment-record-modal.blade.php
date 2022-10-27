@@ -23,28 +23,30 @@
                                 {{-- Record Type --}}
                                 <div class=" tw__text-center tw__mb-4">
                                     <div class="btn-group">
-                                        <a href="javascript:void(0)" class="planned_payment_record-type btn" x-on:click="selectedRecordType = 'income';@this.set('plannedPaymentRecordType', 'income')" :class="[(selectedRecordType === 'income' ? 'btn-secondary' : 'btn-outline-secondary'), (is_mobile ? 'btn-sm' : '')]">Income</a>
-                                        <a href="javascript:void(0)" class="planned_payment_record-type btn" x-on:click="selectedRecordType = 'transfer';@this.set('plannedPaymentRecordType', 'transfer')" :class="[selectedRecordType === 'transfer' ? 'btn-secondary' : 'btn-outline-secondary', (is_mobile ? 'btn-sm' : '')]">Transfer</a>
-                                        <a href="javascript:void(0)" class="planned_payment_record-type btn" x-on:click="selectedRecordType = 'expense';@this.set('plannedPaymentRecordType', 'expense')" :class="[selectedRecordType === 'expense' ? 'btn-secondary' : 'btn-outline-secondary', (is_mobile ? 'btn-sm' : '')]">Expense</a>
+                                        <a href="javascript:void(0)" class="planned_payment_record-type btn" data-value="income" x-on:click="selectedRecordType = 'income'" :class="[(selectedRecordType === 'income' ? 'btn-secondary' : 'btn-outline-secondary'), (is_mobile ? 'btn-sm' : '')]">Income</a>
+                                        <a href="javascript:void(0)" class="planned_payment_record-type btn" data-value="transfer" x-on:click="selectedRecordType = 'transfer'" :class="[selectedRecordType === 'transfer' ? 'btn-secondary' : 'btn-outline-secondary', (is_mobile ? 'btn-sm' : '')]">Transfer</a>
+                                        <a href="javascript:void(0)" class="planned_payment_record-type btn" data-value="expense" x-on:click="selectedRecordType = 'expense'" :class="[selectedRecordType === 'expense' ? 'btn-secondary' : 'btn-outline-secondary', (is_mobile ? 'btn-sm' : '')]">Expense</a>
                                     </div>
                                 </div>
 
                                 {{-- Category --}}
                                 <div class="form-group tw__mb-4" x-show="selectedRecordType !== 'transfer' ? true : false">
                                     <label for="input_planned_payment_record-category_id">Category</label>
-                                    <select class="form-control" id="input_planned_payment_record-category_id" name="category_id" placeholder="Search for Category Data" x-on:change="@this.set('plannedPaymentRecordCategory', $event.target.value)">
-                                        <option value="" {{ $plannedPaymentRecordCategory == '' ? 'selected' : '' }}>Search for Category Data</option>
-                                        @foreach ($listCategory as $category)
-                                            <optgroup label="{{ $category->name }}">
-                                                <option value="{{ $category->uuid }}" {{ !empty($plannedPaymentRecordCategory) && $category->uuid === $plannedPaymentRecordCategory ? 'selected' : '' }}>{{ $category->name }}</option>
-                                                @if ($category->child()->exists())
-                                                    @foreach ($category->child as $child)
-                                                        <option value="{{ $child->uuid }}" {{ !empty($plannedPaymentRecordCategory) && $child->uuid === $plannedPaymentRecordCategory ? 'selected' : '' }}>{{ $category->name }} - {{ $child->name }}</option>
-                                                    @endforeach
-                                                @endif
-                                            </optgroup>
-                                        @endforeach
-                                    </select>
+                                    <div wire:ignore>
+                                        <select class="form-control" id="input_planned_payment_record-category_id" name="category_id" placeholder="Search for Category Data">
+                                            <option value="" {{ $plannedPaymentRecordCategory == '' ? 'selected' : '' }}>Search for Category Data</option>
+                                            @foreach ($listCategory as $category)
+                                                <optgroup label="{{ $category->name }}">
+                                                    <option value="{{ $category->uuid }}" {{ !empty($plannedPaymentRecordCategory) && $category->uuid === $plannedPaymentRecordCategory ? 'selected' : '' }}>{{ $category->name }}</option>
+                                                    @if ($category->child()->exists())
+                                                        @foreach ($category->child as $child)
+                                                            <option value="{{ $child->uuid }}" {{ !empty($plannedPaymentRecordCategory) && $child->uuid === $plannedPaymentRecordCategory ? 'selected' : '' }}>{{ $category->name }} - {{ $child->name }}</option>
+                                                        @endforeach
+                                                    @endif
+                                                </optgroup>
+                                            @endforeach
+                                        </select>
+                                    </div>
 
                                     @error('plannedPaymentRecordCategory')
                                         <span class="invalid-feedback tw__block">{{ $message }}</span>
@@ -54,19 +56,21 @@
                                 {{-- Wallet --}}
                                 <div class="form-group tw__mb-4">
                                     <label for="input_planned_payment_record-wallet_id" x-text="selectedRecordType === 'income' || selectedRecordType === 'expense' ? 'Wallet' : 'From'"></label>
-                                    <select class="form-control" id="input_planned_payment_record-wallet_id" name="wallet_id" placeholder="Search for Wallet Data" x-on:change="@this.set('plannedPaymentRecordWallet', $event.target.value)">
-                                        <option value="" {{ $plannedPaymentRecordWallet == '' ? 'selected' : '' }}>Search for Wallet Data</option>
-                                        @foreach ($listWallet as $wallet)
-                                            <optgroup label="{{ $wallet->name }}">
-                                                <option value="{{ $wallet->uuid }}" {{ !empty($plannedPaymentRecordWallet) && $wallet->uuid === $plannedPaymentRecordWallet ? 'selected' : '' }}>{{ $wallet->name }}</option>
-                                                @if ($wallet->child()->exists())
-                                                    @foreach ($wallet->child as $child)
-                                                        <option value="{{ $child->uuid }}" {{ !empty($plannedPaymentRecordWallet) && $child->uuid === $plannedPaymentRecordWallet ? 'selected' : '' }}>{{ $wallet->name }} - {{ $child->name }}</option>
-                                                    @endforeach
-                                                @endif
-                                            </optgroup>
-                                        @endforeach
-                                    </select>
+                                    <div wire:ignore>
+                                        <select class="form-control" id="input_planned_payment_record-wallet_id" name="wallet_id" placeholder="Search for Wallet Data">
+                                            <option value="" {{ $plannedPaymentRecordWallet == '' ? 'selected' : '' }}>Search for Wallet Data</option>
+                                            @foreach ($listWallet as $wallet)
+                                                <optgroup label="{{ $wallet->name }}">
+                                                    <option value="{{ $wallet->uuid }}" {{ !empty($plannedPaymentRecordWallet) && $wallet->uuid === $plannedPaymentRecordWallet ? 'selected' : '' }}>{{ $wallet->name }}</option>
+                                                    @if ($wallet->child()->exists())
+                                                        @foreach ($wallet->child as $child)
+                                                            <option value="{{ $child->uuid }}" {{ !empty($plannedPaymentRecordWallet) && $child->uuid === $plannedPaymentRecordWallet ? 'selected' : '' }}>{{ $wallet->name }} - {{ $child->name }}</option>
+                                                        @endforeach
+                                                    @endif
+                                                </optgroup>
+                                            @endforeach
+                                        </select>
+                                    </div>
 
                                     @error('plannedPaymentRecordWallet')
                                         <span class="invalid-feedback tw__block">{{ $message }}</span>
@@ -76,26 +80,28 @@
                                 {{-- Wallet Transfer --}}
                                 <div class="" x-show="selectedRecordType === 'transfer' ? true : false">
                                     <div class=" tw__mb-4">
-                                        <a href="javascript:void(0)" class="btn btn-sm btn-primary" x-on:click="@this.set('plannedPaymentRecordWallet', document.getElementById('input_planned_payment_record-wallet_transfer_id').value);@this.set('plannedPaymentRecordWalletTransfer', document.getElementById('input_planned_payment_record-wallet_id').value);">
+                                        <a href="javascript:void(0)" class="btn btn-sm btn-primary" id="btn_plannedPaymentrecord-switch">
                                             <span class="tw__flex tw__items-center tw__gap-2"><i class='bx bx-transfer-alt bx-rotate-90' ></i>Switch</span>
                                         </a>
                                     </div>
 
                                     <div class="form-group tw__mb-4" id="form-transfer">
                                         <label for="input_planned_payment_record-target">To</label>
-                                        <select class="form-control" id="input_planned_payment_record-wallet_transfer_id" name="wallet_transfer_id" placeholder="Search for Wallet Target Data" x-on:change="@this.set('plannedPaymentRecordWalletTransfer', $event.target.value)">
-                                            <option value="" {{ $plannedPaymentRecordWalletTransfer == '' ? 'selected' : '' }}>Search for Wallet Target Data</option>
-                                            @foreach ($listWallet as $wallet)
-                                                <optgroup label="{{ $wallet->name }}">
-                                                    <option value="{{ $wallet->uuid }}" {{ !empty($plannedPaymentRecordWalletTransfer) && $wallet->uuid === $plannedPaymentRecordWalletTransfer ? 'selected' : '' }}>{{ $wallet->name }}</option>
-                                                    @if ($wallet->child()->exists())
-                                                        @foreach ($wallet->child as $child)
-                                                            <option value="{{ $child->uuid }}" {{ !empty($plannedPaymentRecordWalletTransfer) && $child->uuid === $plannedPaymentRecordWalletTransfer ? 'selected' : '' }}>{{ $wallet->name }} - {{ $child->name }}</option>
-                                                        @endforeach
-                                                    @endif
-                                                </optgroup>
-                                            @endforeach
-                                        </select>
+                                        <div wire:ignore>
+                                            <select class="form-control" id="input_planned_payment_record-wallet_transfer_id" name="wallet_transfer_id" placeholder="Search for Wallet Target Data">
+                                                <option value="" {{ $plannedPaymentRecordWalletTransfer == '' ? 'selected' : '' }}>Search for Wallet Target Data</option>
+                                                @foreach ($listWallet as $wallet)
+                                                    <optgroup label="{{ $wallet->name }}">
+                                                        <option value="{{ $wallet->uuid }}" {{ !empty($plannedPaymentRecordWalletTransfer) && $wallet->uuid === $plannedPaymentRecordWalletTransfer ? 'selected' : '' }}>{{ $wallet->name }}</option>
+                                                        @if ($wallet->child()->exists())
+                                                            @foreach ($wallet->child as $child)
+                                                                <option value="{{ $child->uuid }}" {{ !empty($plannedPaymentRecordWalletTransfer) && $child->uuid === $plannedPaymentRecordWalletTransfer ? 'selected' : '' }}>{{ $wallet->name }} - {{ $child->name }}</option>
+                                                            @endforeach
+                                                        @endif
+                                                    </optgroup>
+                                                @endforeach
+                                            </select>
+                                        </div>
 
                                         @error('plannedPaymentRecordWalletTransfer')
                                             <span class="invalid-feedback tw__block">{{ $message }}</span>
@@ -135,9 +141,9 @@
                                     <div class="col-12">
                                         <small class="text-muted">
                                             <span>(</span>
-                                            <a href="javascript:void(0)" class="planned_payment_record_extra-type" x-on:click="selectedExtraType = 'amount';plannedPaymentRecordCalculateFinal(selectedExtraType);@this.set('plannedPaymentRecordExtraType', 'amount')" :class="selectedExtraType !== 'amount' ? 'tw__text-slate-400' : ''">Amount</a>
+                                            <a href="javascript:void(0)" class="planned_payment_record_extra-type" data-value="amount" x-on:click="selectedExtraType = 'amount';plannedPaymentRecordCalculateFinal(selectedExtraType)" :class="selectedExtraType !== 'amount' ? 'tw__text-slate-400' : ''">Amount</a>
                                             <span>/</span>
-                                            <a href="javascript:void(0)" class="planned_payment_record_extra-type" x-on:click="selectedExtraType = 'percentage';plannedPaymentRecordCalculateFinal(selectedExtraType);@this.set('plannedPaymentRecordExtraType', 'percentage')" :class="selectedExtraType !== 'percentage' ? 'tw__text-slate-400' : ''">Percentage</a>
+                                            <a href="javascript:void(0)" class="planned_payment_record_extra-type" data-value="percentage" x-on:click="selectedExtraType = 'percentage';plannedPaymentRecordCalculateFinal(selectedExtraType)" :class="selectedExtraType !== 'percentage' ? 'tw__text-slate-400' : ''">Percentage</a>
                                             <span>)</span>
                                         </small>
                                     </div>
@@ -147,7 +153,7 @@
                             <div class=" tw__p-6 tw__col-span-2 tw__bg-slate-100 tw__flex tw__items-center">
                                 <div class=" tw__w-full">
                                     {{-- Period --}}
-                                    <div class="form-group tw__mb-4">
+                                    <div class="form-group tw__mb-4" wire:ignore>
                                         <label for="input_planned_payment_record-period">Date Time</label>
                                         <input type="text" class="form-control flatpickr @error('plannedPaymentRecordPeriod') is-invalid @enderror" name="period" id="input_planned_payment_record-period" placeholder="Date Time">
                                         @error('plannedPaymentRecordPeriod')
@@ -261,12 +267,21 @@
 
 @push('javascript')
     <script>
+        // IMask
         var plannedPaymentRecordAmountMask = null;
         var plannedPaymentRecordExtraAmountMask = null;
         var plannedPaymentRecordFinalAmountMask = null;
-        window.addEventListener('plannedPaymentRecord_wire-init', (event) => {
-            refreshFsLightbox();
+        // Choices
+        let plannedPaymentRecordModalCategoryChoice = null;
+        let plannedPaymentRecordModalWalletChoice = null;
+        let plannedPaymentRecordModalWalletTransferChoice = null;
+        // Flatpickr
+        let plannedPaymentRecordModalFlatpickrDateTime;
+        let plannedPaymentRecordModalDefaultDate;
+        let plannedPaymentRecordModalDefaultDateTemp = null;
 
+        document.addEventListener('DOMContentLoaded', (e) => {
+            plannedPaymentRecordModalDefaultDate = moment().format('YYYY-MM-DD HH:mm');
             // iMask
             if(document.getElementById('input_planned_payment_record-amount')){
                 plannedPaymentRecordAmountMask = IMask(document.getElementById('input_planned_payment_record-amount'), {
@@ -298,14 +313,10 @@
                     min: 0,
                 });
             }
-
             // Choices
-            let categoryChoice = null;
-            let walletChoice = null;
-            let walletTransferChoice = null;
             if(document.getElementById('input_planned_payment_record-category_id')){
                 const categoryEl = document.getElementById('input_planned_payment_record-category_id');
-                categoryChoice = new Choices(categoryEl, {
+                plannedPaymentRecordModalCategoryChoice = new Choices(categoryEl, {
                     allowHTML: true,
                     removeItemButton: true,
                     searchPlaceholderValue: "Search for Wallet Data",
@@ -317,7 +328,7 @@
             }
             if(document.getElementById('input_planned_payment_record-wallet_id')){
                 const walletEl = document.getElementById('input_planned_payment_record-wallet_id');
-                walletChoice = new Choices(walletEl, {
+                plannedPaymentRecordModalWalletChoice = new Choices(walletEl, {
                     allowHTML: true,
                     removeItemButton: true,
                     searchPlaceholderValue: "Search for Wallet Data",
@@ -328,7 +339,7 @@
             }
             if(document.getElementById('input_planned_payment_record-wallet_transfer_id')){
                 const walletTransferEl = document.getElementById('input_planned_payment_record-wallet_transfer_id');
-                walletTransferChoice = new Choices(walletTransferEl, {
+                plannedPaymentRecordModalWalletTransferChoice = new Choices(walletTransferEl, {
                     allowHTML: true,
                     removeItemButton: true,
                     searchPlaceholderValue: "Search for Wallet Target Data",
@@ -337,10 +348,8 @@
                     shouldSort: false
                 });
             }
-
             // Flatpickr
-            let defaultDate = moment().format('YYYY-MM-DD HH:mm');
-            flatpickr(document.getElementById('input_planned_payment_record-period'), {
+            plannedPaymentRecordModalFlatpickrDateTime = flatpickr(document.getElementById('input_planned_payment_record-period'), {
                 enableTime: true,
                 altInput: true,
                 altFormat: "F j, Y / H:i",
@@ -348,40 +357,14 @@
                 time_24hr: true,
                 minuteIncrement: 1,
                 allowInput: true,
-                defaultDate: defaultDate,
+                defaultDate: plannedPaymentRecordModalDefaultDate,
+                maxDate: moment().format('YYYY-MM-DD 23:59'),
                 onClose: function(selectedDates, dateStr, instance){
-                    @this.set('plannedPaymentRecordPeriod', document.getElementById('input_planned_payment_record-period').value);
-                    @this.set('plannedPaymentRecordPeriodChanged', true);
+                    plannedPaymentRecordModalDefaultDate = moment(dateStr).format('YYYY-MM-DD HH:mm');
+                    plannedPaymentRecordModalDefaultDateTemp = true;
                 }
             });
 
-            document.getElementById('modal-plannedPaymentRecord').addEventListener('hidden.bs.modal', (e) => {
-                @this.removeReceipt();
-            });
-        });
-
-        // Calculate Final after adding extra amount
-        function plannedPaymentRecordCalculateFinal(type){
-            let amount = parseFloat(plannedPaymentRecordAmountMask.unmaskedValue);
-            if(isNaN(amount)){
-                amount = 0;
-            }
-            let extraAmount = parseFloat(plannedPaymentRecordExtraAmountMask.unmaskedValue);
-            if(isNaN(extraAmount)){
-                extraAmount = 0;
-            }
-
-            let extra = (amount * extraAmount) / 100;
-            if(type === 'amount'){
-                extra = extraAmount;
-            }
-
-            let final = amount + extra;
-            @this.set('plannedPaymentRecordFinalAmount', final);
-            plannedPaymentRecordFinalAmountMask.value = final.toString();
-        }
-
-        document.addEventListener('DOMContentLoaded', (e) => {
             document.getElementById('plannedPaymentRecord-form').addEventListener('submit', (e) => {
                 e.preventDefault();
                 if(e.target.querySelector('button[type="submit"]')){
@@ -395,11 +378,17 @@
                 }
 
                 @this.set('user_timezone', document.getElementById('user_timezone').value);
+                @this.set('plannedPaymentRecordType', document.querySelector('.planned_payment_record-type.btn.btn-secondary').dataset.value);
+                @this.set('plannedPaymentRecordCategory', document.getElementById('input_planned_payment_record-category_id').value);
+                @this.set('plannedPaymentRecordWallet', document.getElementById('input_planned_payment_record-wallet_id').value);
+                @this.set('plannedPaymentRecordWalletTransfer', document.getElementById('input_planned_payment_record-wallet_transfer_id').value);
                 @this.set('plannedPaymentRecordAmount', plannedPaymentRecordAmountMask.unmaskedValue);
                 @this.set('plannedPaymentRecordExtraAmount', plannedPaymentRecordExtraAmountMask.unmaskedValue);
+                @this.set('plannedPaymentRecordFinalAmount', plannedPaymentRecordFinalAmountMask.unmaskedValue);
                 @this.set('plannedPaymentRecordPeriod', document.getElementById('input_planned_payment_record-period').value);
-                
                 @this.save();
+
+                plannedPaymentRecordModalDefaultDateTemp = null;
             });
 
             // Receipt Change
@@ -407,6 +396,31 @@
                 if(document.getElementById('input_planned_payment_record-receipt').closest('.form-group') && document.getElementById('input_planned_payment_record-receipt').closest('.form-group').querySelector('.invalid-feedback')){
                     document.getElementById('input_planned_payment_record-receipt').closest('.form-group').querySelector('.invalid-feedback').remove();
                 }
+            });
+            // Switch Wallet
+            document.getElementById('btn_plannedPaymentrecord-switch').addEventListener('click', (e) => {
+                let wallet = document.getElementById('input_planned_payment_record-wallet_id').value;
+                let walletTransfer = document.getElementById('input_planned_payment_record-wallet_transfer_id').value;
+
+                plannedPaymentRecordModalWalletChoice.setChoiceByValue(walletTransfer);
+                plannedPaymentRecordModalWalletTransferChoice.setChoiceByValue(wallet);
+            });
+
+        });
+
+        window.addEventListener('plannedPaymentRecord_wire-init', (event) => {
+            refreshFsLightbox();
+
+            if(@this.get('plannedPaymentRecordAmount')){
+                plannedPaymentRecordAmountMask.value = (@this.get('plannedPaymentRecordAmount')).toString();
+            }
+            document.getElementById('modal-plannedPaymentRecord').addEventListener('show.bs.modal', (e) => {
+                plannedPaymentRecordModalDefaultDate = moment().format('YYYY-MM-DD HH:mm');
+                plannedPaymentRecordModalFlatpickrDateTime.setDate(plannedPaymentRecordModalDefaultDate);
+            });
+            document.getElementById('modal-plannedPaymentRecord').addEventListener('hidden.bs.modal', (e) => {
+                @this.removeReceipt();
+                plannedPaymentRecordModalDefaultDateTemp = null;
             });
         });
 
@@ -427,7 +441,6 @@
                 }
             }, 0);
         });
-
         window.addEventListener('trigger-eventPlannedPaymentRecord', (event) => {
             let el = event.detail;
             if(el.hasOwnProperty('plannedPaymentRecordType')){
@@ -454,6 +467,18 @@
                     }
                 });
             }
+            if(el.hasOwnProperty('plannedPaymentRecordCategory')){
+                plannedPaymentRecordModalCategoryChoice.setChoiceByValue(el.plannedPaymentRecordCategory);
+            }
+            if(el.hasOwnProperty('plannedPaymentRecordWallet')){
+                plannedPaymentRecordModalWalletChoice.setChoiceByValue(el.plannedPaymentRecordWallet);
+            }
+            if(el.hasOwnProperty('plannedPaymentRecordWalletTransfer')){
+                plannedPaymentRecordModalWalletTransferChoice.setChoiceByValue(el.plannedPaymentRecordWalletTransfer);
+            }
+            if(el.hasOwnProperty('resetPeriod')){
+                plannedPaymentRecordModalFlatpickrDateTime.setDate(moment().format('YYYY-MM-DD HH:mm'));
+            }
         });
 
         // Remove receipt
@@ -463,6 +488,25 @@
             document.getElementById('input_planned_payment_record-receipt').dispatchEvent(new Event('change'))
 
             @this.removeReceipt();
+        }
+        // Calculate Final after adding extra amount
+        function plannedPaymentRecordCalculateFinal(type){
+            let amount = parseFloat(plannedPaymentRecordAmountMask.unmaskedValue);
+            if(isNaN(amount)){
+                amount = 0;
+            }
+            let extraAmount = parseFloat(plannedPaymentRecordExtraAmountMask.unmaskedValue);
+            if(isNaN(extraAmount)){
+                extraAmount = 0;
+            }
+
+            let extra = (amount * extraAmount) / 100;
+            if(type === 'amount'){
+                extra = extraAmount;
+            }
+
+            let final = amount + extra;
+            plannedPaymentRecordFinalAmountMask.value = final.toString();
         }
     </script>
 @endpush

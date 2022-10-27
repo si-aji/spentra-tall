@@ -226,6 +226,14 @@
                                     </a>
                                 </li>
                             `);
+                        } else if(val.status === 'complete' && val.record){
+                            action.push(`
+                                <li>
+                                    <a class="dropdown-item tw__text-blue-400" href="{{ route('sys.record.index') }}/${val.record.uuid}">
+                                        <span class=" tw__flex tw__items-center"><i class="bx bx-eye tw__mr-2"></i>Detail</span>
+                                    </a>
+                                </li>
+                            `);
                         }
                         // Handle Action
                         let actionBtn = '';

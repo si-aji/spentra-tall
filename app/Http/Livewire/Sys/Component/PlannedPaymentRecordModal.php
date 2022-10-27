@@ -113,6 +113,7 @@ class PlannedPaymentRecordModal extends Component
     }
     public function save()
     {
+        $this->resetValidation();
         // Reset Field if Transfer
         if($this->plannedPaymentRecordType === 'transfer'){
             $this->reset([
@@ -201,7 +202,11 @@ class PlannedPaymentRecordModal extends Component
             'plannedPaymentRecordType' => $this->plannedPaymentRecordType,
             'plannedPaymentRecordExtraType' => $this->plannedPaymentRecordExtraType,
             'plannedPaymentRecordAmount' => $this->plannedPaymentRecordAmount,
-            'plannedPaymentRecordExtraAmount' => $this->plannedPaymentRecordExtraAmount
+            'plannedPaymentRecordExtraAmount' => $this->plannedPaymentRecordExtraAmount,
+            'plannedPaymentRecordCategory' => $this->plannedPaymentRecordCategory,
+            'plannedPaymentRecordWallet' => $this->plannedPaymentRecordWallet,
+            'plannedPaymentRecordWalletTransfer' => $this->plannedPaymentRecordWalletTransfer,
+            'resetPeriod' => true
         ]);
     }
     public function editAction($uuid)
@@ -228,7 +233,10 @@ class PlannedPaymentRecordModal extends Component
             'plannedPaymentRecordType' => $this->plannedPaymentRecordType,
             'plannedPaymentRecordExtraType' => $this->plannedPaymentRecordExtraType,
             'plannedPaymentRecordAmount' => $this->plannedPaymentRecordAmount,
-            'plannedPaymentRecordExtraAmount' => $this->plannedPaymentRecordExtraAmount
+            'plannedPaymentRecordExtraAmount' => $this->plannedPaymentRecordExtraAmount,
+            'plannedPaymentRecordCategory' => $this->plannedPaymentRecordCategory,
+            'plannedPaymentRecordWallet' => $this->plannedPaymentRecordWallet,
+            'plannedPaymentRecordWalletTransfer' => $this->plannedPaymentRecordWalletTransfer,
         ]);
     }
     public function skipRecord($uuid, $plannedPaymentUuid)
@@ -278,5 +286,6 @@ class PlannedPaymentRecordModal extends Component
             'plannedPaymentRecordAmount' => $this->plannedPaymentRecordAmount,
             'plannedPaymentRecordExtraAmount' => $this->plannedPaymentRecordExtraAmount
         ]);
+        $this->resetValidation();
     }
 }
