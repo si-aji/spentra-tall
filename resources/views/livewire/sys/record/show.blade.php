@@ -102,6 +102,16 @@
                         @endif
                     </td>
                 </tr>
+                <tr>
+                    <th>Tags</th>
+                    <td>
+                        @if ($recordData->recordTags()->exists())
+                            <span>{{ implode(', ', $recordData->recordTags->pluck('name')->toArray()) }}</span>
+                        @else
+                            <span>-</span>
+                        @endif
+                    </td>
+                </tr>
             </table>
         </div>
     </div>

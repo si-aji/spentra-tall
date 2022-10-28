@@ -92,6 +92,13 @@ class Record extends Model
     {
         return $this->belongsTo(\App\Models\Category::class, 'category_id');
     }
+    public function recordTags()
+    {
+        return $this->belongsToMany(\App\Models\Tag::class, 'record_tags', 'record_id', 'tag_id')
+            ->using(\App\Models\RecordTag::class)
+            ->orderBy('name', 'asc')
+            ->withTimestamps();
+    }
 
     /**
      * The "boot" method of the model.

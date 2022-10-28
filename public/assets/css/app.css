@@ -674,9 +674,6 @@ input:invalid, textarea:invalid, select:invalid {
 .tw__mb-0 {
   margin-bottom: 0px !important;
 }
-.tw__mr-1 {
-  margin-right: 0.25rem !important;
-}
 .tw__ml-auto {
   margin-left: auto !important;
 }
@@ -712,6 +709,9 @@ input:invalid, textarea:invalid, select:invalid {
 }
 .tw__mb-2 {
   margin-bottom: 0.5rem !important;
+}
+.tw__mr-1 {
+  margin-right: 0.25rem !important;
 }
 .tw__mt-0 {
   margin-top: 0px !important;
@@ -898,11 +898,11 @@ input:invalid, textarea:invalid, select:invalid {
 .tw__justify-around {
   justify-content: space-around !important;
 }
-.tw__gap-1 {
-  gap: 0.25rem !important;
-}
 .tw__gap-2 {
   gap: 0.5rem !important;
+}
+.tw__gap-1 {
+  gap: 0.25rem !important;
 }
 .tw__gap-4 {
   gap: 1rem !important;

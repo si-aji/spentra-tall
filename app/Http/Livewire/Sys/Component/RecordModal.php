@@ -16,6 +16,7 @@ class RecordModal extends Component
     public $listTemplate;
     public $listCategory;
     public $listWallet;
+    public $listTag;
 
     // Modal
     public $recordModalState = true;
@@ -39,6 +40,7 @@ class RecordModal extends Component
     public $recordReceipt = null;
     public $recordReceiptTemp = null;
     public $recordMoreState = false;
+    public $recordTag = [];
     public $recordResetField = [];
 
     protected $listeners = [
@@ -49,7 +51,7 @@ class RecordModal extends Component
     ];
 
     // Fetch Data
-    public function fetchDataTemplate($uuid = null)
+    public function fetchDataTemplateData($uuid = null)
     {
         if($uuid == ''){
             $this->recordTemplate = '';
@@ -88,7 +90,8 @@ class RecordModal extends Component
             'recordExtraAmount' => $this->recordExtraAmount,
             'recordCategory' => $this->recordCategory,
             'recordWallet' => $this->recordWallet,
-            'recordWalletTransfer' => $this->recordWalletTransfer
+            'recordWalletTransfer' => $this->recordWalletTransfer,
+            'recordTag' => $this->recordTag
         ]);
     }
 
@@ -119,6 +122,13 @@ class RecordModal extends Component
             ->orderBy('order_main', 'asc')
             ->get();
     }
+    public function fetchListTag()
+    {
+        // Tag
+        $this->listTag = \App\Models\Tag::where('user_id', \Auth::user()->id)
+            ->orderBy('name', 'asc')
+            ->get();
+    }
 
     public function mount()
     {
@@ -137,7 +147,8 @@ class RecordModal extends Component
             'recordPeriodChanged',
             'recordNote',
             'recordReceipt',
-            'recordReceiptTemp'
+            'recordReceiptTemp',
+            'recordTag'
         ];
     }
 
@@ -146,6 +157,7 @@ class RecordModal extends Component
         $this->fetchListTemplate();
         $this->fetchListCategory();
         $this->fetchListWallet();
+        $this->fetchListTag();
 
         // \Log::debug("Debug on Record Modal render", [
         //     'category' => $this->recordCategory,
@@ -172,7 +184,7 @@ class RecordModal extends Component
         ]);
     }
     public function editAction($uuid){
-        $record = \App\Models\Record::with('wallet', 'walletTransferTarget', 'category')
+        $record = \App\Models\Record::with('wallet', 'walletTransferTarget', 'category', 'recordTags')
             ->where('user_id', \Auth::user()->id)
             ->where(\DB::raw('BINARY `uuid`'), $uuid)
             ->firstOrFail();
@@ -207,6 +219,7 @@ class RecordModal extends Component
         $this->recordNote = $record->note;
         // $this->recordReceipt = $record->receipt;
         $this->recordReceiptTemp = $record->receipt;
+        $this->recordTag = $record->recordTags->pluck('uuid');
 
         $this->dispatchBrowserEvent('trigger-event', [
             'recordType' => $this->recordType,
@@ -215,7 +228,8 @@ class RecordModal extends Component
             'recordExtraAmount' => $this->recordExtraAmount,
             'recordCategory' => $this->recordCategory,
             'recordWallet' => $this->recordWallet,
-            'recordWalletTransfer' => $this->recordWalletTransfer
+            'recordWalletTransfer' => $this->recordWalletTransfer,
+            'recordTag' => $this->recordTag
         ]);
         $this->dispatchBrowserEvent('open-modal');
     }
@@ -243,15 +257,16 @@ class RecordModal extends Component
             'recordReceipt' => ['nullable', 'mimes:jpg,jpeg,png,pdf', 'max:1024']
         ]);
 
-        \Log::debug("Debug on Record Modal Store", [
-            'uuid' => $this->recordUuid,
-            'wallet' => $this->recordWallet,
-            'recordAmount' => $this->recordAmount,
-            'type' => $this->recordType,
-            'period' => $this->recordPeriod,
-            'user_timezone' => $this->user_timezone
-        ]);
+        // \Log::debug("Debug on Record Modal Store", [
+        //     'uuid' => $this->recordUuid,
+        //     'wallet' => $this->recordWallet,
+        //     'recordAmount' => $this->recordAmount,
+        //     'type' => $this->recordType,
+        //     'period' => $this->recordPeriod,
+        //     'user_timezone' => $this->user_timezone
+        // ]);
 
+        // Period, convert to UTC
         $datetime = date("Y-m-d H:i", strtotime($this->recordPeriod));
         if($this->user_timezone){
             $raw = date('Y-m-d H:i:00', strtotime($this->recordPeriod));
@@ -259,6 +274,18 @@ class RecordModal extends Component
             $utc = convertToUtc($raw, ($this->user_timezone));
             $datetime = date('Y-m-d H:i:00', strtotime($utc));
         }
+        // Tag, get selected tag
+        $selectedTags = [];
+        if(!empty($this->recordTag)){
+            $selectedTags = \App\Models\Tag::where('user_id', \Auth::user()->id)
+                ->whereIn(\DB::raw('BINARY `uuid`'), $this->recordTag)
+                ->pluck('id')
+                ->toArray();
+        }
+        // \Log::debug("Debug on Selected Tags", [
+        //     'this' => $this->recordTag,
+        //     'arr' => $selectedTags
+        // ]);
 
         // Receipt file Upload
         $file = null;
@@ -298,7 +325,7 @@ class RecordModal extends Component
             $wallet = $walletData->id;
         }
 
-        \DB::transaction(function () use ($category, $wallet, $datetime, $file, $plannedPaymentRecord) {
+        \DB::transaction(function () use ($category, $wallet, $datetime, $file, $plannedPaymentRecord, $selectedTags) {
             if($this->recordUuid){
                 // Update update Function
                 $record = \App\Models\Record::where('user_id', \Auth::user()->id)
@@ -350,6 +377,8 @@ class RecordModal extends Component
                     $record->receipt = $file;
                     $record->timezone_offset = $this->user_timezone;
                     $record->save();
+                    // Record Tags
+                    $record->recordTags()->sync($selectedTags);
     
                     // Handle Extra Amount
                     $extraType = 'amount';
@@ -378,6 +407,8 @@ class RecordModal extends Component
                     $relatedRecord->receipt = $file;
                     $relatedRecord->timezone_offset = $this->user_timezone;
                     $relatedRecord->save();
+                    // Related Record Tags
+                    $relatedRecord->recordTags()->sync($selectedTags);
                 } else {
                     // New data is either expense / income
                     if(!empty($record->to_wallet_id)){
@@ -403,6 +434,8 @@ class RecordModal extends Component
                     $record->receipt = $file;
                     $record->timezone_offset = $this->user_timezone;
                     $record->save();
+                    // Record Tags
+                    $record->recordTags()->sync($selectedTags);
                 }
             } else {
                 // Handle store function
@@ -444,6 +477,8 @@ class RecordModal extends Component
                         $data->receipt = $file;
                         $data->timezone_offset = $this->user_timezone;
                         $data->save();
+                        // Record Tags
+                        $data->recordTags()->sync($selectedTags);
 
                         if($plannedPaymentRecord !== null){
                             if($typ === 'expense'){
@@ -474,6 +509,8 @@ class RecordModal extends Component
                     $data->receipt = $file;
                     $data->timezone_offset = $this->user_timezone;
                     $data->save();
+                    // Record Tags
+                    $data->recordTags()->sync($selectedTags);
 
                     if($plannedPaymentRecord !== null){
                         $plannedPaymentRecord->record_id = $data->id;
@@ -503,6 +540,7 @@ class RecordModal extends Component
                 'recordCategory' => $this->recordCategory,
                 'recordWallet' => $this->recordWallet,
                 'recordWalletTransfer' => $this->recordWalletTransfer,
+                'recordTag' => $this->recordTag,
                 'resetPeriod' => true
             ]);
             $this->dispatchBrowserEvent('wire-action', [
@@ -560,9 +598,9 @@ class RecordModal extends Component
 
     public function removeReceipt(): void
     {
-        \Log::debug("Remove Receipt", [
-            '!empty' => $this->recordReceipt ? 'true' : 'false'
-        ]);
+        // \Log::debug("Remove Receipt", [
+        //     '!empty' => $this->recordReceipt ? 'true' : 'false'
+        // ]);
         if($this->recordReceipt){
             if(\File::exists('livewire-tmp'.'/'.$this->recordReceipt->getFilename())){
                 \Storage::delete('livewire-tmp'.'/'.$this->recordReceipt->getFilename());
@@ -575,6 +613,10 @@ class RecordModal extends Component
     // Handle Modal
     public function openModal()
     {
+        $this->fetchListTemplate();
+        $this->fetchListCategory();
+        $this->fetchListWallet();
+        $this->fetchListTag();
         $this->emit($this->recordModalState ? 'show' : 'hide');
     }
     public function closeModal()
@@ -589,7 +631,8 @@ class RecordModal extends Component
             'recordExtraAmount' => $this->recordExtraAmount,
             'recordCategory' => $this->recordCategory,
             'recordWallet' => $this->recordWallet,
-            'recordWalletTransfer' => $this->recordWalletTransfer
+            'recordWalletTransfer' => $this->recordWalletTransfer,
+            'recordTag' => $this->recordTag
         ]);
         $this->resetValidation();
     }

@@ -52,7 +52,7 @@ class Index extends Component
     }
     public function fetchRecordData($selectedWallet = null) : void
     {
-        $this->dataRecord = \App\Models\Record::with('wallet.parent', 'walletTransferTarget.parent', 'category.parent')
+        $this->dataRecord = \App\Models\Record::with('wallet.parent', 'walletTransferTarget.parent', 'category.parent', 'recordTags')
             ->where('user_id', \Auth::user()->id)
             ->where('status', 'complete');
 

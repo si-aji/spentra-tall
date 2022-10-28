@@ -24,7 +24,7 @@ function recordContainerFormat(val, index){
     `;
 }
 function recordContentFormat(val, index, action = []){
-    // console.log(val);
+    console.log(val);
     // console.log(val.datetime);
     // console.log(momentDateTime(val.datetime, 'HH:mm'));
 
@@ -34,16 +34,16 @@ function recordContentFormat(val, index, action = []){
     // Extra Information
     let smallInformation = [];
     if(val.category){
-        smallInformation.push(`<span><small class="tw__text-[#293240]"><i class="bx bxs-category tw__mr-1"></i>${val.category.parent_id ? `${val.category.parent.name} - ` : ''}${val.category.name}</small></span>`);
+        smallInformation.push(`<span><small class="tw__text-[#293240] tw__flex tw__items-center tw__gap-2"><i class="bx bxs-category"></i>${val.category.parent_id ? `${val.category.parent.name} - ` : ''}${val.category.name}</small></span>`);
     }
     if(val.receipt !== null){
-        smallInformation.push(`<span><small class="tw__text-[#293240]"><i class="bx bx-paperclip bx-rotate-90 tw__mr-1"></i>Receipt</small></span>`);
+        smallInformation.push(`<span><small class="tw__text-[#293240] tw__flex tw__items-center tw__gap-2"><i class="bx bx-paperclip bx-rotate-90"></i>Receipt</small></span>`);
     }
     if(val.note !== null){
-        smallInformation.push(`<span><small class="tw__text-[#293240]"><i class="bx bx-paragraph tw__mr-1"></i>Note</small></span>`);
+        smallInformation.push(`<span><small class="tw__text-[#293240] tw__flex tw__items-center tw__gap-2"><i class="bx bx-paragraph"></i>Note</small></span>`);
     }
-    if(val.tags !== null && val.tags !== undefined && val.tags.length > 0){
-        smallInformation.push(`<span><small class="tw__text-[#293240]"><i class="bx bxs-tag-alt tw__mr-1"></i>Tags</small></span>`);
+    if(val.record_tags !== null && val.record_tags !== undefined && val.record_tags.length > 0){
+        smallInformation.push(`<span><small class="tw__text-[#293240] tw__flex tw__items-center tw__gap-2"><i class="bx bxs-tag-alt"></i>Tags</small></span>`);
     }
     // Handle Action
     let actionBtn = '';

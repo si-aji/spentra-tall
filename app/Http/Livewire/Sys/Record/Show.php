@@ -18,7 +18,8 @@ class Show extends Component
 
     public function mount($uuid)
     {
-        $this->recordData = \App\Models\Record::where('user_id', \Auth::user()->id)
+        $this->recordData = \App\Models\Record::with('wallet.parent', 'walletTransferTarget.parent', 'category.parent', 'recordTags')
+            ->where('user_id', \Auth::user()->id)
             ->where(\DB::raw('BINARY `uuid`'), $uuid)
             ->firstOrFail();
         $this->recordUuid = $this->recordData->uuid;

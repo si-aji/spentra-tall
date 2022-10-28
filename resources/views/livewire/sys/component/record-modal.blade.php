@@ -24,7 +24,7 @@
                                 {{-- Record Template --}}
                                 <div class="form-group tw__mb-4" wire:ignore>
                                     <label for="input_record-template">Template</label>
-                                    <select class="form-control" id="input_record-template_id" name="template_id" placeholder="Search for Template Data" x-on:change="@this.fetchDataTemplate($event.target.value)">
+                                    <select class="form-control" id="input_record-template_id" name="template_id" placeholder="Search for Template Data" x-on:change="@this.fetchDataTemplateData($event.target.value)">
                                         <option value="" {{ $recordTemplate == '' ? 'selected' : '' }}>Search for Template Data</option>
                                         @foreach ($listTemplate as $template)
                                             <option value="{{ $template->uuid }}" {{ !empty($recordTemplate) && $template->uuid === $recordTemplate ? 'selected' : '' }}>{{ $template->name }}</option>
@@ -262,6 +262,22 @@
                                         @enderror
                                     </div>
 
+                                    {{-- Tags --}}
+                                    <div class="form-group tw__mb-4">
+                                        <label>Tags</label>
+                                        <div wire:ignore>
+                                            <select class="form-control" id="input_record-tag_id" name="tag_id" placeholder="Search for Tag Data" multiple>
+                                                <option value="" {{ $recordTag == '' ? 'selected' : '' }}>Search for Tag Data</option>
+                                                @foreach ($listTag as $tag)
+                                                    <option value="{{ $tag->uuid }}" {{ !empty($recordTag) && $tag->uuid === $recordTag ? 'selected' : '' }}>{{ $tag->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        @error('recordWalletTag')
+                                            <span class="invalid-feedback tw__block">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+
                                     {{-- Add more State --}}
                                     <div class="form-group">
                                         <div class="form-check tw__flex tw__items-center tw__gap-2">
@@ -299,6 +315,7 @@
         let recordModalCategoryChoice = null;
         let recordModalWalletChoice = null;
         let recordModalWalletTransferChoice = null;
+        let recordModalTagChoice = null;
         // Flatpickr
         let recordModalFlatpickrDateTime;
         let recordModalDefaultDate;
@@ -349,6 +366,17 @@
                     searchPlaceholderValue: "Search for Wallet Target Data",
                     placeholder: true,
                     placeholderValue: 'Search for Wallet Target Data',
+                    shouldSort: false
+                });
+            }
+            if(document.getElementById('input_record-tag_id')){
+                const tagEl = document.getElementById('input_record-tag_id');
+                recordModalTagChoice = new Choices(tagEl, {
+                    allowHTML: true,
+                    removeItemButton: true,
+                    searchPlaceholderValue: "Search for Tag Data",
+                    placeholder: true,
+                    placeholderValue: 'Search for Tag Data',
                     shouldSort: false
                 });
             }
@@ -414,6 +442,11 @@
                     `;
                     e.target.querySelector('button[type="submit"]').disabled = true;
                 }
+                // Get Tags Data
+                let selectedTags = [];
+                recordModalTagChoice.getValue().forEach((e, key) => {
+                    selectedTags.push(e.value);
+                });
 
                 @this.set('user_timezone', document.getElementById('user_timezone').value);
                 @this.set('recordType', document.querySelector('.record-type.btn.btn-secondary').dataset.value);
@@ -425,6 +458,7 @@
                 @this.set('recordExtraAmount', recordModalExtraAmountMask.unmaskedValue);
                 @this.set('recordFinalAmount', recordModalFinalAmountMask.unmaskedValue);
                 @this.set('recordPeriod', document.getElementById('input_record-period').value);
+                @this.set('recordTag', selectedTags);
                 @this.set('recordMoreState', document.getElementById('input_record-more').checked);
                 @this.save();
 
@@ -513,6 +547,14 @@
             }
             if(el.hasOwnProperty('resetPeriod')){
                 recordModalFlatpickrDateTime.setDate(moment().format('YYYY-MM-DD HH:mm'));
+            }
+            if(el.hasOwnProperty('recordTag')){
+                recordModalTagChoice.removeActiveItems();
+                if((el.recordTag).length > 0){
+                    (el.recordTag).forEach((tag) => {
+                        recordModalTagChoice.setChoiceByValue(tag);
+                    });
+                }
             }
         });
 
