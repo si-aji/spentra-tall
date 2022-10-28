@@ -57,19 +57,17 @@
                     <th>{{ empty($plannedPaymentData->to_wallet_id) ? 'Base ' : '' }}Amount</th>
                     <td>{{ formatRupiah($plannedPaymentData->amount) }}</td>
                 </tr>
-                @if (empty($plannedPaymentData->to_wallet_id))
-                    <tr>
-                        <th>Extra Amount</th>
-                        <td>
-                            <span class=" tw__block">{{ $plannedPaymentData->extra_type === 'amount' ? formatRupiah($plannedPaymentData->extra_amount) : $plannedPaymentData->extra_percentage.'%' }}</span>
-                            <span class="badge bg-label-secondary">{{ ucwords($plannedPaymentData->extra_type) }}</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Final Amount</th>
-                        <td>{{ formatRupiah($plannedPaymentData->amount + $plannedPaymentData->extra_amount) }}</td>
-                    </tr>
-                @endif
+                <tr>
+                    <th>Extra Amount</th>
+                    <td>
+                        <span class=" tw__block">{{ $plannedPaymentData->extra_type === 'amount' ? formatRupiah($plannedPaymentData->extra_amount) : $plannedPaymentData->extra_percentage.'%' }}</span>
+                        <span class="badge bg-label-secondary">{{ ucwords($plannedPaymentData->extra_type) }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Final Amount</th>
+                    <td>{{ formatRupiah($plannedPaymentData->amount + $plannedPaymentData->extra_amount) }}</td>
+                </tr>
                 <tr>
                     <th>Note</th>
                     <td>{{ $plannedPaymentData->note ?? '-' }}</td>
@@ -99,6 +97,10 @@
                 <tr>
                     <th>Start</th>
                     <td data-period="{{ $plannedPaymentData->start_date }}">-</td>
+                </tr>
+                <tr>
+                    <th>Repeat Every</th>
+                    <td>{{ $plannedPaymentData->repeat_every.' '.ucwords($plannedPaymentData->getRepeatType($plannedPaymentData->repeat_type)) }}(s)</td>
                 </tr>
                 <tr>
                     <th>Next</th>

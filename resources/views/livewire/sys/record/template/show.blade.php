@@ -73,7 +73,17 @@
                 @endif
                 <tr>
                     <th>Note</th>
-                    <td>{{ $recordTemplateData->note ?? '-' }}</td>
+                    <td>{{ $recordTemplateData->note !== '' ? $recordTemplateData->note : '-' }}</td>
+                </tr>
+                <tr>
+                    <th>Tags</th>
+                    <td>
+                        @if ($recordTemplateData->recordTemplateTags()->exists())
+                            <span>{{ implode(', ', $recordTemplateData->recordTemplateTags->pluck('name')->toArray()) }}</span>
+                        @else
+                            <span>-</span>
+                        @endif
+                    </td>
                 </tr>
             </table>
         </div>

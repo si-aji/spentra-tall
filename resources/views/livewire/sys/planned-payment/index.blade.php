@@ -229,10 +229,21 @@
                     }
                     // Alert
                     let alert = '';
-                    if(moment() > moment(val.next_date)){
+                    let current = moment().format('YYYY-MM-DD');
+                    let nextDate = moment(val.next_date).format('YYYY-MM-DD');
+                    if(moment(current).diff(moment(nextDate)) > 0){
+                        console.log(current);
+                        console.log(nextDate);
+                        console.log(moment(current).diff(moment(nextDate)));
                         alert = `
                             <small class="tw__bg-red-400 tw__bg-opacity-75 tw__px-2 tw__py-1 tw__rounded tw__mb-2 tw__text-white tw__inline-block"><span class="tw__flex tw__items-center tw__gap-2">
                                 <i class='bx bx-info-circle'></i>Overdue</span>
+                            </small>
+                        `;
+                    } else if(moment(current).diff(moment(nextDate)) === 0){
+                        alert = `
+                            <small class="tw__bg-blue-400 tw__bg-opacity-75 tw__px-2 tw__py-1 tw__rounded tw__mb-2 tw__text-white tw__inline-block"><span class="tw__flex tw__items-center tw__gap-2">
+                                <i class='bx bx-info-circle'></i>Today</span>
                             </small>
                         `;
                     }

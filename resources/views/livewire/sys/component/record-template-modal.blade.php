@@ -30,19 +30,21 @@
                                 {{-- Category --}}
                                 <div class="form-group tw__mb-4" x-show="selectedRecordType !== 'transfer' ? true : false">
                                     <label for="input_record_template-category_id">Category</label>
-                                    <select class="form-control" id="input_record_template-category_id" name="category_id" placeholder="Search for Category Data">
-                                        <option value="" {{ $recordTemplateCategory == '' ? 'selected' : '' }}>Search for Category Data</option>
-                                        @foreach ($listCategory as $category)
-                                            <optgroup label="{{ $category->name }}">
-                                                <option value="{{ $category->uuid }}" {{ !empty($recordTemplateCategory) && $category->uuid === $recordTemplateCategory ? 'selected' : '' }}>{{ $category->name }}</option>
-                                                @if ($category->child()->exists())
-                                                    @foreach ($category->child as $child)
-                                                        <option value="{{ $child->uuid }}" {{ !empty($recordTemplateCategory) && $child->uuid === $recordTemplateCategory ? 'selected' : '' }}>{{ $category->name }} - {{ $child->name }}</option>
-                                                    @endforeach
-                                                @endif
-                                            </optgroup>
-                                        @endforeach
-                                    </select>
+                                    <div wire:ignore>
+                                        <select class="form-control" id="input_record_template-category_id" name="category_id" placeholder="Search for Category Data">
+                                            <option value="" {{ $recordTemplateCategory == '' ? 'selected' : '' }}>Search for Category Data</option>
+                                            @foreach ($listCategory as $category)
+                                                <optgroup label="{{ $category->name }}">
+                                                    <option value="{{ $category->uuid }}" {{ !empty($recordTemplateCategory) && $category->uuid === $recordTemplateCategory ? 'selected' : '' }}>{{ $category->name }}</option>
+                                                    @if ($category->child()->exists())
+                                                        @foreach ($category->child as $child)
+                                                            <option value="{{ $child->uuid }}" {{ !empty($recordTemplateCategory) && $child->uuid === $recordTemplateCategory ? 'selected' : '' }}>{{ $category->name }} - {{ $child->name }}</option>
+                                                        @endforeach
+                                                    @endif
+                                                </optgroup>
+                                            @endforeach
+                                        </select>
+                                    </div>
 
                                     @error('recordTemplateCategory')
                                         <span class="invalid-feedback tw__block">{{ $message }}</span>
@@ -52,19 +54,21 @@
                                 {{-- Wallet --}}
                                 <div class="form-group tw__mb-4">
                                     <label for="input_record_template-wallet_id" x-text="selectedRecordType === 'income' || selectedRecordType === 'expense' ? 'Wallet' : 'From'"></label>
-                                    <select class="form-control" id="input_record_template-wallet_id" name="wallet_id" placeholder="Search for Wallet Data">
-                                        <option value="" {{ $recordTemplateWallet == '' ? 'selected' : '' }}>Search for Wallet Data</option>
-                                        @foreach ($listWallet as $wallet)
-                                            <optgroup label="{{ $wallet->name }}">
-                                                <option value="{{ $wallet->uuid }}" {{ !empty($recordTemplateWallet) && $wallet->uuid === $recordTemplateWallet ? 'selected' : '' }}>{{ $wallet->name }}</option>
-                                                @if ($wallet->child()->exists())
-                                                    @foreach ($wallet->child as $child)
-                                                        <option value="{{ $child->uuid }}" {{ !empty($recordTemplateWallet) && $child->uuid === $recordTemplateWallet ? 'selected' : '' }}>{{ $wallet->name }} - {{ $child->name }}</option>
-                                                    @endforeach
-                                                @endif
-                                            </optgroup>
-                                        @endforeach
-                                    </select>
+                                    <div wire:ignore>
+                                        <select class="form-control" id="input_record_template-wallet_id" name="wallet_id" placeholder="Search for Wallet Data">
+                                            <option value="" {{ $recordTemplateWallet == '' ? 'selected' : '' }}>Search for Wallet Data</option>
+                                            @foreach ($listWallet as $wallet)
+                                                <optgroup label="{{ $wallet->name }}">
+                                                    <option value="{{ $wallet->uuid }}" {{ !empty($recordTemplateWallet) && $wallet->uuid === $recordTemplateWallet ? 'selected' : '' }}>{{ $wallet->name }}</option>
+                                                    @if ($wallet->child()->exists())
+                                                        @foreach ($wallet->child as $child)
+                                                            <option value="{{ $child->uuid }}" {{ !empty($recordTemplateWallet) && $child->uuid === $recordTemplateWallet ? 'selected' : '' }}>{{ $wallet->name }} - {{ $child->name }}</option>
+                                                        @endforeach
+                                                    @endif
+                                                </optgroup>
+                                            @endforeach
+                                        </select>
+                                    </div>
 
                                     @error('recordTemplateWallet')
                                         <span class="invalid-feedback tw__block">{{ $message }}</span>
@@ -81,19 +85,21 @@
 
                                     <div class="form-group tw__mb-4" id="form-transfer">
                                         <label for="input_record_template-target">To</label>
-                                        <select class="form-control" id="input_record_template-wallet_transfer_id" name="wallet_transfer_id" placeholder="Search for Wallet Target Data">
-                                            <option value="" {{ $recordTemplateWalletTransfer == '' ? 'selected' : '' }}>Search for Wallet Target Data</option>
-                                            @foreach ($listWallet as $wallet)
-                                                <optgroup label="{{ $wallet->name }}">
-                                                    <option value="{{ $wallet->uuid }}" {{ !empty($recordTemplateWalletTransfer) && $wallet->uuid === $recordTemplateWalletTransfer ? 'selected' : '' }}>{{ $wallet->name }}</option>
-                                                    @if ($wallet->child()->exists())
-                                                        @foreach ($wallet->child as $child)
-                                                            <option value="{{ $child->uuid }}" {{ !empty($recordTemplateWalletTransfer) && $child->uuid === $recordTemplateWalletTransfer ? 'selected' : '' }}>{{ $wallet->name }} - {{ $child->name }}</option>
-                                                        @endforeach
-                                                    @endif
-                                                </optgroup>
-                                            @endforeach
-                                        </select>
+                                        <div wire:ignore>
+                                            <select class="form-control" id="input_record_template-wallet_transfer_id" name="wallet_transfer_id" placeholder="Search for Wallet Target Data">
+                                                <option value="" {{ $recordTemplateWalletTransfer == '' ? 'selected' : '' }}>Search for Wallet Target Data</option>
+                                                @foreach ($listWallet as $wallet)
+                                                    <optgroup label="{{ $wallet->name }}">
+                                                        <option value="{{ $wallet->uuid }}" {{ !empty($recordTemplateWalletTransfer) && $wallet->uuid === $recordTemplateWalletTransfer ? 'selected' : '' }}>{{ $wallet->name }}</option>
+                                                        @if ($wallet->child()->exists())
+                                                            @foreach ($wallet->child as $child)
+                                                                <option value="{{ $child->uuid }}" {{ !empty($recordTemplateWalletTransfer) && $child->uuid === $recordTemplateWalletTransfer ? 'selected' : '' }}>{{ $wallet->name }} - {{ $child->name }}</option>
+                                                            @endforeach
+                                                        @endif
+                                                    </optgroup>
+                                                @endforeach
+                                            </select>
+                                        </div>
 
                                         @error('recordTemplateWalletTransfer')
                                             <span class="invalid-feedback tw__block">{{ $message }}</span>
@@ -117,7 +123,7 @@
                                 </div>
 
                                 {{-- Extra Amount --}}
-                                <div class="row" x-show="selectedRecordType !== 'transfer' ? true : false">
+                                <div class="row">
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="input_record_template-extra">Extra Amount</label>
@@ -162,6 +168,22 @@
                                         @enderror
                                     </div>
 
+                                    {{-- Tags --}}
+                                    <div class="form-group tw__mb-4">
+                                        <label>Tags</label>
+                                        <div wire:ignore>
+                                            <select class="form-control" id="input_record_template-tag_id" name="tag_id" placeholder="Search for Tag Data" multiple>
+                                                <option value="">Search for Tag Data</option>
+                                                @foreach ($listTag as $tag)
+                                                    <option value="{{ $tag->uuid }}" {{ !empty($recordTemplateTag) && $tag->uuid === $recordTemplateTag ? 'selected' : '' }}>{{ $tag->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        @error('recordTemplateTag')
+                                            <span class="invalid-feedback tw__block">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+
                                     {{-- Add more State --}}
                                     <div class="form-group">
                                         <div class="form-check tw__flex tw__items-center tw__gap-2">
@@ -189,20 +211,20 @@
 
 @push('javascript')
     <script>
-        var templateAmountMask = null;
-        var templateExtraAmountMask = null;
-        var templateFinalAmountMask = null;
+        // IMask
+        var recordTemplateModalAmountMask = null;
+        var recordTemplateModalExtraAmountMask = null;
+        var recordTemplateModalFinalAmountMask = null;
+        // Choice
+        let recordTemplateModalCategoryChoice = null;
+        let recordTemplateModalWalletChoice = null;
+        let recordTemplateModalWalletTransferChoice = null;
+        let recordTemplateModalTagChoice = null;
 
-        let templateCategoryChoice = null;
-        let templateWalletChoice = null;
-        let templateWalletTransferChoice = null;
-
-        window.addEventListener('record_template_wire-init', (event) => {
-            // console.log("Record Template init");
-
+        document.addEventListener('DOMContentLoaded', (e) => {
             // iMask
             if(document.getElementById('input_record_template-amount')){
-                templateAmountMask = IMask(document.getElementById('input_record_template-amount'), {
+                recordTemplateModalAmountMask = IMask(document.getElementById('input_record_template-amount'), {
                     mask: Number,
                     thousandsSeparator: ',',
                     scale: 2,  // digits after point, 0 for integers
@@ -212,7 +234,7 @@
                 });
             }
             if(document.getElementById('input_record_template-extra')){
-                templateExtraAmountMask = IMask(document.getElementById('input_record_template-extra'), {
+                recordTemplateModalExtraAmountMask = IMask(document.getElementById('input_record_template-extra'), {
                     mask: Number,
                     thousandsSeparator: ',',
                     scale: 2,  // digits after point, 0 for integers
@@ -222,7 +244,7 @@
                 });
             }
             if(document.getElementById('input_record_template-final')){
-                templateFinalAmountMask = IMask(document.getElementById('input_record_template-final'), {
+                recordTemplateModalFinalAmountMask = IMask(document.getElementById('input_record_template-final'), {
                     mask: Number,
                     thousandsSeparator: ',',
                     scale: 2,  // digits after point, 0 for integers
@@ -235,7 +257,7 @@
             // Choices
             if(document.getElementById('input_record_template-category_id')){
                 const categoryEl = document.getElementById('input_record_template-category_id');
-                templateCategoryChoice = new Choices(categoryEl, {
+                recordTemplateModalCategoryChoice = new Choices(categoryEl, {
                     allowHTML: true,
                     removeItemButton: true,
                     searchPlaceholderValue: "Search for Wallet Data",
@@ -247,7 +269,7 @@
             }
             if(document.getElementById('input_record_template-wallet_id')){
                 const walletEl = document.getElementById('input_record_template-wallet_id');
-                templateWalletChoice = new Choices(walletEl, {
+                recordTemplateModalWalletChoice = new Choices(walletEl, {
                     allowHTML: true,
                     removeItemButton: true,
                     searchPlaceholderValue: "Search for Wallet Data",
@@ -258,7 +280,7 @@
             }
             if(document.getElementById('input_record_template-wallet_transfer_id')){
                 const walletTransferEl = document.getElementById('input_record_template-wallet_transfer_id');
-                templateWalletTransferChoice = new Choices(walletTransferEl, {
+                recordTemplateModalWalletTransferChoice = new Choices(walletTransferEl, {
                     allowHTML: true,
                     removeItemButton: true,
                     searchPlaceholderValue: "Search for Wallet Target Data",
@@ -267,34 +289,51 @@
                     shouldSort: false
                 });
             }
-
-            document.getElementById('btn_recordTemplate-switch').addEventListener('click', (e) => {
-                let wallet = document.getElementById('input_record_template-wallet_id').value;
-                let walletTransfer = document.getElementById('input_record_template-wallet_transfer_id').value;
-
-                templateWalletChoice.setChoiceByValue(walletTransfer);
-                templateWalletTransferChoice.setChoiceByValue(wallet);
-            });
-        });
-
-        document.addEventListener('DOMContentLoaded', (e) => {
+            if(document.getElementById('input_record_template-tag_id')){
+                const tagEl = document.getElementById('input_record_template-tag_id');
+                recordTemplateModalTagChoice = new Choices(tagEl, {
+                    allowHTML: true,
+                    removeItemButton: true,
+                    searchPlaceholderValue: "Search for Tag Data",
+                    placeholder: true,
+                    placeholderValue: 'Search for Tag Data',
+                    shouldSort: false
+                });
+            }
+            
             document.getElementById('recordTemplate-form').addEventListener('submit', (e) => {
                 e.preventDefault();
+                // Get Tags Data
+                let selectedTags = [];
+                recordTemplateModalTagChoice.getValue().forEach((e, key) => {
+                    selectedTags.push(e.value);
+                });
+
                 // @this.set('user_timezone', document.getElementById('user_timezone').value);
                 @this.set('recordTemplateType', document.querySelector('.record_template-type.btn.btn-secondary').dataset.value);
                 @this.set('recordTemplateCategory', document.getElementById('input_record_template-category_id').value)
                 @this.set('recordTemplateWallet', document.getElementById('input_record_template-wallet_id').value);
                 @this.set('recordTemplateWalletTransfer', document.getElementById('input_record_template-wallet_transfer_id').value)
-                @this.set('recordTemplateAmount', templateAmountMask.unmaskedValue);
+                @this.set('recordTemplateAmount', recordTemplateModalAmountMask.unmaskedValue);
                 @this.set('recordTemplateExtraType', document.querySelector('.record_template_extra-type.active').dataset.value);
-                @this.set('recordTemplateExtraAmount', templateExtraAmountMask.unmaskedValue);
-                @this.set('recordTemplateFinalAmount', templateFinalAmountMask.unmaskedValue);
+                @this.set('recordTemplateExtraAmount', recordTemplateModalExtraAmountMask.unmaskedValue);
+                @this.set('recordTemplateFinalAmount', recordTemplateModalFinalAmountMask.unmaskedValue);
+                @this.set('recordTemplateTag', selectedTags);
                 @this.set('recordTemplateMoreState', document.getElementById('input_record_template-more').checked);
                 
                 @this.save();
             });
         });
 
+        window.addEventListener('record_template_wire-init', (event) => {
+            document.getElementById('btn_recordTemplate-switch').addEventListener('click', (e) => {
+                let wallet = document.getElementById('input_record_template-wallet_id').value;
+                let walletTransfer = document.getElementById('input_record_template-wallet_transfer_id').value;
+
+                recordTemplateModalWalletChoice.setChoiceByValue(walletTransfer);
+                recordTemplateModalWalletTransferChoice.setChoiceByValue(wallet);
+            });
+        });
         window.addEventListener('open-modalRecordTemplate', (event) => {
             var myModalEl = document.getElementById('modal-recordTemplate');
             var modal = new bootstrap.Modal(myModalEl)
@@ -307,8 +346,8 @@
         });
         window.addEventListener('trigger-eventRecordTemplate', (event) => {
             let el = event.detail;
-            if(el.hasOwnProperty('recordType')){
-                let data = el.recordType;
+            if(el.hasOwnProperty('recordTemplateType')){
+                let data = el.recordTemplateType;
                 document.querySelectorAll('a.record_template-type').forEach((el) => {
                     if(data.toUpperCase() === el.textContent.toUpperCase()){
                         // Trigger Event Click
@@ -316,14 +355,14 @@
                     }
                 });
             }
-            if(el.hasOwnProperty('recordAmount')){
-                templateAmountMask.value = (el.recordAmount).toString();
+            if(el.hasOwnProperty('recordTemplateAmount')){
+                recordTemplateModalAmountMask.value = (el.recordTemplateAmount).toString();
             }
-            if(el.hasOwnProperty('recordExtraAmount')){
-                templateExtraAmountMask.value = (el.recordExtraAmount ?? '').toString();
+            if(el.hasOwnProperty('recordTemplateExtraAmount')){
+                recordTemplateModalExtraAmountMask.value = (el.recordTemplateExtraAmount ?? '').toString();
             }
-            if(el.hasOwnProperty('recordExtraType')){
-                let data = el.recordExtraType;
+            if(el.hasOwnProperty('recordTemplateExtraType')){
+                let data = el.recordTemplateExtraType;
                 document.querySelectorAll('a.record_template_extra-type').forEach((el) => {
                     if(data.toUpperCase() === el.textContent.toUpperCase()){
                         // Trigger Event Click
@@ -331,17 +370,34 @@
                     }
                 });
             }
+            if(el.hasOwnProperty('recordTemplateCategory')){
+                recordTemplateModalCategoryChoice.setChoiceByValue(el.recordTemplateCategory);
+            }
+            if(el.hasOwnProperty('recordTemplateWallet')){
+                recordTemplateModalWalletChoice.setChoiceByValue(el.recordTemplateWallet);
+            }
+            if(el.hasOwnProperty('recordTemplateWalletTransfer')){
+                recordTemplateModalWalletTransferChoice.setChoiceByValue(el.recordTemplateWalletTransfer);
+            }
+            if(el.hasOwnProperty('recordTemplateTag')){
+                recordTemplateModalTagChoice.removeActiveItems();
+                if(el.recordTemplateTag){
+                    (el.recordTemplateTag).forEach((tag) => {
+                        recordTemplateModalTagChoice.setChoiceByValue(tag);
+                    });
+                }
+            }
 
             templateCalculateFinal(el.recordType);
         });
 
         // Calculate Final after adding extra amount
         function templateCalculateFinal(type){
-            let amount = parseFloat(templateAmountMask.unmaskedValue);
+            let amount = parseFloat(recordTemplateModalAmountMask.unmaskedValue);
             if(isNaN(amount)){
                 amount = 0;
             }
-            let extraAmount = parseFloat(templateExtraAmountMask.unmaskedValue);
+            let extraAmount = parseFloat(recordTemplateModalExtraAmountMask.unmaskedValue);
             if(isNaN(extraAmount)){
                 extraAmount = 0;
             }
@@ -352,7 +408,7 @@
             }
 
             let final = amount + extra;
-            templateFinalAmountMask.value = final.toString();
+            recordTemplateModalFinalAmountMask.value = final.toString();
         }
     </script>
 @endpush

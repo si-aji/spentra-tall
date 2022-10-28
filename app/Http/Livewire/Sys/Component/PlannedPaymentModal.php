@@ -113,8 +113,8 @@ class PlannedPaymentModal extends Component
         if($this->plannedPaymentType === 'transfer'){
             $this->reset([
                 'plannedPaymentCategory',
-                'plannedPaymentExtraType',
-                'plannedPaymentExtraAmount'
+                // 'plannedPaymentExtraType',
+                // 'plannedPaymentExtraAmount'
             ]);
         }
 

@@ -125,7 +125,7 @@
                                 </div>
 
                                 {{-- Extra Amount --}}
-                                <div class="row" x-show="selectedRecordType !== 'transfer' ? true : false">
+                                <div class="row">
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="input_planned_payment_record-extra">Extra Amount</label>

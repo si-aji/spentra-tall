@@ -129,8 +129,8 @@ class PlannedPaymentRecordModal extends Component
         if($this->plannedPaymentRecordType === 'transfer'){
             $this->reset([
                 'plannedPaymentRecordCategory',
-                'plannedPaymentRecordExtraType',
-                'plannedPaymentRecordExtraAmount'
+                // 'plannedPaymentRecordExtraType',
+                // 'plannedPaymentRecordExtraAmount'
             ]);
         }
 

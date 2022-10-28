@@ -21,6 +21,8 @@ class Index extends Component
     public $dataSelectedYear = '';
     public $dataSelectedMonth = '';
     public $dataSelectedType = '';
+    public $dataSelectedWallet = '';
+    public $dataSelectedCategory = '';
     public $dataSelectedNote = '';
     public $dataRecord;
     protected $recordPaginate;
@@ -79,11 +81,31 @@ class Index extends Component
             if($this->dataSelectedType === 'transfer'){
                 $this->dataRecord->whereNotNull('to_wallet_id');
             } else {
-                $this->dataRecord->where('type', $this->dataSelectedType);
+                $this->dataRecord->where('type', $this->dataSelectedType)
+                    ->whereNull('to_wallet_id');
             }
         }
         if($this->dataSelectedNote !== ''){
             $this->dataRecord->where('note', 'like', '%'.$this->dataSelectedNote.'%');
+        }
+        if($this->dataSelectedWallet !== '' && is_array($this->dataSelectedWallet) && count($this->dataSelectedWallet) > 0){
+            $selectedWallet = \App\Models\Wallet::where('user_id', \Auth::user()->id)
+                ->whereIn(\DB::raw('BINARY `uuid`'), $this->dataSelectedWallet)
+                ->pluck('id')
+                ->toArray();
+
+            $this->dataRecord->where(function($q) use ($selectedWallet){
+                return $q->whereIn('wallet_id', $selectedWallet)
+                    ->orWhereIn('to_wallet_id', $selectedWallet);
+            });
+        }
+        if($this->dataSelectedCategory !== '' && is_array($this->dataSelectedCategory) && count($this->dataSelectedCategory) > 0){
+            $selectedCategory = \App\Models\Wallet::where('user_id', \Auth::user()->id)
+                ->whereIn(\DB::raw('BINARY `uuid`'), $this->dataSelectedCategory)
+                ->pluck('id')
+                ->toArray();
+
+            $this->dataRecord->whereIn('category_id', $selectedCategory);
         }
 
         $this->dataRecord = $this->dataRecord->orderBy('datetime', 'desc')
@@ -142,7 +164,7 @@ class Index extends Component
         
         $this->fetchMainCategory();
         $this->fetchMainWallet();
-        $this->dispatchBrowserEvent('recordPluginsInit');
+        // $this->dispatchBrowserEvent('recordPluginsInit');
         $this->dispatchBrowserEvent('recordLoadData');
         return view('livewire.sys.record.index', [
             'paginate' => $this->recordPaginate

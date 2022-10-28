@@ -1026,6 +1026,10 @@ input:invalid, textarea:invalid, select:invalid {
   --tw-bg-opacity: 1 !important;
   background-color: rgb(209 213 219 / var(--tw-bg-opacity)) !important;
 }
+.tw__bg-blue-400 {
+  --tw-bg-opacity: 1 !important;
+  background-color: rgb(96 165 250 / var(--tw-bg-opacity)) !important;
+}
 .tw__bg-opacity-60 {
   --tw-bg-opacity: 0.6 !important;
 }
