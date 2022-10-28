@@ -898,11 +898,11 @@ input:invalid, textarea:invalid, select:invalid {
 .tw__justify-around {
   justify-content: space-around !important;
 }
-.tw__gap-2 {
-  gap: 0.5rem !important;
-}
 .tw__gap-1 {
   gap: 0.25rem !important;
+}
+.tw__gap-2 {
+  gap: 0.5rem !important;
 }
 .tw__gap-4 {
   gap: 1rem !important;

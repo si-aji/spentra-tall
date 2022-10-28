@@ -58,6 +58,11 @@ class Tag extends Model
         return $this->belongsToMany(\App\Models\Record::class, 'record_tags', 'tag_id', 'record_id')
             ->using(\App\Models\RecordTag::class);
     }
+    public function plannedPaymentTags()
+    {
+        return $this->belongsToMany(\App\Models\PlannedPayment::class, 'planned_payment_tags', 'planned_payment_id', 'tag_id')
+            ->using(\App\Models\PlannedPaymentTag::class);
+    }
 
     /**
      * Foreign Key Relation

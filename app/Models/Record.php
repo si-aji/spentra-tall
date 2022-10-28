@@ -68,6 +68,13 @@ class Record extends Model
      *
      * @return model
      */
+    public function recordTags()
+    {
+        return $this->belongsToMany(\App\Models\Tag::class, 'record_tags', 'record_id', 'tag_id')
+            ->using(\App\Models\RecordTag::class)
+            ->orderBy('name', 'asc')
+            ->withTimestamps();
+    }
 
     /**
      * Foreign Key Relation
@@ -91,13 +98,6 @@ class Record extends Model
     public function category()
     {
         return $this->belongsTo(\App\Models\Category::class, 'category_id');
-    }
-    public function recordTags()
-    {
-        return $this->belongsToMany(\App\Models\Tag::class, 'record_tags', 'record_id', 'tag_id')
-            ->using(\App\Models\RecordTag::class)
-            ->orderBy('name', 'asc')
-            ->withTimestamps();
     }
 
     /**

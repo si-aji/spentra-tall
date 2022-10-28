@@ -39,19 +39,21 @@
                                 {{-- Category --}}
                                 <div class="form-group tw__mb-4" x-show="selectedRecordType !== 'transfer' ? true : false">
                                     <label for="input_planned_payment-category_id">Category</label>
-                                    <select class="form-control" id="input_planned_payment-category_id" name="category_id" placeholder="Search for Category Data">
-                                        <option value="" {{ $plannedPaymentCategory == '' ? 'selected' : '' }}>Search for Category Data</option>
-                                        @foreach ($listCategory as $category)
-                                            <optgroup label="{{ $category->name }}">
-                                                <option value="{{ $category->uuid }}" {{ !empty($plannedPaymentCategory) && $category->uuid === $plannedPaymentCategory ? 'selected' : '' }}>{{ $category->name }}</option>
-                                                @if ($category->child()->exists())
-                                                    @foreach ($category->child as $child)
-                                                        <option value="{{ $child->uuid }}" {{ !empty($plannedPaymentCategory) && $child->uuid === $plannedPaymentCategory ? 'selected' : '' }}>{{ $category->name }} - {{ $child->name }}</option>
-                                                    @endforeach
-                                                @endif
-                                            </optgroup>
-                                        @endforeach
-                                    </select>
+                                    <div wire:ignore>
+                                        <select class="form-control" id="input_planned_payment-category_id" name="category_id" placeholder="Search for Category Data">
+                                            <option value="" {{ $plannedPaymentCategory == '' ? 'selected' : '' }}>Search for Category Data</option>
+                                            @foreach ($listCategory as $category)
+                                                <optgroup label="{{ $category->name }}">
+                                                    <option value="{{ $category->uuid }}" {{ !empty($plannedPaymentCategory) && $category->uuid === $plannedPaymentCategory ? 'selected' : '' }}>{{ $category->name }}</option>
+                                                    @if ($category->child()->exists())
+                                                        @foreach ($category->child as $child)
+                                                            <option value="{{ $child->uuid }}" {{ !empty($plannedPaymentCategory) && $child->uuid === $plannedPaymentCategory ? 'selected' : '' }}>{{ $category->name }} - {{ $child->name }}</option>
+                                                        @endforeach
+                                                    @endif
+                                                </optgroup>
+                                            @endforeach
+                                        </select>
+                                    </div>
 
                                     @error('plannedPaymentCategory')
                                         <span class="invalid-feedback tw__block">{{ $message }}</span>
@@ -61,19 +63,21 @@
                                 {{-- Wallet --}}
                                 <div class="form-group tw__mb-4">
                                     <label for="input_planned_payment-wallet_id" x-text="selectedRecordType === 'income' || selectedRecordType === 'expense' ? 'Wallet' : 'From'"></label>
-                                    <select class="form-control" id="input_planned_payment-wallet_id" name="wallet_id" placeholder="Search for Wallet Data">
-                                        <option value="" {{ $plannedPaymentWallet == '' ? 'selected' : '' }}>Search for Wallet Data</option>
-                                        @foreach ($listWallet as $wallet)
-                                            <optgroup label="{{ $wallet->name }}">
-                                                <option value="{{ $wallet->uuid }}" {{ !empty($plannedPaymentWallet) && $wallet->uuid === $plannedPaymentWallet ? 'selected' : '' }}>{{ $wallet->name }}</option>
-                                                @if ($wallet->child()->exists())
-                                                    @foreach ($wallet->child as $child)
-                                                        <option value="{{ $child->uuid }}" {{ !empty($plannedPaymentWallet) && $child->uuid === $plannedPaymentWallet ? 'selected' : '' }}>{{ $wallet->name }} - {{ $child->name }}</option>
-                                                    @endforeach
-                                                @endif
-                                            </optgroup>
-                                        @endforeach
-                                    </select>
+                                    <div wire:ignore>
+                                        <select class="form-control" id="input_planned_payment-wallet_id" name="wallet_id" placeholder="Search for Wallet Data">
+                                            <option value="" {{ $plannedPaymentWallet == '' ? 'selected' : '' }}>Search for Wallet Data</option>
+                                            @foreach ($listWallet as $wallet)
+                                                <optgroup label="{{ $wallet->name }}">
+                                                    <option value="{{ $wallet->uuid }}" {{ !empty($plannedPaymentWallet) && $wallet->uuid === $plannedPaymentWallet ? 'selected' : '' }}>{{ $wallet->name }}</option>
+                                                    @if ($wallet->child()->exists())
+                                                        @foreach ($wallet->child as $child)
+                                                            <option value="{{ $child->uuid }}" {{ !empty($plannedPaymentWallet) && $child->uuid === $plannedPaymentWallet ? 'selected' : '' }}>{{ $wallet->name }} - {{ $child->name }}</option>
+                                                        @endforeach
+                                                    @endif
+                                                </optgroup>
+                                            @endforeach
+                                        </select>
+                                    </div>
 
                                     @error('plannedPaymentWallet')
                                         <span class="invalid-feedback tw__block">{{ $message }}</span>
@@ -90,19 +94,21 @@
 
                                     <div class="form-group tw__mb-4" id="form-transfer">
                                         <label for="input_planned_payment-target">To</label>
-                                        <select class="form-control" id="input_planned_payment-wallet_transfer_id" name="wallet_transfer_id" placeholder="Search for Wallet Target Data">
-                                            <option value="" {{ $plannedPaymentWalletTransfer == '' ? 'selected' : '' }}>Search for Wallet Target Data</option>
-                                            @foreach ($listWallet as $wallet)
-                                                <optgroup label="{{ $wallet->name }}">
-                                                    <option value="{{ $wallet->uuid }}" {{ !empty($plannedPaymentWalletTransfer) && $wallet->uuid === $plannedPaymentWalletTransfer ? 'selected' : '' }}>{{ $wallet->name }}</option>
-                                                    @if ($wallet->child()->exists())
-                                                        @foreach ($wallet->child as $child)
-                                                            <option value="{{ $child->uuid }}" {{ !empty($plannedPaymentWalletTransfer) && $child->uuid === $plannedPaymentWalletTransfer ? 'selected' : '' }}>{{ $wallet->name }} - {{ $child->name }}</option>
-                                                        @endforeach
-                                                    @endif
-                                                </optgroup>
-                                            @endforeach
-                                        </select>
+                                        <div wire:ignore>
+                                            <select class="form-control" id="input_planned_payment-wallet_transfer_id" name="wallet_transfer_id" placeholder="Search for Wallet Target Data">
+                                                <option value="" {{ $plannedPaymentWalletTransfer == '' ? 'selected' : '' }}>Search for Wallet Target Data</option>
+                                                @foreach ($listWallet as $wallet)
+                                                    <optgroup label="{{ $wallet->name }}">
+                                                        <option value="{{ $wallet->uuid }}" {{ !empty($plannedPaymentWalletTransfer) && $wallet->uuid === $plannedPaymentWalletTransfer ? 'selected' : '' }}>{{ $wallet->name }}</option>
+                                                        @if ($wallet->child()->exists())
+                                                            @foreach ($wallet->child as $child)
+                                                                <option value="{{ $child->uuid }}" {{ !empty($plannedPaymentWalletTransfer) && $child->uuid === $plannedPaymentWalletTransfer ? 'selected' : '' }}>{{ $wallet->name }} - {{ $child->name }}</option>
+                                                            @endforeach
+                                                        @endif
+                                                    </optgroup>
+                                                @endforeach
+                                            </select>
+                                        </div>
 
                                         @error('plannedPaymentWalletTransfer')
                                             <span class="invalid-feedback tw__block">{{ $message }}</span>
@@ -173,13 +179,15 @@
                                                 @enderror
                                             </div>
                                             <div class="col-12 col-lg-8">
-                                                <select class="form-control @error('plannedPaymentRepeatType') is-invalid @enderror" id="input_planned_payment-repeat_type" name="repeat_type" placeholder="Search for Repeat Type Data">
-                                                    <option value="" {{ $plannedPaymentRepeatType === '' ? 'selected' : '' }}>Search for Repeat Type Data</option>
-                                                    <option value="daily" {{ $plannedPaymentRepeatType === 'daily' ? 'selected' : '' }}>Daily</option>
-                                                    <option value="weekly" {{ $plannedPaymentRepeatType === 'weekly' ? 'selected' : '' }}>Weekly</option>
-                                                    <option value="monthly" {{ $plannedPaymentRepeatType === 'monthly' ? 'selected' : '' }}>Monthly</option>
-                                                    <option value="yearly" {{ $plannedPaymentRepeatType === 'yearly' ? 'selected' : '' }}>Yearly</option>
-                                                </select>
+                                                <div wire:ignore>
+                                                    <select class="form-control @error('plannedPaymentRepeatType') is-invalid @enderror" id="input_planned_payment-repeat_type" name="repeat_type" placeholder="Search for Repeat Type Data">
+                                                        <option value="" {{ $plannedPaymentRepeatType === '' ? 'selected' : '' }}>Search for Repeat Type Data</option>
+                                                        <option value="daily" {{ $plannedPaymentRepeatType === 'daily' ? 'selected' : '' }}>Daily</option>
+                                                        <option value="weekly" {{ $plannedPaymentRepeatType === 'weekly' ? 'selected' : '' }}>Weekly</option>
+                                                        <option value="monthly" {{ $plannedPaymentRepeatType === 'monthly' ? 'selected' : '' }}>Monthly</option>
+                                                        <option value="yearly" {{ $plannedPaymentRepeatType === 'yearly' ? 'selected' : '' }}>Yearly</option>
+                                                    </select>
+                                                </div>
                                                 @error('plannedPaymentRepeatType')
                                                     <span class="invalid-feedback tw__block">{{ $message }}</span>
                                                 @enderror
@@ -192,6 +200,22 @@
                                         <label for="input_planned_payment-note">Note</label>
                                         <textarea class="form-control @error('plannedPaymentNote') is-invalid @enderror" name="note" id="input_planned_payment-note" placeholder="Planned Payment Notes..." rows="6" wire:model.defer="plannedPaymentNote"></textarea>
                                         @error('plannedPaymentNote')
+                                            <span class="invalid-feedback tw__block">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+
+                                    {{-- Tags --}}
+                                    <div class="form-group tw__mb-4">
+                                        <label>Tags</label>
+                                        <div wire:ignore>
+                                            <select class="form-control" id="input_planned_payment-tag_id" name="tag_id" placeholder="Search for Tag Data" multiple>
+                                                <option value="">Search for Tag Data</option>
+                                                @foreach ($listTag as $tag)
+                                                    <option value="{{ $tag->uuid }}" {{ !empty($plannedPaymentTag) && $tag->uuid === $plannedPaymentTag ? 'selected' : '' }}>{{ $tag->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        @error('plannedPaymentTag')
                                             <span class="invalid-feedback tw__block">{{ $message }}</span>
                                         @enderror
                                     </div>
@@ -223,10 +247,18 @@
 
 @push('javascript')
     <script>
+        // IMask
         var plannedPaymentAmountMask = null;
         var plannedPaymentExtraAmountMask = null;
         var plannedPaymentFinalAmountMask = null;
-        window.addEventListener('plannedPaymentModal_wire-init', (event) => {
+        // Choices
+        let plannedPaymentModalCategoryChoice = null;
+        let plannedPaymentModalWalletChoice = null;
+        let plannedPaymentModalWalletTransferChoice = null;
+        let plannedPaymentModalRepeatTypeChoice = null;
+        let plannedPaymentModalTagChoice = null;
+
+        document.addEventListener('DOMContentLoaded', (e) => {
             // iMask
             if(document.getElementById('input_planned_payment-amount')){
                 plannedPaymentAmountMask = IMask(document.getElementById('input_planned_payment-amount'), {
@@ -258,15 +290,10 @@
                     min: 0,
                 });
             }
-
             // Choices
-            let categoryChoice = null;
-            let walletChoice = null;
-            let walletTransferChoice = null;
-            let repeatTypeChoice = null;
             if(document.getElementById('input_planned_payment-category_id')){
                 const categoryEl = document.getElementById('input_planned_payment-category_id');
-                categoryChoice = new Choices(categoryEl, {
+                plannedPaymentModalCategoryChoice = new Choices(categoryEl, {
                     allowHTML: true,
                     removeItemButton: true,
                     searchPlaceholderValue: "Search for Wallet Data",
@@ -278,7 +305,7 @@
             }
             if(document.getElementById('input_planned_payment-wallet_id')){
                 const walletEl = document.getElementById('input_planned_payment-wallet_id');
-                walletChoice = new Choices(walletEl, {
+                plannedPaymentModalWalletChoice = new Choices(walletEl, {
                     allowHTML: true,
                     removeItemButton: true,
                     searchPlaceholderValue: "Search for Wallet Data",
@@ -289,7 +316,7 @@
             }
             if(document.getElementById('input_planned_payment-wallet_transfer_id')){
                 const walletTransferEl = document.getElementById('input_planned_payment-wallet_transfer_id');
-                walletTransferChoice = new Choices(walletTransferEl, {
+                plannedPaymentModalWalletTransferChoice = new Choices(walletTransferEl, {
                     allowHTML: true,
                     removeItemButton: true,
                     searchPlaceholderValue: "Search for Wallet Target Data",
@@ -300,7 +327,7 @@
             }
             if(document.getElementById('input_planned_payment-repeat_type')){
                 const repeatTypeEl = document.getElementById('input_planned_payment-repeat_type');
-                repeatTypeChoice = new Choices(repeatTypeEl, {
+                plannedPaymentModalRepeatTypeChoice = new Choices(repeatTypeEl, {
                     allowHTML: true,
                     removeItemButton: true,
                     searchPlaceholderValue: "Search for Repeat Type Data",
@@ -309,7 +336,20 @@
                     shouldSort: false
                 });
             }
+            if(document.getElementById('input_planned_payment-tag_id')){
+                const tagEl = document.getElementById('input_planned_payment-tag_id');
+                plannedPaymentModalTagChoice = new Choices(tagEl, {
+                    allowHTML: true,
+                    removeItemButton: true,
+                    searchPlaceholderValue: "Search for Tag Data",
+                    placeholder: true,
+                    placeholderValue: 'Search for Tag Data',
+                    shouldSort: false
+                });
+            }
+        });
 
+        window.addEventListener('plannedPaymentModal_wire-init', (event) => {
             // Flatpickr
             let defaultDate = moment().format('YYYY-MM-DD');
             if(@this.get('plannedPaymentPeriod')){
@@ -337,8 +377,8 @@
                 let wallet = document.getElementById('input_planned_payment-wallet_id').value;
                 let walletTransfer = document.getElementById('input_planned_payment-wallet_transfer_id').value;
 
-                walletChoice.setChoiceByValue(walletTransfer);
-                walletTransferChoice.setChoiceByValue(wallet);
+                plannedPaymentModalWalletChoice.setChoiceByValue(walletTransfer);
+                plannedPaymentModalWalletTransferChoice.setChoiceByValue(wallet);
             });
         });
 
@@ -365,6 +405,20 @@
         document.addEventListener('DOMContentLoaded', (e) => {
             document.getElementById('plannedPayment-form').addEventListener('submit', (e) => {
                 e.preventDefault();
+                if(e.target.querySelector('button[type="submit"]')){
+                    e.target.querySelector('button[type="submit"]').innerHTML = `
+                        <span class=" tw__flex tw__items-center tw__gap-2">
+                            <i class="bx bx-loader-alt bx-spin"></i>
+                            <span>Loading</span>    
+                        </span>
+                    `;
+                    e.target.querySelector('button[type="submit"]').disabled = true;
+                }
+                // Get Tags Data
+                let selectedTags = [];
+                plannedPaymentModalTagChoice.getValue().forEach((e, key) => {
+                    selectedTags.push(e.value);
+                });
 
                 @this.set('user_timezone', document.getElementById('user_timezone').value);
                 @this.set('plannedPaymentType', document.querySelector('.planned_payment-type.btn.btn-secondary').dataset.value);
@@ -378,6 +432,7 @@
                 @this.set('plannedPaymentRepeatType', document.getElementById('input_planned_payment-repeat_type').value);
                 @this.set('plannedPaymentExtraType', document.querySelector('.planned_payment_extra-type.active').dataset.value);
                 @this.set('plannedPaymentMoreState', document.getElementById('input_planned_payment-more').checked);
+                @this.set('plannedPaymentTag', selectedTags);
                 
                 @this.save();
             });
@@ -418,6 +473,26 @@
                         el.dispatchEvent(new Event('click'));
                     }
                 });
+            }
+            if(el.hasOwnProperty('plannedPaymentCategory')){
+                plannedPaymentModalCategoryChoice.setChoiceByValue(el.plannedPaymentCategory);
+            }
+            if(el.hasOwnProperty('plannedPaymentWallet')){
+                plannedPaymentModalWalletChoice.setChoiceByValue(el.plannedPaymentWallet);
+            }
+            if(el.hasOwnProperty('plannedPaymentWalletTransfer')){
+                plannedPaymentModalWalletTransferChoice.setChoiceByValue(el.plannedPaymentWalletTransfer);
+            }
+            if(el.hasOwnProperty('plannedPaymentRepeatType')){
+                plannedPaymentModalRepeatTypeChoice.setChoiceByValue(el.plannedPaymentRepeatType);
+            }
+            if(el.hasOwnProperty('plannedPaymentTag')){
+                plannedPaymentModalTagChoice.removeActiveItems();
+                if(el.plannedPaymentTag){
+                    (el.plannedPaymentTag).forEach((tag) => {
+                        plannedPaymentModalTagChoice.setChoiceByValue(tag);
+                    });
+                }
             }
         });
     </script>

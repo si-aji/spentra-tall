@@ -219,7 +219,7 @@ class RecordModal extends Component
         $this->recordNote = $record->note;
         // $this->recordReceipt = $record->receipt;
         $this->recordReceiptTemp = $record->receipt;
-        $this->recordTag = $record->recordTags->pluck('uuid');
+        $this->recordTag = $record->recordTags()->exists() ? $record->recordTags->pluck('uuid') : [];
 
         $this->dispatchBrowserEvent('trigger-event', [
             'recordType' => $this->recordType,
@@ -616,7 +616,6 @@ class RecordModal extends Component
         $this->fetchListTemplate();
         $this->fetchListCategory();
         $this->fetchListWallet();
-        $this->fetchListTag();
         $this->emit($this->recordModalState ? 'show' : 'hide');
     }
     public function closeModal()

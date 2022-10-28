@@ -267,7 +267,7 @@
                                         <label>Tags</label>
                                         <div wire:ignore>
                                             <select class="form-control" id="input_record-tag_id" name="tag_id" placeholder="Search for Tag Data" multiple>
-                                                <option value="" {{ $recordTag == '' ? 'selected' : '' }}>Search for Tag Data</option>
+                                                <option value="">Search for Tag Data</option>
                                                 @foreach ($listTag as $tag)
                                                     <option value="{{ $tag->uuid }}" {{ !empty($recordTag) && $tag->uuid === $recordTag ? 'selected' : '' }}>{{ $tag->name }}</option>
                                                 @endforeach
@@ -550,7 +550,7 @@
             }
             if(el.hasOwnProperty('recordTag')){
                 recordModalTagChoice.removeActiveItems();
-                if((el.recordTag).length > 0){
+                if(el.recordTag){
                     (el.recordTag).forEach((tag) => {
                         recordModalTagChoice.setChoiceByValue(tag);
                     });

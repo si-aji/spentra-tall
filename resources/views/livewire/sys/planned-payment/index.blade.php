@@ -216,16 +216,16 @@
                     // Extra Information
                     let smallInformation = [];
                     if(val.category){
-                        smallInformation.push(`<span><small class="tw__text-[#293240]"><i class="bx bxs-category tw__mr-1"></i>${val.category.parent_id ? `${val.category.parent.name} - ` : ''}${val.category.name}</small></span>`);
+                        smallInformation.push(`<span><small class="tw__text-[#293240] tw__flex tw__items-center tw__gap-1"><i class="bx bxs-category"></i>${val.category.parent_id ? `${val.category.parent.name} - ` : ''}${val.category.name}</small></span>`);
                     }
                     if(val.receipt !== null){
-                        smallInformation.push(`<span><small class="tw__text-[#293240]"><i class="bx bx-paperclip bx-rotate-90 tw__mr-1"></i>Receipt</small></span>`);
+                        smallInformation.push(`<span><small class="tw__text-[#293240] tw__flex tw__items-center tw__gap-1"><i class="bx bx-paperclip bx-rotate-90"></i>Receipt</small></span>`);
                     }
                     if(val.note !== null && val.note !== ''){
-                        smallInformation.push(`<span><small class="tw__text-[#293240]"><i class="bx bx-paragraph tw__mr-1"></i>Note</small></span>`);
+                        smallInformation.push(`<span><small class="tw__text-[#293240] tw__flex tw__items-center tw__gap-1"><i class="bx bx-paragraph"></i>Note</small></span>`);
                     }
-                    if(val.tags !== null && val.tags !== undefined && val.tags.length > 0){
-                        smallInformation.push(`<span><small class="tw__text-[#293240]"><i class="bx bxs-tag-alt tw__mr-1"></i>Tags</small></span>`);
+                    if(val.planned_payment_tags !== null && val.planned_payment_tags !== undefined && val.planned_payment_tags.length > 0){
+                        smallInformation.push(`<span><small class="tw__text-[#293240] tw__flex tw__items-center tw__gap-1"><i class="bx bxs-tag-alt"></i>Tags</small></span>`);
                     }
                     // Alert
                     let alert = '';

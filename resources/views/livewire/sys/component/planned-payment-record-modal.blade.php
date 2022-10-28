@@ -249,6 +249,22 @@
                                             @endif
                                         @enderror
                                     </div>
+
+                                    {{-- Tags --}}
+                                    <div class="form-group tw__mb-4">
+                                        <label>Tags</label>
+                                        <div wire:ignore>
+                                            <select class="form-control" id="input_planned_payment_record-tag_id" name="tag_id" placeholder="Search for Tag Data" multiple>
+                                                <option value="">Search for Tag Data</option>
+                                                @foreach ($listTag as $tag)
+                                                    <option value="{{ $tag->uuid }}" {{ !empty($plannedPaymentRecordTag) && $tag->uuid === $plannedPaymentRecordTag ? 'selected' : '' }}>{{ $tag->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        @error('plannedPaymentRecordTag')
+                                            <span class="invalid-feedback tw__block">{{ $message }}</span>
+                                        @enderror
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -275,6 +291,7 @@
         let plannedPaymentRecordModalCategoryChoice = null;
         let plannedPaymentRecordModalWalletChoice = null;
         let plannedPaymentRecordModalWalletTransferChoice = null;
+        let plannedPaymentRecordModalTagChoice = null;
         // Flatpickr
         let plannedPaymentRecordModalFlatpickrDateTime;
         let plannedPaymentRecordModalDefaultDate;
@@ -348,6 +365,17 @@
                     shouldSort: false
                 });
             }
+            if(document.getElementById('input_planned_payment_record-tag_id')){
+                const tagEl = document.getElementById('input_planned_payment_record-tag_id');
+                plannedPaymentRecordModalTagChoice = new Choices(tagEl, {
+                    allowHTML: true,
+                    removeItemButton: true,
+                    searchPlaceholderValue: "Search for Tag Data",
+                    placeholder: true,
+                    placeholderValue: 'Search for Tag Data',
+                    shouldSort: false
+                });
+            }
             // Flatpickr
             plannedPaymentRecordModalFlatpickrDateTime = flatpickr(document.getElementById('input_planned_payment_record-period'), {
                 enableTime: true,
@@ -376,6 +404,11 @@
                     `;
                     e.target.querySelector('button[type="submit"]').disabled = true;
                 }
+                // Get Tags Data
+                let selectedTags = [];
+                plannedPaymentRecordModalTagChoice.getValue().forEach((e, key) => {
+                    selectedTags.push(e.value);
+                });
 
                 @this.set('user_timezone', document.getElementById('user_timezone').value);
                 @this.set('plannedPaymentRecordType', document.querySelector('.planned_payment_record-type.btn.btn-secondary').dataset.value);
@@ -386,6 +419,7 @@
                 @this.set('plannedPaymentRecordExtraAmount', plannedPaymentRecordExtraAmountMask.unmaskedValue);
                 @this.set('plannedPaymentRecordFinalAmount', plannedPaymentRecordFinalAmountMask.unmaskedValue);
                 @this.set('plannedPaymentRecordPeriod', document.getElementById('input_planned_payment_record-period').value);
+                @this.set('plannedPaymentRecordTag', selectedTags);
                 @this.save();
 
                 plannedPaymentRecordModalDefaultDateTemp = null;
@@ -478,6 +512,14 @@
             }
             if(el.hasOwnProperty('resetPeriod')){
                 plannedPaymentRecordModalFlatpickrDateTime.setDate(moment().format('YYYY-MM-DD HH:mm'));
+            }
+            if(el.hasOwnProperty('plannedPaymentRecordTag')){
+                plannedPaymentRecordModalTagChoice.removeActiveItems();
+                if(el.plannedPaymentRecordTag){
+                    (el.plannedPaymentRecordTag).forEach((tag) => {
+                        plannedPaymentRecordModalTagChoice.setChoiceByValue(tag);
+                    });
+                }
             }
         });
 

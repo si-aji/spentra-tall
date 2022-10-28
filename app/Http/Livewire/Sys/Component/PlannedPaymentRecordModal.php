@@ -16,6 +16,7 @@ class PlannedPaymentRecordModal extends Component
     public $listTemplate;
     public $listCategory;
     public $listWallet;
+    public $listTag;
 
     public $plannedPaymentRecordResetField = [];
     protected $listeners = [
@@ -46,6 +47,7 @@ class PlannedPaymentRecordModal extends Component
     public $plannedPaymentRecordNote = '';
     public $plannedPaymentRecordReceipt = null;
     public $plannedPaymentRecordReceiptTemp = null;
+    public $plannedPaymentRecordTag;
 
     public function mount()
     {
@@ -63,7 +65,8 @@ class PlannedPaymentRecordModal extends Component
             'plannedPaymentRecordPeriodChanged',
             'plannedPaymentRecordNote',
             'plannedPaymentRecordReceipt',
-            'plannedPaymentRecordReceiptTemp'
+            'plannedPaymentRecordReceiptTemp',
+            'plannedPaymentRecordTag'
         ];
     }
 
@@ -86,11 +89,19 @@ class PlannedPaymentRecordModal extends Component
             ->orderBy('order_main', 'asc')
             ->get();
     }
+    public function fetchListTag()
+    {
+        // Tag
+        $this->listTag = \App\Models\Tag::where('user_id', \Auth::user()->id)
+            ->orderBy('name', 'asc')
+            ->get();
+    }
 
     public function render()
     {
         $this->fetchListCategory();
         $this->fetchListWallet();
+        $this->fetchListTag();
         $this->dispatchBrowserEvent('plannedPaymentRecord_wire-init');
 
         return view('livewire.sys.component.planned-payment-record-modal');
@@ -187,6 +198,7 @@ class PlannedPaymentRecordModal extends Component
             $recordLivewire->recordPeriod = $this->plannedPaymentRecordPeriod;
             $recordLivewire->recordNote = $this->plannedPaymentRecordNote;
             $recordLivewire->recordReceipt = $this->plannedPaymentRecordReceipt;
+            $recordLivewire->recordTag = $this->plannedPaymentRecordTag;
             $recordLivewire->save(true, $plannedRecord);
         });
 
@@ -206,6 +218,7 @@ class PlannedPaymentRecordModal extends Component
             'plannedPaymentRecordCategory' => $this->plannedPaymentRecordCategory,
             'plannedPaymentRecordWallet' => $this->plannedPaymentRecordWallet,
             'plannedPaymentRecordWalletTransfer' => $this->plannedPaymentRecordWalletTransfer,
+            'plannedPaymentRecordTag' => $this->plannedPaymentRecordTag,
             'resetPeriod' => true
         ]);
     }
@@ -227,6 +240,7 @@ class PlannedPaymentRecordModal extends Component
         $this->plannedPaymentRecordExtraAmount = $plannedRecord->extra_type === 'percentage' ? $plannedRecord->extra_percentage : $plannedRecord->extra_amount;
         $this->plannedPaymentRecordFinalAmount = $plannedRecord->amount + $plannedRecord->extra_amount;
         $this->plannedPaymentRecordNote = $plannedRecord->plannedPayment->note;
+        $this->plannedPaymentRecordTag = $plannedRecord->plannedPayment->plannedPaymentTags()->exists() ? $plannedRecord->plannedPayment->plannedPaymentTags->pluck('uuid') : [];
         
         $this->dispatchBrowserEvent('open-modalPlannedPaymentRecord');
         $this->dispatchBrowserEvent('trigger-eventPlannedPaymentRecord', [
@@ -237,6 +251,7 @@ class PlannedPaymentRecordModal extends Component
             'plannedPaymentRecordCategory' => $this->plannedPaymentRecordCategory,
             'plannedPaymentRecordWallet' => $this->plannedPaymentRecordWallet,
             'plannedPaymentRecordWalletTransfer' => $this->plannedPaymentRecordWalletTransfer,
+            'plannedPaymentRecordTag' => $this->plannedPaymentRecordTag,
         ]);
     }
     public function skipRecord($uuid, $plannedPaymentUuid)
@@ -284,7 +299,11 @@ class PlannedPaymentRecordModal extends Component
             'plannedPaymentRecordType' => $this->plannedPaymentRecordType,
             'plannedPaymentRecordExtraType' => $this->plannedPaymentRecordExtraType,
             'plannedPaymentRecordAmount' => $this->plannedPaymentRecordAmount,
-            'plannedPaymentRecordExtraAmount' => $this->plannedPaymentRecordExtraAmount
+            'plannedPaymentRecordExtraAmount' => $this->plannedPaymentRecordExtraAmount,
+            'plannedPaymentRecordCategory' => $this->plannedPaymentRecordCategory,
+            'plannedPaymentRecordWallet' => $this->plannedPaymentRecordWallet,
+            'plannedPaymentRecordWalletTransfer' => $this->plannedPaymentRecordWalletTransfer,
+            'plannedPaymentRecordTag' => $this->plannedPaymentRecordTag,
         ]);
         $this->resetValidation();
     }
