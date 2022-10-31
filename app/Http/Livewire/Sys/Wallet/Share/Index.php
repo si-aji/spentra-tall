@@ -12,7 +12,7 @@ class Index extends Component
     public function mount()
     {
         $this->menuState = 'wallet';
-        $this->submenuState = 'group';
+        $this->submenuState = 'share';
     }
 
     public function render()
@@ -20,7 +20,7 @@ class Index extends Component
         return view('livewire.sys.wallet.share.index')->extends('layouts.sneat', [
             'menuState' => $this->menuState,
             'submenuState' => $this->submenuState,
-            'componentWalletGroup' => true
+            'componentWalletShare' => true
         ]);
     }
 }

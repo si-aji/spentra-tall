@@ -91,9 +91,8 @@ return [
                         'state' => 'group',
                     ], [
                         'name' => 'Share',
-                        'route' => null,
+                        'route' => 'sys.wallet.share.index',
                         'state' => 'share',
-                        'disabled' => true
                     ]
                 ]
             ], [

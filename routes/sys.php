@@ -195,6 +195,9 @@ Route::group([
         ->name('group.show');
         Route::get('group', \App\Http\Livewire\Sys\Wallet\Group\Index::class)
         ->name('group.index');
+        // Share
+        Route::get('share', \App\Http\Livewire\Sys\Wallet\Share\Index::class)
+            ->name('share.index');
     });
 
     // Profile

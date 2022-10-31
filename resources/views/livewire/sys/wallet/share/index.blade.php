@@ -14,4 +14,9 @@
 
 <div>
     {{-- Knowing others is intelligence; knowing yourself is true wisdom. --}}
+    <div class="">
+        <a href="javascript:void(0)" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#modal-wallet_share">
+            <span class=" tw__flex tw__items-center tw__gap-2"><i class="bx bx-plus"></i>Add new</span>
+        </a>
+    </div>
 </div>
