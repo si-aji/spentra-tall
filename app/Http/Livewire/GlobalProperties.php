@@ -27,8 +27,6 @@ class GlobalProperties extends Component
 
     public function setUserTimezone($tz, $offset)
     {
-        \Log::debug("A");
-
         $this->user_timezone = $tz;
         $this->user_timezone_offset = $offset;
         \Session::put('SAUSER_TZ', $this->user_timezone);

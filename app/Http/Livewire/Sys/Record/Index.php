@@ -174,9 +174,9 @@ class Index extends Component
         ]);
     }
 
-    public function loadMore($limit = 10)
+    public function loadMore()
     {
-        $this->loadPerPage += $limit;
+        $this->loadPerPage += $this->loadPerPage;
     }
     public function monthChanged()
     {

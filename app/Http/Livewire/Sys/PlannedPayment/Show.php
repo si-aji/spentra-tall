@@ -59,8 +59,8 @@ class Show extends Component
         return $plannedRecordModal->skipRecord($uuid, $this->plannedPaymentUuid);
     }
 
-    public function loadMore($limit = 10)
+    public function loadMore()
     {
-        $this->loadPerPage += $limit;
+        $this->loadPerPage += $this->loadPerPage;
     }
 }
