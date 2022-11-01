@@ -279,16 +279,15 @@
                             let selectedWallet = val.wallet_group_list.length;
                             if(selectedWallet > 0){
                                 (val.wallet_group_list).some((lis, index) => {
-                                    console.log(lis);
-
-                                    let walletName = `${lis.parent ? `${lis.parent.name} - ` : ''}${lis.name}`;
-                                    items.push(`<small class=" bg-primary tw__px-2 tw__py-1 tw__rounded tw__text-white">${walletName}</small>`);
-
-                                    let stopper = 1;
-                                    if(index >= stopper){
+                                    // console.log(lis);
+                                    let stopper = 4;
+                                    if(index > stopper){
                                         items.push(`<small class=" bg-secondary tw__px-2 tw__py-1 tw__rounded tw__text-white">and ${selectedWallet - (stopper + 1)} more...</small>`);
                                         return true;
                                     }
+
+                                    let walletName = `${lis.parent ? `${lis.parent.name} - ` : ''}${lis.name}`;
+                                    items.push(`<small class=" bg-primary tw__px-2 tw__py-1 tw__rounded tw__text-white">${walletName}</small>`);
                                 });
                             } else {
                                 items.push(`
