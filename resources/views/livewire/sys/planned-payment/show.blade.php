@@ -57,33 +57,50 @@
                     <th>{{ empty($plannedPaymentData->to_wallet_id) ? 'Base ' : '' }}Amount</th>
                     <td>{{ formatRupiah($plannedPaymentData->amount) }}</td>
                 </tr>
-                @if (empty($plannedPaymentData->to_wallet_id))
-                    <tr>
-                        <th>Extra Amount</th>
-                        <td>
-                            <span class=" tw__block">{{ $plannedPaymentData->extra_type === 'amount' ? formatRupiah($plannedPaymentData->extra_amount) : $plannedPaymentData->extra_percentage.'%' }}</span>
-                            <span class="badge bg-label-secondary">{{ ucwords($plannedPaymentData->extra_type) }}</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Final Amount</th>
-                        <td>{{ formatRupiah($plannedPaymentData->amount + $plannedPaymentData->extra_amount) }}</td>
-                    </tr>
-                @endif
                 <tr>
-                    <th class=" tw__border-b-0">Note</th>
-                    <td class=" tw__border-b-0">{{ $plannedPaymentData->note ?? '-' }}</td>
+                    <th>Extra Amount</th>
+                    <td>
+                        <span class=" tw__block">{{ $plannedPaymentData->extra_type === 'amount' ? formatRupiah($plannedPaymentData->extra_amount) : $plannedPaymentData->extra_percentage.'%' }}</span>
+                        <span class="badge bg-label-secondary">{{ ucwords($plannedPaymentData->extra_type) }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Final Amount</th>
+                    <td>{{ formatRupiah($plannedPaymentData->amount + $plannedPaymentData->extra_amount) }}</td>
+                </tr>
+                <tr>
+                    <th>Note</th>
+                    <td>{{ $plannedPaymentData->note ?? '-' }}</td>
+                </tr>
+                <tr>
+                    <th class=" tw__border-b-0">Tags</th>
+                    <td class=" tw__border-b-0">
+                        @if ($plannedPaymentData->plannedPaymentTags()->exists())
+                            <span>{{ implode(', ', $plannedPaymentData->plannedPaymentTags->pluck('name')->toArray()) }}</span>
+                        @else
+                            <span>-</span>
+                        @endif
+                    </td>
                 </tr>
             </table>
 
             <div class="divider">
-                <div class="divider-text"><i class='bx bx-time'></i></div>
+                <div class="divider-text">
+                    <span class=" tw__flex tw__items-center tw__gap-1">
+                        <i class='bx bx-time'></i>
+                        <span>Period</span>
+                    </span>
+                </div>
             </div>
 
             <table class="table table-hover">
                 <tr>
                     <th>Start</th>
                     <td data-period="{{ $plannedPaymentData->start_date }}">-</td>
+                </tr>
+                <tr>
+                    <th>Repeat Every</th>
+                    <td>{{ $plannedPaymentData->repeat_every.' '.ucwords($plannedPaymentData->getRepeatType($plannedPaymentData->repeat_type)) }}(s)</td>
                 </tr>
                 <tr>
                     <th>Next</th>
@@ -110,7 +127,6 @@
                                         </div>
                                     </div>
                                     <div class=" tw__bg-gray-300 tw__rounded-lg tw__w-full content-list tw__p-4 tw__h-20 tw__animate-pulse tw__self-center">
-                                        
                                     </div>
                                 </div>
                             </div>
@@ -140,14 +156,20 @@
     <script>
         document.addEventListener('DOMContentLoaded', (e) => {
             document.dispatchEvent(new Event('plannedPaymentShowLoadData'));
-            
+
+            if(document.getElementById('modal-plannedPaymentRecord')){
+                document.getElementById('modal-plannedPaymentRecord').addEventListener('hidden.bs.modal', (e) => {
+                    Livewire.emitTo('sys.planned-payment.show', 'refreshComponent');
+                });
+            }
+        });
+
+        document.addEventListener('plannedPaymentShowLoadData', (e) => {
             let container = document.getElementById('plannedPayment-detail');
             container.querySelectorAll('[data-period]').forEach((el) => {
                 el.innerHTML = moment(el.dataset.period).format('DD MMM, YYYY');
             });
-        });
-
-        document.addEventListener('plannedPaymentShowLoadData', (e) => {
+            
             generateList();
         });
 
@@ -155,7 +177,7 @@
             let paneEl = document.getElementById('plannedPayment-recordList');
             let plannedPaymentRecordList = null;
             let data = @this.get('plannedPaymentRecordData');
-            let origData = @this.get('plannedPaymentData');
+            let origData = @js($plannedPaymentData);
 
             paneEl.innerHTML = '';
             if(data.length > 0){
@@ -209,6 +231,11 @@
                         if(val.record){
                             note = val.record.note;
                         }
+                        // Tags
+                        let tags = origData.planned_payment_tags;
+                        if(val.record){
+                            tags = val.record.record_tags;
+                        }
                         // Append Action
                         let action = [];
                         if(val.status === 'pending'){
@@ -252,15 +279,18 @@
                         // Append Small Information
                         let smallInformation = [];
                         if(val.record && val.record.category){
-                            smallInformation.push(`<span><small class="tw__text-[#293240]"><i class="bx bxs-category tw__mr-1"></i>${val.record.category.parent_id ? `${val.record.category.parent.name} - ` : ''}${val.record.category.name}</small></span>`);
+                            smallInformation.push(`<span><small class="tw__text-[#293240] tw__flex tw__items-center tw__gap-1"><i class="bx bxs-category"></i>${val.record.category.parent_id ? `${val.record.category.parent.name} - ` : ''}${val.record.category.name}</small></span>`);
                         } else if(val.planned_payment && val.planned_payment.category){
-                            smallInformation.push(`<span><small class="tw__text-[#293240]"><i class="bx bxs-category tw__mr-1"></i>${val.planned_payment.category.parent_id ? `${val.planned_payment.category.parent.name} - ` : ''}${val.planned_payment.category.name}</small></span>`);
+                            smallInformation.push(`<span><small class="tw__text-[#293240] tw__flex tw__items-center tw__gap-1"><i class="bx bxs-category"></i>${val.planned_payment.category.parent_id ? `${val.planned_payment.category.parent.name} - ` : ''}${val.planned_payment.category.name}</small></span>`);
                         }
                         if(val.record && val.record.receipt !== null){
-                            smallInformation.push(`<span><small class="tw__text-[#293240]"><i class="bx bx-paperclip bx-rotate-90 tw__mr-1"></i>Receipt</small></span>`);
+                            smallInformation.push(`<span><small class="tw__text-[#293240] tw__flex tw__items-center tw__gap-1"><i class="bx bx-paperclip bx-rotate-90"></i>Receipt</small></span>`);
                         }
                         if(note !== null){
-                            smallInformation.push(`<span><small class="tw__text-[#293240]"><i class="bx bx-paragraph tw__mr-1"></i>Note</small></span>`);
+                            smallInformation.push(`<span><small class="tw__text-[#293240] tw__flex tw__items-center tw__gap-1"><i class="bx bx-paragraph"></i>Note</small></span>`);
+                        }
+                        if(tags !== null && tags !== undefined && tags.length > 0){
+                            smallInformation.push(`<span><small class="tw__text-[#293240] tw__flex tw__items-center tw__gap-1"><i class="bx bxs-tag-alt"></i>Tags</small></span>`);
                         }
                         // Alert
                         let alert = '';

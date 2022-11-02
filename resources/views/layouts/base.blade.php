@@ -25,6 +25,9 @@
         <!-- CSS Inline -->
         @yield('baseCSSInline')
 
+        <!-- Manifest -->
+        <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
+
         <!-- Livewire -->
         @livewireStyles
         @livewireScripts
@@ -59,5 +62,6 @@
         @yield('baseJsPlugins')
         <!-- Script Inline -->
         @yield('baseJsInline')
+        @include('layouts.service-worker')
     </body>
 </html>

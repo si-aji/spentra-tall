@@ -41,19 +41,19 @@
                     @endif
                 </div>
 
-                {{-- Upcomming --}}
-                <div class=" tw__mt-6" id="upcomming-container">
+                {{-- Upcoming --}}
+                <div class=" tw__mt-6" id="upcoming-container">
                     <div class=" tw__flex tw__items-center tw__gap-2 tw__p-2 tw__rounded tw__bg-blue-100 tw__mb-2">
                         <i class='bx bx-alarm-snooze'></i>
-                        <h6 class=" tw__mb-0">Upcomming</h6>
+                        <h6 class=" tw__mb-0">Upcoming <span>(<small>in {{ $upcomingConf }} day(s)</small>)</span></h6>
                     </div>
                     <div class="notif-container">
                         <div class=" tw__p-2 tw__bg-gray-100 tw__rounded">No available data</div>
                     </div>
-                    @if ($paginateUpcomming)
+                    @if ($paginateUpcoming)
                         <div class=" tw__mt-1 tw__flex tw__items-center tw__justify-between">
-                            <button type="button" class="btn btn-sm btn-primary disabled:tw__cursor-not-allowed" {{ $paginateUpcomming->hasMorePages() ? '' : 'disabled' }} x-on:click="@this.loadMoreUpcomming()">Load more</button>
-                            <span>Showing {{ $paginateUpcomming->count() }} of {{ $paginateUpcomming->total() }} entries</span>
+                            <button type="button" class="btn btn-sm btn-primary disabled:tw__cursor-not-allowed" {{ $paginateUpcoming->hasMorePages() ? '' : 'disabled' }} x-on:click="@this.loadMoreUpcoming()">Load more</button>
+                            <span>Showing {{ $paginateUpcoming->count() }} of {{ $paginateUpcoming->total() }} entries</span>
                         </div>
                     @endif
                 </div>
@@ -92,7 +92,7 @@
         window.addEventListener('notificationGenerateOverdueList', (e) => {
             generatePlannedPaymentList('overdue', @this.get('dataOverdue'));
             generatePlannedPaymentList('today', @this.get('dataToday'));
-            generatePlannedPaymentList('upcomming', @this.get('dataUpcomming'));
+            generatePlannedPaymentList('upcoming', @this.get('dataUpcoming'));
         });
         const generatePlannedPaymentList = (pane, data) => {
             let paneEl = document.getElementById(`${pane}-container`);
@@ -102,9 +102,11 @@
             if(data.length > 0){
                 let items = [];
                 data.forEach((val, index) => {
-                    let note = ``;
+                    // Wallet
                     let walletName = `${val.wallet.parent ? `${val.wallet.parent.name} - ` : ''}${val.wallet.name}`;
                     let toWalletName = val.to_wallet_id ? `${val.wallet_transfer_target.parent ? `${val.wallet_transfer_target.parent.name} - ` : ''}${val.wallet_transfer_target.name}` : null;
+                    // Note
+                    let note = ``;
                     if(val.note){
                         note = `
                             <small class=" tw__opacity-70">
@@ -113,6 +115,12 @@
                             </small>
                         `;
                     }
+                    // Extra Date (Upcoming)
+                    let upcomingDays = '';
+                    if(pane === 'upcoming'){
+                        upcomingDays = `<span>(<small>Coming in ${moment(val.next_date).diff(moment(), 'days')} day(s)</small>)</span>`;
+                    }
+
                     let item = `
                         <div class=" tw__p-2 last:tw__border-b-0">
                             <div class=" tw__flex tw__justify-between">
@@ -120,8 +128,8 @@
                                 <span class=" tw__whitespace-nowrap ${val.type === 'income' ? 'tw__text-green-600' : val.type === 'transfer' ? 'tw__text-gray-600' : 'tw__text-red-600'}">${val.type !== 'income' ? `(${formatRupiah(parseFloat(val.amount) + parseFloat(val.extra_amount))})` : formatRupiah(parseFloat(val.amount) + parseFloat(val.extra_amount))}</span>
                             </div>
                             ${note}
-                            <small class="tw__flex tw__items-center tw__leading-none tw__gap-1 tw__flex-wrap"><span class=""><i class="bx bx-wallet-alt tw__mr-1"></i></span>${walletName} ${toWalletName !== null ? `<small><i class="bx bx-caret-right"></i></small>${toWalletName}` : ''}</small>
-                            <small class="tw__flex tw__items-center tw__gap-2"><i class="bx bx-time"></i>${momentDateTime(val.next_date, 'DD MMM, YYYY')}</small>
+                            <small class=" tw__opacity-70 tw__flex tw__items-center tw__leading-none tw__gap-1 tw__flex-wrap"><span class=""><i class="bx bx-wallet-alt tw__mr-1"></i></span>${walletName} ${toWalletName !== null ? `<small><i class="bx bx-caret-right"></i></small>${toWalletName}` : ''}</small>
+                            <small class=" tw__opacity-70 tw__flex tw__items-center tw__gap-2"><i class="bx bx-time"></i>${momentDateTime(val.next_date, 'DD MMM, YYYY')} ${upcomingDays}</small>
                             <div class=" tw__mt-1 tw__flex tw__gap-2">
                                 <button type="button" class="btn btn-sm tw__bg-[#696cff]/75 hover:tw__bg-[#696cff] tw__transition-all tw__text-white tw__w-full" onclick="@this.call('closeModal');Livewire.emitTo('sys.component.planned-payment-record-modal', 'editAction', '${val.planned_payment_record && val.planned_payment_record.length > 0 ? val.planned_payment_record[0]['uuid'] : ''}')">Approve</button>
                                 <a href="{{ route('sys.planned-payment.index') }}/${val.uuid}" class="btn btn-sm tw__bg-[#8493a3]/75 hover:tw__bg-[#8493a3] tw__transition-all tw__text-white tw__w-full">Detail</a>

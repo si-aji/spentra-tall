@@ -63,7 +63,13 @@ function formatRupiah($number = 0, $prefix = true)
         $decimal = $checkDecimal[1];
     }
 
-    return ($prefix ? 'Rp ' : '').number_format((int) $number, 0, ',', '.').(! empty($decimal) ? ','.$decimal : '');
+    if($number < 0){
+        $number = '('.number_format((int) $number, 0, ',', '.').(! empty($decimal) ? ','.$decimal : '').')';
+    } else {
+        $number = number_format((int) $number, 0, ',', '.').(! empty($decimal) ? ','.$decimal : '');
+    }
+
+    return ($prefix ? 'Rp ' : '').$number;
 }
 
 /**

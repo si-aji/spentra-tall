@@ -17,6 +17,10 @@ class Show extends Component
     // Load More Conf
     public $loadPerPage = 10;
 
+    protected $listeners = [
+        'refreshComponent' => '$refresh',
+    ];
+
     public function mount($uuid)
     {
         $this->menuState = 'planned-payment';
@@ -25,14 +29,15 @@ class Show extends Component
 
     public function render()
     {
-        $this->plannedPaymentData = \App\Models\PlannedPayment::where('user_id', \Auth::user()->id)
+        $this->plannedPaymentData = \App\Models\PlannedPayment::with('category.parent', 'wallet.parent', 'walletTransferTarget.parent', 'plannedPaymentTags')
+            ->where('user_id', \Auth::user()->id)
             ->where(\DB::raw('BINARY `uuid`'), $this->plannedPaymentUuid)
             ->firstOrFail();
         // Record List
         $this->plannedPaymentRecordData = \App\Models\PlannedPaymentRecord::whereHas('plannedPayment', function($q){
                 return $q->where(\DB::raw('BINARY `uuid`'), $this->plannedPaymentUuid);
             })
-            ->with('plannedPayment.category.parent', 'wallet.parent', 'walletTransferTarget.parent', 'record.category.parent', 'recordTransferTarget')
+            ->with('plannedPayment.category.parent', 'wallet.parent', 'walletTransferTarget.parent', 'record.category.parent', 'record.recordTags', 'recordTransferTarget')
             ->orderBy('period', 'desc');
         $this->plannedPaymentRecordData = $this->plannedPaymentRecordData->paginate($this->loadPerPage);
         $paginate = $this->plannedPaymentRecordData;
@@ -54,8 +59,8 @@ class Show extends Component
         return $plannedRecordModal->skipRecord($uuid, $this->plannedPaymentUuid);
     }
 
-    public function loadMore($limit = 10)
+    public function loadMore()
     {
-        $this->loadPerPage += $limit;
+        $this->loadPerPage += $this->loadPerPage;
     }
 }

@@ -23,8 +23,8 @@
         <div class="card-header tw__flex tw__items-center tw__justify-between">
             <h5 class="card-title tw__mb-0">Filter</h5>
 
-            <div class="btn-group">
-                <button type="button" class="btn btn-secondary tw__flex tw__items-center tw__gap-2"><i class='bx bx-refresh'></i>Reset</button>
+            <div class="btn-group" wire:ignore>
+                <button type="button" class="btn btn-secondary tw__flex tw__items-center tw__gap-2" id="recordFilter-btn" disabled><i class='bx bx-refresh'></i>Reset</button>
             </div>
         </div>
         <div class="card-body">
@@ -32,61 +32,69 @@
                 {{-- Filter - Year --}}
                 <div class="col-12 col-lg-3 tw__mb-4">
                     <label for="filter-year">Year</label>
-                    <select class="form-control" id="filter-year" placeholder="Search for Year Filter" x-on:change="$wire.localUpdate('dataSelectedYear', $event.target.value)">
-                        @for ($i = date("Y-01-01"); $i >= date("Y-01-01", strtotime(\Auth::user()->getFirstYearRecord().'-01-01')); $i = date("Y-01-01", strtotime($i.' -1 years')))
-                            <option value="{{ date("Y", strtotime($i)) }}" {{ $dataSelectedYear == date("Y", strtotime($i)) ? 'selected' : '' }}>{{ date("Y", strtotime($i)) }}</option>
-                        @endfor
-                    </select>
+                    <div wire:ignore>
+                        <select class="form-control" id="filter-year" placeholder="Search for Year Filter" x-on:change="detectFilter()">
+                            @for ($i = date("Y-01-01"); $i >= date("Y-01-01", strtotime(\Auth::user()->getFirstYearRecord().'-01-01')); $i = date("Y-01-01", strtotime($i.' -1 years')))
+                                <option value="{{ date("Y", strtotime($i)) }}" {{ $dataSelectedYear == date("Y", strtotime($i)) ? 'selected' : '' }}>{{ date("Y", strtotime($i)) }}</option>
+                            @endfor
+                        </select>
+                    </div>
                 </div>
                 {{-- Filter - Type --}}
                 <div class="col-12 col-lg-3 tw__mb-4">
                     <label for="filter-type">Type</label>
-                    <select class="form-control" id="filter-type" placeholder="Search for Type Filter" x-on:change="$wire.localUpdate('dataSelectedType', $event.target.value)">
-                        <option value="">Search for Record Type</option>
-                        <option value="income" {{ $dataSelectedType === 'income' ? 'selected' : '' }}>Income</option>
-                        <option value="expense" {{ $dataSelectedType === 'expense' ? 'selected' : '' }}>Expense</option>
-                        <option value="transfer" {{ $dataSelectedType === 'transfer' ? 'selected' : '' }}>Transfer</option>
-                    </select>
+                    <div wire:ignore>
+                        <select class="form-control" id="filter-type" placeholder="Search for Type Filter" x-on:change="detectFilter()">
+                            <option value="">Search for Record Type</option>
+                            <option value="income" {{ $dataSelectedType === 'income' ? 'selected' : '' }}>Income</option>
+                            <option value="expense" {{ $dataSelectedType === 'expense' ? 'selected' : '' }}>Expense</option>
+                            <option value="transfer" {{ $dataSelectedType === 'transfer' ? 'selected' : '' }}>Transfer</option>
+                        </select>
+                    </div>
                 </div>
 
                 {{-- Filter - Wallet --}}
                 <div class="col-12 col-lg-3 tw__mb-4">
                     <label for="filter-wallet">Wallet</label>
-                    <select class="form-control" id="filter-wallet" placeholder="Search for Wallet Data" multiple disabled>
-                        <option value="">Search for Wallet Data</option>
-                        @foreach ($listWallet as $wallet)
-                            <optgroup label="{{ $wallet->name }}">
-                                <option value="{{ $wallet->uuid }}">{{ $wallet->name }}</option>
-                                @if ($wallet->child()->exists())
-                                    @foreach ($wallet->child as $child)
-                                        <option value="{{ $child->uuid }}">{{ $wallet->name }} - {{ $child->name }}</option>
-                                    @endforeach
-                                @endif
-                            </optgroup>
-                        @endforeach
-                    </select>
+                    <div wire:ignore>
+                        <select class="form-control" id="filter-wallet" placeholder="Search for Wallet Data" multiple x-on:change="detectFilter()">
+                            <option value="">Search for Wallet Data</option>
+                            @foreach ($listWallet as $wallet)
+                                <optgroup label="{{ $wallet->name }}">
+                                    <option value="{{ $wallet->uuid }}">{{ $wallet->name }}</option>
+                                    @if ($wallet->child()->exists())
+                                        @foreach ($wallet->child as $child)
+                                            <option value="{{ $child->uuid }}">{{ $wallet->name }} - {{ $child->name }}</option>
+                                        @endforeach
+                                    @endif
+                                </optgroup>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
                 {{-- Filter - Category --}}
                 <div class="col-12 col-lg-3 tw__mb-4">
                     <label for="filter-category">Category</label>
-                    <select class="form-control" id="filter-category" placeholder="Search for Category Data" disabled>
-                        <option value="" selected>Search for Category Data</option>
-                        @foreach ($listCategory as $category)
-                            <optgroup label="{{ $category->name }}">
-                                <option value="{{ $category->uuid }}">{{ $category->name }}</option>
-                                @if ($category->child()->exists())
-                                    @foreach ($category->child as $child)
-                                        <option value="{{ $child->uuid }}">{{ $category->name }} - {{ $child->name }}</option>
-                                    @endforeach
-                                @endif
-                            </optgroup>
-                        @endforeach
-                    </select>
+                    <div wire:ignore>
+                        <select class="form-control" id="filter-category" placeholder="Search for Category Data" multiple x-on:change="detectFilter()">
+                            <option value="">Search for Category Data</option>
+                            @foreach ($listCategory as $category)
+                                <optgroup label="{{ $category->name }}">
+                                    <option value="{{ $category->uuid }}">{{ $category->name }}</option>
+                                    @if ($category->child()->exists())
+                                        @foreach ($category->child as $child)
+                                            <option value="{{ $child->uuid }}">{{ $category->name }} - {{ $child->name }}</option>
+                                        @endforeach
+                                    @endif
+                                </optgroup>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
                 {{-- Filter - Keyword --}}
                 <div class="col-12">
                     <label for="filter-note">Notes Keyword</label>
-                    <input type="text" class="form-control" name="filter_keyword" placeholder="Search notes keyword" wire:model.lazy="dataSelectedNote">
+                    <input type="text" class="form-control" name="filter_keyword" id="input_record-filter_keyword" placeholder="Search notes keyword" @input.debounce="detectFilter()">
                 </div>
             </div>
         </div>
@@ -173,15 +181,15 @@
 
 @section('js_inline')
     <script>
+        // Choices
+        let recordFilterYearChoice = null;
+        let recordFilterTypeChoice = null;
+        let recordFilterWalletChoice = null;
+        let recordFilterCategoryChoice = null;
+
         document.addEventListener('DOMContentLoaded', (e) => {
-            window.dispatchEvent(new Event('recordPluginsInit'));
             window.dispatchEvent(new Event('recordLoadData'));
-        });
-        window.addEventListener('recordPluginsInit', (e) => {
-            let recordFilterYearChoice = null;
-            let recordFilterTypeChoice = null;
-            let recordFilterWalletChoice = null;
-            let recordFilterCategoryChoice = null;
+
             if(document.getElementById('filter-year')){
                 const filterYearEl = document.getElementById('filter-year');
                 recordFilterYearChoice = new Choices(filterYearEl, {
@@ -330,7 +338,6 @@
                 paneEl.appendChild(recordContent);
             }
         };
-
         function removeRecord(uuid){
             Swal.fire({
                 title: 'Warning',
@@ -350,6 +357,92 @@
                     });
                 },
                 allowOutsideClick: () => !Swal.isLoading()
+            });
+        }
+
+        // Filter
+        function detectFilter(){
+            console.log("Detect Filter");
+
+            let button = document.getElementById('recordFilter-btn');
+            let filterButtonDisabledState = true;
+            let stateCount = 0;
+
+            // Year Filter
+            let currentYear = moment().format('YYYY');
+            let year = currentYear;
+            if(recordFilterYearChoice.getValue()){
+                year = recordFilterYearChoice.getValue().value;
+            } else {
+                recordFilterYearChoice.setChoiceByValue(currentYear);
+            }
+            @this.set('dataSelectedYear', year);
+            if(year !== currentYear){
+                stateCount += 1;
+            }
+            // Type Filter
+            let type = '';
+            if(recordFilterTypeChoice.getValue()){
+                type = recordFilterTypeChoice.getValue().value;
+            } else {
+                recordFilterTypeChoice.removeActiveItems();
+            }
+            @this.set('dataSelectedType', type);
+            if(type !== ''){
+                stateCount += 1;
+            }
+            // Wallet Filter
+            let wallet = [];
+            if(recordFilterWalletChoice.getValue()){
+                recordFilterWalletChoice.getValue().forEach((e, key) => {
+                    wallet.push(e.value);
+                });
+            } else {
+                recordFilterWalletChoice.removeActiveItems();
+            }
+            @this.set('dataSelectedWallet', wallet);
+            if(wallet.length > 0){
+                stateCount += 1;
+            }
+            // Category Filter
+            let category = [];
+            if(recordFilterCategoryChoice.getValue()){
+                recordFilterCategoryChoice.getValue().forEach((e, key) => {
+                    category.push(e.value);
+                });
+            } else {
+                recordFilterCategoryChoice.removeActiveItems();
+            }
+            @this.set('dataSelectedCategory', category);
+            if(category.length > 0){
+                stateCount += 1;
+            }
+            // Note
+            if(document.getElementById('input_record-filter_keyword').value !== ''){
+                stateCount += 1;
+            }
+            @this.set('dataSelectedNote', document.getElementById('input_record-filter_keyword').value);
+
+            if(stateCount > 0){
+                filterButtonDisabledState = false;
+            }
+            button.disabled = filterButtonDisabledState;
+        }
+        if(document.getElementById('recordFilter-btn')){
+            document.getElementById('recordFilter-btn').addEventListener('click', (e) => {
+                console.log("Filter Reset");
+                // Year
+                recordFilterYearChoice.setChoiceByValue(moment().format('YYYY'));
+                // Type
+                recordFilterTypeChoice.setChoiceByValue('');
+                // Wallet
+                recordFilterWalletChoice.removeActiveItems();
+                // Category
+                recordFilterCategoryChoice.removeActiveItems();
+                // Note
+                document.getElementById('input_record-filter_keyword').value = '';
+
+                detectFilter();
             });
         }
     </script>

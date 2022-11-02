@@ -79,6 +79,13 @@ class PlannedPayment extends Model
     {
         return $this->hasMany(\App\Models\PlannedPaymentRecord::class, 'planned_payment_id');
     }
+    public function plannedPaymentTags()
+    {
+        return $this->belongsToMany(\App\Models\Tag::class, 'planned_payment_tags', 'planned_payment_id', 'tag_id')
+            ->using(\App\Models\PlannedPaymentTag::class)
+            ->orderBy('name', 'asc')
+            ->withTimestamps();
+    }
 
     /**
      * Foreign Key Relation

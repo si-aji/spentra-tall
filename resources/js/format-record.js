@@ -34,16 +34,16 @@ function recordContentFormat(val, index, action = []){
     // Extra Information
     let smallInformation = [];
     if(val.category){
-        smallInformation.push(`<span><small class="tw__text-[#293240]"><i class="bx bxs-category tw__mr-1"></i>${val.category.parent_id ? `${val.category.parent.name} - ` : ''}${val.category.name}</small></span>`);
+        smallInformation.push(`<span><small class="tw__text-[#293240] tw__flex tw__items-center tw__gap-1"><i class="bx bxs-category"></i>${val.category.parent_id ? `${val.category.parent.name} - ` : ''}${val.category.name}</small></span>`);
     }
     if(val.receipt !== null){
-        smallInformation.push(`<span><small class="tw__text-[#293240]"><i class="bx bx-paperclip bx-rotate-90 tw__mr-1"></i>Receipt</small></span>`);
+        smallInformation.push(`<span><small class="tw__text-[#293240] tw__flex tw__items-center tw__gap-1"><i class="bx bx-paperclip bx-rotate-90"></i>Receipt</small></span>`);
     }
     if(val.note !== null){
-        smallInformation.push(`<span><small class="tw__text-[#293240]"><i class="bx bx-paragraph tw__mr-1"></i>Note</small></span>`);
+        smallInformation.push(`<span><small class="tw__text-[#293240] tw__flex tw__items-center tw__gap-1"><i class="bx bx-paragraph"></i>Note</small></span>`);
     }
-    if(val.tags !== null && val.tags !== undefined && val.tags.length > 0){
-        smallInformation.push(`<span><small class="tw__text-[#293240]"><i class="bx bxs-tag-alt tw__mr-1"></i>Tags</small></span>`);
+    if(val.record_tags !== null && val.record_tags !== undefined && val.record_tags.length > 0){
+        smallInformation.push(`<span><small class="tw__text-[#293240] tw__flex tw__items-center tw__gap-1"><i class="bx bxs-tag-alt"></i>Tags</small></span>`);
     }
     // Handle Action
     let actionBtn = '';
@@ -77,7 +77,7 @@ function recordContentFormat(val, index, action = []){
 
         <div class="tw__my-2 tw__mt-4 lg:tw__mt-2 tw__flex tw__items-center tw__gap-4">
             <div class="tw__min-h-[35px] tw__min-w-[35px] tw__rounded-full tw__text-white ${val.to_wallet_id ? 'tw__bg-gray-400' : (val.type === 'expense' ? 'tw__bg-red-400' : 'tw__bg-green-400')} tw__bg-opacity-75 tw__flex tw__items-center tw__justify-center">
-                <i class="bx bxs-${val.to_wallet_id ? 'arrow-to-bottom' : (val.type === 'expense' ? 'arrow-from-bottom' : 'arrow-from-bottom')}"></i>
+                <i class="bx bx${val.to_wallet_id ? '-transfer' : (val.type === 'expense' ? 's-arrow-from-bottom' : 's-arrow-from-bottom')}"></i>
             </div>
             <div class="tw__flex tw__items-center tw__gap-4 tw__w-full">
                 <div class="tw__mr-auto">

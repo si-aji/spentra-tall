@@ -36,7 +36,7 @@ class Index extends Component
 
     public function render()
     {
-        $this->dataPlannedPayment = \App\Models\PlannedPayment::with('category.parent', 'wallet.parent', 'walletTransferTarget.parent')
+        $this->dataPlannedPayment = \App\Models\PlannedPayment::with('category.parent', 'wallet.parent', 'walletTransferTarget.parent', 'plannedPaymentTags')
             ->where('user_id', \Auth::user()->id);
         // Apply Filter
         if(!empty($this->filterName)){
@@ -68,9 +68,9 @@ class Index extends Component
         ])->section('content');
     }
 
-    public function loadMore($limit = 10)
+    public function loadMore()
     {
-        $this->loadPerPage += $limit;
+        $this->loadPerPage += $this->loadPerPage;
     }
 
     public function loadListData()

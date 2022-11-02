@@ -10,11 +10,6 @@
 
 <div wire:init="loadListData()">
     {{-- The Master doesn't talk, he acts. --}}
-    <div class="">
-        <a href="javascript:void(0)" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-plannedPayment">
-            <span class=" tw__flex tw__items-center tw__gap-2"><i class="bx bx-plus"></i>Add new</span>
-        </a>
-    </div>
 
     {{-- Filter --}}
     <div class="card tw__mt-4"  wire:ignore>
@@ -53,32 +48,39 @@
 
     {{-- List --}}
     <div class="card mt-4">
-        <div class="card-body" id="plannedPayment-container">
-            @for ($i = 0; $i < 3; $i++)
-                <div class=" tw__flex tw__flex-col tw__mb-4 last:tw__mb-0">
-                    <div class="list-wrapper">
-                        <div class=" tw__bg-gray-300 tw__rounded-lg tw__w-full content-list tw__p-4 tw__animate-pulse tw__self-center">
-                            <div class=" tw__flex tw__justify-between">
-                                <div class="tw__flex tw__gap-4">
-                                    <span class=" tw__bg-gray-400 tw__rounded tw__h-6 tw__w-24"></span>
-                                    <span class=" tw__bg-gray-400 tw__rounded tw__h-6 tw__w-12"></span>
+        <div class="card-body">
+            <div class=" tw__mb-4">
+                <a href="javascript:void(0)" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-plannedPayment">
+                    <span class=" tw__flex tw__items-center tw__gap-2"><i class="bx bx-plus"></i>Add new</span>
+                </a>
+            </div>
+            <div id="plannedPayment-container">
+                @for ($i = 0; $i < 3; $i++)
+                    <div class=" tw__flex tw__flex-col tw__mb-4 last:tw__mb-0">
+                        <div class="list-wrapper">
+                            <div class=" tw__bg-gray-300 tw__rounded-lg tw__w-full content-list tw__p-4 tw__animate-pulse tw__self-center">
+                                <div class=" tw__flex tw__justify-between">
+                                    <div class="tw__flex tw__gap-4">
+                                        <span class=" tw__bg-gray-400 tw__rounded tw__h-6 tw__w-24"></span>
+                                        <span class=" tw__bg-gray-400 tw__rounded tw__h-6 tw__w-12"></span>
+                                    </div>
+                                    <div class=" tw__flex tw__gap-4">
+                                        <span class=" tw__bg-gray-400 tw__rounded tw__h-6 tw__w-16"></span>
+                                        <span class=" tw__bg-gray-400 tw__rounded tw__h-6 tw__w-4"></span>
+                                    </div>
                                 </div>
-                                <div class=" tw__flex tw__gap-4">
-                                    <span class=" tw__bg-gray-400 tw__rounded tw__h-6 tw__w-16"></span>
-                                    <span class=" tw__bg-gray-400 tw__rounded tw__h-6 tw__w-4"></span>
-                                </div>
-                            </div>
-                            <div class=" tw__flex tw__gap-4 tw__mt-2 tw__items-center">
-                                <span class=" tw__bg-gray-400 tw__w-11 tw__h-11 tw__rounded-full"></span>
-                                <div class=" tw__flex tw__flex-col tw__gap-2">
-                                    <span class=" tw__bg-gray-400 tw__rounded tw__w-20 tw__h-5"></span>
-                                    <span class=" tw__bg-gray-400 tw__rounded tw__w-14 tw__h-3"></span>
+                                <div class=" tw__flex tw__gap-4 tw__mt-2 tw__items-center">
+                                    <span class=" tw__bg-gray-400 tw__w-11 tw__h-11 tw__rounded-full"></span>
+                                    <div class=" tw__flex tw__flex-col tw__gap-2">
+                                        <span class=" tw__bg-gray-400 tw__rounded tw__w-20 tw__h-5"></span>
+                                        <span class=" tw__bg-gray-400 tw__rounded tw__w-14 tw__h-3"></span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            @endfor
+                @endfor
+            </div>
         </div>
         <div class="card-footer tw__pt-0">
             <div class=" tw__flex tw__items-center tw__justify-between">
@@ -136,7 +138,6 @@
         }
         if(document.getElementById('modal-plannedPaymentRecord')){
             document.getElementById('modal-plannedPaymentRecord').addEventListener('hide.bs.modal', (e) => {
-                console.log("ok");
                 window.dispatchEvent(new Event('plannedPaymentLoadData'));
             });
         }
@@ -153,6 +154,7 @@
         const generateList = () => {
             // Get data from Component
             let data = @this.get('dataPlannedPayment');
+            console.log(data);
             // Define container
             let paneEl = document.getElementById('plannedPayment-container');
             let plannedContent = null;
@@ -216,23 +218,34 @@
                     // Extra Information
                     let smallInformation = [];
                     if(val.category){
-                        smallInformation.push(`<span><small class="tw__text-[#293240]"><i class="bx bxs-category tw__mr-1"></i>${val.category.parent_id ? `${val.category.parent.name} - ` : ''}${val.category.name}</small></span>`);
+                        smallInformation.push(`<span><small class="tw__text-[#293240] tw__flex tw__items-center tw__gap-1"><i class="bx bxs-category"></i>${val.category.parent_id ? `${val.category.parent.name} - ` : ''}${val.category.name}</small></span>`);
                     }
                     if(val.receipt !== null){
-                        smallInformation.push(`<span><small class="tw__text-[#293240]"><i class="bx bx-paperclip bx-rotate-90 tw__mr-1"></i>Receipt</small></span>`);
+                        smallInformation.push(`<span><small class="tw__text-[#293240] tw__flex tw__items-center tw__gap-1"><i class="bx bx-paperclip bx-rotate-90"></i>Receipt</small></span>`);
                     }
                     if(val.note !== null && val.note !== ''){
-                        smallInformation.push(`<span><small class="tw__text-[#293240]"><i class="bx bx-paragraph tw__mr-1"></i>Note</small></span>`);
+                        smallInformation.push(`<span><small class="tw__text-[#293240] tw__flex tw__items-center tw__gap-1"><i class="bx bx-paragraph"></i>Note</small></span>`);
                     }
-                    if(val.tags !== null && val.tags !== undefined && val.tags.length > 0){
-                        smallInformation.push(`<span><small class="tw__text-[#293240]"><i class="bx bxs-tag-alt tw__mr-1"></i>Tags</small></span>`);
+                    if(val.planned_payment_tags !== null && val.planned_payment_tags !== undefined && val.planned_payment_tags.length > 0){
+                        smallInformation.push(`<span><small class="tw__text-[#293240] tw__flex tw__items-center tw__gap-1"><i class="bx bxs-tag-alt"></i>Tags</small></span>`);
                     }
                     // Alert
                     let alert = '';
-                    if(moment() > moment(val.next_date)){
+                    let current = moment().format('YYYY-MM-DD');
+                    let nextDate = moment(val.next_date).format('YYYY-MM-DD');
+                    if(moment(current).diff(moment(nextDate)) > 0){
+                        // console.log(current);
+                        // console.log(nextDate);
+                        // console.log(moment(current).diff(moment(nextDate)));
                         alert = `
                             <small class="tw__bg-red-400 tw__bg-opacity-75 tw__px-2 tw__py-1 tw__rounded tw__mb-2 tw__text-white tw__inline-block"><span class="tw__flex tw__items-center tw__gap-2">
                                 <i class='bx bx-info-circle'></i>Overdue</span>
+                            </small>
+                        `;
+                    } else if(moment(current).diff(moment(nextDate)) === 0){
+                        alert = `
+                            <small class="tw__bg-blue-400 tw__bg-opacity-75 tw__px-2 tw__py-1 tw__rounded tw__mb-2 tw__text-white tw__inline-block"><span class="tw__flex tw__items-center tw__gap-2">
+                                <i class='bx bx-info-circle'></i>Today</span>
                             </small>
                         `;
                     }

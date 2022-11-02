@@ -17,20 +17,20 @@ class NotificationFeature extends Component
     // Load More Conf
     public $loadPerPageOverdue = 3;
     public $loadPerPageToday = 3;
-    public $loadPerPageUpcomming = 3;
+    public $loadPerPageUpcoming = 3;
 
     // Paginate
     protected $paginateOverdue = null;
     protected $paginateToday = null;
-    protected $paginateUpcomming = null;
+    protected $paginateUpcoming = null;
 
     // Extra Conf
-    public $upcommingConf = 7; // Get X days upcomming planned payments
+    public $upcomingConf = 7; // Get X days upcoming planned payments
 
     // List Data
     public $dataOverdue;
     public $dataToday;
-    public $dataUpcomming;
+    public $dataUpcoming;
 
     protected $listeners = [
         'refreshComponent' => '$refresh',
@@ -76,14 +76,14 @@ class NotificationFeature extends Component
         $this->dataToday = $this->dataToday->paginate($this->loadPerPageToday);
         $this->paginateToday = $this->dataToday;
         $this->dataToday = collect($this->dataToday->items());
-        // Upcomming Data
-        $this->dataUpcomming = (clone $query)
+        // Upcoming Data
+        $this->dataUpcoming = (clone $query)
             ->where('next_date', '>', $datetime)
-            ->where('next_date', '<', date("Y-m-d", strtotime($datetime." +".$this->upcommingConf." days")))
+            ->where('next_date', '<', date("Y-m-d", strtotime($datetime." +".$this->upcomingConf." days")))
             ->orderBy('next_date', 'asc');
-        $this->dataUpcomming = $this->dataUpcomming->paginate($this->loadPerPageUpcomming);
-        $this->paginateUpcomming = $this->dataUpcomming;
-        $this->dataUpcomming = collect($this->dataUpcomming->items());
+        $this->dataUpcoming = $this->dataUpcoming->paginate($this->loadPerPageUpcoming);
+        $this->paginateUpcoming = $this->dataUpcoming;
+        $this->dataUpcoming = collect($this->dataUpcoming->items());
 
         $this->dispatchBrowserEvent('notificationGenerateOverdueList');
     }
@@ -95,7 +95,7 @@ class NotificationFeature extends Component
         return view('livewire.sys.component.notification-feature', [
             'paginateOverdue' => $this->paginateOverdue,
             'paginateToday' => $this->paginateToday,
-            'paginateUpcomming' => $this->paginateUpcomming,
+            'paginateUpcoming' => $this->paginateUpcoming,
         ]);
     }
 
@@ -113,12 +113,12 @@ class NotificationFeature extends Component
         $this->notificationModalState = 'show';
         $this->loadPerPageToday += $limit;
     }
-    public function loadMoreUpcomming($limit = 10)
+    public function loadMoreUpcoming($limit = 10)
     {
         $this->loadData();
 
         $this->notificationModalState = 'show';
-        $this->loadPerPageUpcomming += $limit;
+        $this->loadPerPageUpcoming += $limit;
     }
 
     // Handle Modal
@@ -136,7 +136,7 @@ class NotificationFeature extends Component
         $this->reset([
             'loadPerPageOverdue',
             'loadPerPageToday',
-            'loadPerPageUpcomming',
+            'loadPerPageUpcoming',
         ]);
 
         $this->notificationModalState = 'hide';

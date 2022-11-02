@@ -61,6 +61,13 @@ class RecordTemplate extends Model
      *
      * @return model
      */
+    public function recordTemplateTags()
+    {
+        return $this->belongsToMany(\App\Models\Tag::class, 'record_template_tags', 'record_template_id', 'tag_id')
+            ->using(\App\Models\RecordTemplateTag::class)
+            ->orderBy('name', 'asc')
+            ->withTimestamps();
+    }
 
     /**
      * Foreign Key Relation

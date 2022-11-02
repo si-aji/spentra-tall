@@ -12,6 +12,7 @@ class RecordTemplateModal extends Component
     // List / Select
     public $listCategory;
     public $listWallet;
+    public $listTag;
 
     // Modal
     public $recordTemplateModalState = true;
@@ -30,6 +31,7 @@ class RecordTemplateModal extends Component
     public $recordTemplateName = '';
     public $recordTemplateNote = '';
     public $recordTemplateMoreState = false;
+    public $recordTemplateTag = [];
     public $recordTemplateResetField = [];
 
     protected $listeners = [
@@ -60,6 +62,13 @@ class RecordTemplateModal extends Component
             ->orderBy('order_main', 'asc')
             ->get();
     }
+    public function fetchListTag()
+    {
+        // Tag
+        $this->listTag = \App\Models\Tag::where('user_id', \Auth::user()->id)
+            ->orderBy('name', 'asc')
+            ->get();
+    }
 
     public function mount()
     {
@@ -75,6 +84,7 @@ class RecordTemplateModal extends Component
             'recordTemplateFinalAmount',
             'recordTemplateName',
             'recordTemplateNote',
+            'recordTemplateTag'
         ];
     }
 
@@ -86,6 +96,7 @@ class RecordTemplateModal extends Component
     {
         $this->fetchListCategory();
         $this->fetchListWallet();
+        $this->fetchListTag();
         
         $this->dispatchBrowserEvent('record_template_wire-init');
         return view('livewire.sys.component.record-template-modal');
@@ -98,8 +109,8 @@ class RecordTemplateModal extends Component
         if($this->recordTemplateType === 'transfer'){
             $this->reset([
                 'recordTemplateCategory',
-                'recordTemplateExtraType',
-                'recordTemplateExtraAmount'
+                // 'recordTemplateExtraType',
+                // 'recordTemplateExtraAmount'
             ]);
         }
 
@@ -132,7 +143,16 @@ class RecordTemplateModal extends Component
         //     'note' => $this->recordTemplateNote
         // ]);
 
-        \DB::transaction(function () {
+        // Tag, get selected tag
+        $selectedTags = [];
+        if(!empty($this->recordTemplateTag)){
+            $selectedTags = \App\Models\Tag::where('user_id', \Auth::user()->id)
+                ->whereIn(\DB::raw('BINARY `uuid`'), $this->recordTemplateTag)
+                ->pluck('id')
+                ->toArray();
+        }
+
+        \DB::transaction(function () use($selectedTags){
             // Category
             $category = null;
             if($this->recordTemplateCategory){
@@ -175,6 +195,8 @@ class RecordTemplateModal extends Component
             $recordTemplate->extra_amount = $this->recordTemplateExtraType === 'percentage' ? ($this->recordTemplateAmount * ($this->recordTemplateExtraAmount / 100)) : ($this->recordTemplateExtraAmount != '' ? $this->recordTemplateExtraAmount : 0);
             $recordTemplate->note = $this->recordTemplateNote;
             $recordTemplate->save();
+            // Record Tags
+            $recordTemplate->recordTemplateTags()->sync($selectedTags);
         });
 
         if(!($this->recordTemplateMoreState)){
@@ -199,8 +221,6 @@ class RecordTemplateModal extends Component
      */
     public function editAction($uuid)
     {
-        \Log::debug("Edit Action: ".$uuid);
-
         $data = \App\Models\RecordTemplate::where(\DB::raw('BINARY `uuid`'), $uuid)
             ->firstOrFail();
         $this->recordTemplateUuid = $data->uuid;
@@ -215,12 +235,17 @@ class RecordTemplateModal extends Component
         $this->recordTemplateExtraAmount = $data->extra_type === 'percentage' ? $data->extra_percentage : $data->extra_amount;
         $this->recordTemplateName = $data->name;
         $this->recordTemplateNote = $data->note;
+        $this->recordTemplateTag = $data->recordTemplateTags()->exists() ? $data->recordTemplateTags->pluck('uuid') : [];
 
         $this->dispatchBrowserEvent('trigger-eventRecordTemplate', [
-            'recordType' => $this->recordTemplateType,
-            'recordAmount' => $this->recordTemplateAmount,
-            'recordExtraType' => $this->recordTemplateExtraType,
-            'recordExtraAmount' => $this->recordTemplateExtraAmount
+            'recordTemplateType' => $this->recordTemplateType,
+            'recordTemplateAmount' => $this->recordTemplateAmount,
+            'recordTemplateExtraType' => $this->recordTemplateExtraType,
+            'recordTemplatextraAmount' => $this->recordTemplateExtraAmount,
+            'recordTemplateCategory' => $this->recordTemplateCategory,
+            'recordTemplateWallet' => $this->recordTemplateWallet,
+            'recordTemplateWalletTransfer' => $this->recordTemplateWalletTransfer,
+            'recordTemplateTag' => $this->recordTemplateTag,
         ]);
         $this->dispatchBrowserEvent('open-modalRecordTemplate');
     }
@@ -236,10 +261,14 @@ class RecordTemplateModal extends Component
         $this->reset($this->recordResetField);
         $this->dispatchBrowserEvent('close-modalRecordTemplate');
         $this->dispatchBrowserEvent('trigger-eventRecordTemplate', [
-            'recordType' => $this->recordTemplateType,
-            'recordAmount' => $this->recordTemplateAmount,
-            'recordExtraType' => $this->recordTemplateExtraType,
-            'recordExtraAmount' => $this->recordTemplateExtraAmount
+            'recordTemplateype' => $this->recordTemplateType,
+            'recordTemplateAmount' => $this->recordTemplateAmount,
+            'recordTemplateExtraType' => $this->recordTemplateExtraType,
+            'recordTemplateExtraAmount' => $this->recordTemplateExtraAmount,
+            'recordTemplateCategory' => $this->recordTemplateCategory,
+            'recordTemplateWallet' => $this->recordTemplateWallet,
+            'recordTemplateWalletTransfer' => $this->recordTemplateWalletTransfer,
+            'recordTemplateTag' => $this->recordTemplateTag,
         ]);
     }
 }

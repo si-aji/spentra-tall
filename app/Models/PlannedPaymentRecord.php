@@ -119,6 +119,10 @@ class PlannedPaymentRecord extends Model
             if ($model->getOriginal('status') === 'pending' && $model->status !== 'pending') {
                 // Set Current date to first date of each month
                 $raw_date = date('Y-m-01', strtotime($model->period));
+                if(in_array($model->plannedPayment->repeat_type, ['daily', 'weekly'])){
+                    $raw_date = date('Y-m-d', strtotime($model->period));
+                }
+
                 /**
                  * Calculate Next Period
                  */
@@ -127,13 +131,28 @@ class PlannedPaymentRecord extends Model
                 // Get Time Added
                 $timeadded = ' +'.$model->plannedPayment->repeat_every.' '.$repeat_type;
                 $next_period = date('Y-m-d', strtotime($raw_date.$timeadded));
-
+                // \Log::debug("Debug on Planned Payment Record Updating", [
+                //     'repeat' => [
+                //         'every' => $model->plannedPayment->repeat_every,
+                //         'type' => $repeat_type,
+                //         'final' => $timeadded
+                //     ],
+                //     'date' => $raw_date,
+                //     'next_period' => $next_period
+                // ]);
                 /**
                  * Calculate Final Date
+                 * 
+                 * Ex: Planned Dat is set to 31 Jan, repeat type is 1 time monthly
+                 * Next period is 31 Feb, but there's no 31 at Feb, so use last dat of Feb istead of 31
                  */
                 $day = date('d', strtotime($model->plannedPayment->start_date));
+                if(in_array($model->plannedPayment->repeat_type, ['daily', 'weekly'])){
+                    $day = date('d', strtotime($next_period));
+                }
+
                 $lastDayOfNextPeriod = date('t', strtotime($next_period));
-                if ($day > $lastDayOfNextPeriod) {
+                if (in_array($model->plannedPayment->repeat_type, ['monthly', 'yearly']) && $day > $lastDayOfNextPeriod) {
                     $next_period = date('Y-m-t', strtotime($next_period));
                 } else {
                     $next_period = date('Y-m', strtotime($next_period)).'-'.$day;

@@ -13,6 +13,7 @@ class PlannedPaymentModal extends Component
     public $listTemplate;
     public $listCategory;
     public $listWallet;
+    public $listTag;
 
     // Modal
     public $plannedPaymentModalState = 'hide';
@@ -35,6 +36,7 @@ class PlannedPaymentModal extends Component
     public $plannedPaymentNote = '';
     public $plannedPaymentRepeat = '';
     public $plannedPaymentRepeatType = '';
+    public $plannedPaymentTag;
     public $plannedPaymentMoreState = '';
 
     public $plannedPaymentResetField = [];
@@ -62,7 +64,8 @@ class PlannedPaymentModal extends Component
             'plannedPaymentPeriodChanged',
             'plannedPaymentNote',
             'plannedPaymentRepeat',
-            'plannedPaymentRepeatType'
+            'plannedPaymentRepeatType',
+            'plannedPaymentTag'
         ];
     }
 
@@ -85,11 +88,19 @@ class PlannedPaymentModal extends Component
             ->orderBy('order_main', 'asc')
             ->get();
     }
+    public function fetchListTag()
+    {
+        // Tag
+        $this->listTag = \App\Models\Tag::where('user_id', \Auth::user()->id)
+            ->orderBy('name', 'asc')
+            ->get();
+    }
 
     public function render()
     {
         $this->fetchListCategory();
         $this->fetchListWallet();
+        $this->fetchListTag();
 
         $this->dispatchBrowserEvent('plannedPaymentModal_wire-init');
         return view('livewire.sys.component.planned-payment-modal');
@@ -102,8 +113,8 @@ class PlannedPaymentModal extends Component
         if($this->plannedPaymentType === 'transfer'){
             $this->reset([
                 'plannedPaymentCategory',
-                'plannedPaymentExtraType',
-                'plannedPaymentExtraAmount'
+                // 'plannedPaymentExtraType',
+                // 'plannedPaymentExtraAmount'
             ]);
         }
 
@@ -122,6 +133,14 @@ class PlannedPaymentModal extends Component
 
         // $datetime = date("Y-m-d H:i", strtotime($this->plannedPaymentPeriod));
         $datetime = date("Y-m-d", strtotime($this->plannedPaymentPeriod));
+        // Tag, get selected tag
+        $selectedTags = [];
+        if(!empty($this->plannedPaymentTag)){
+            $selectedTags = \App\Models\Tag::where('user_id', \Auth::user()->id)
+                ->whereIn(\DB::raw('BINARY `uuid`'), $this->plannedPaymentTag)
+                ->pluck('id')
+                ->toArray();
+        }
         // if($this->user_timezone){
         //     $raw = date('Y-m-d H:i:00', strtotime($this->plannedPaymentPeriod));
         //     // Convert to UTC
@@ -153,7 +172,7 @@ class PlannedPaymentModal extends Component
         //     'note' => $this->plannedPaymentNote
         // ]);
 
-        \DB::transaction(function () use ($datetime) {
+        \DB::transaction(function () use ($datetime, $selectedTags) {
             // Category
             $category = null;
             if($this->plannedPaymentCategory){
@@ -168,6 +187,7 @@ class PlannedPaymentModal extends Component
                     ->firstOrFail();
                 $wallet = $walletData->id;
             }
+            // Transfer Wallet
             $walletTransfer = null;
             if($this->plannedPaymentType === 'transfer'){
                 // To
@@ -175,8 +195,10 @@ class PlannedPaymentModal extends Component
                     ->firstOrFail();
                 $walletTransfer = $walletTransferData->id;
             }
+
             $plannedPayment = new \App\Models\PlannedPayment();
             if($this->plannedPaymentUuid){
+                // Update Data
                 $plannedPayment = \App\Models\PlannedPayment::where('user_id', \Auth::user()->id)
                     ->where(\DB::raw('BINARY `uuid`'), $this->plannedPaymentUuid)
                     ->firstOrFail();
@@ -201,6 +223,8 @@ class PlannedPaymentModal extends Component
             $plannedPayment->until_number = null;
             $plannedPayment->note = $this->plannedPaymentNote;
             $plannedPayment->save();
+            // Planned Payment Tags
+            $plannedPayment->plannedPaymentTags()->sync($selectedTags);
         });
 
         if(!($this->plannedPaymentMoreState)){
@@ -224,7 +248,12 @@ class PlannedPaymentModal extends Component
             'plannedPaymentType' => $this->plannedPaymentType,
             'plannedPaymentExtraType' => $this->plannedPaymentExtraType,
             'plannedPaymentAmount' => $this->plannedPaymentAmount,
-            'plannedPaymentExtraAmount' => $this->plannedPaymentExtraAmount
+            'plannedPaymentExtraAmount' => $this->plannedPaymentExtraAmount,
+            'plannedPaymentCategory' => $this->plannedPaymentCategory,
+            'plannedPaymentWallet' => $this->plannedPaymentWallet,
+            'plannedPaymentWalletTransfer' => $this->plannedPaymentWalletTransfer,
+            'plannedPaymentRepeatType' => $this->plannedPaymentRepeatType,
+            'plannedPaymentTag' => $this->plannedPaymentTag
         ]);
     }
     public function editAction($uuid = null)
@@ -250,12 +279,18 @@ class PlannedPaymentModal extends Component
         $this->plannedPaymentNote = $plannedPayment->note;
         $this->plannedPaymentRepeat = $plannedPayment->repeat_every;
         $this->plannedPaymentRepeatType = $plannedPayment->repeat_type;
+        $this->plannedPaymentTag = $plannedPayment->plannedPaymentTags()->exists() ? $plannedPayment->plannedPaymentTags->pluck('uuid') : [];
 
         $this->dispatchBrowserEvent('trigger-eventPlannedPayment', [
             'plannedPaymentType' => $this->plannedPaymentType,
             'plannedPaymentExtraType' => $this->plannedPaymentExtraType,
             'plannedPaymentAmount' => $this->plannedPaymentAmount,
-            'plannedPaymentExtraAmount' => $this->plannedPaymentExtraAmount
+            'plannedPaymentExtraAmount' => $this->plannedPaymentExtraAmount,
+            'plannedPaymentCategory' => $this->plannedPaymentCategory,
+            'plannedPaymentWallet' => $this->plannedPaymentWallet,
+            'plannedPaymentWalletTransfer' => $this->plannedPaymentWalletTransfer,
+            'plannedPaymentRepeatType' => $this->plannedPaymentRepeatType,
+            'plannedPaymentTag' => $this->plannedPaymentTag
         ]);
         $this->dispatchBrowserEvent('open-modalPlannedPayment');
     }
@@ -263,18 +298,23 @@ class PlannedPaymentModal extends Component
     // Handle Modal
     public function openModal()
     {
-    $this->plannedPaymentModalState = 'show';
+        $this->plannedPaymentModalState = 'show';
     }
     public function closeModal()
     {
-    $this->plannedPaymentResetField[] = 'plannedPaymentMoreState';
-    $this->reset($this->plannedPaymentResetField);
-    $this->dispatchBrowserEvent('close-modalPlannedPayment');
-    $this->dispatchBrowserEvent('trigger-eventPlannedPayment', [
-        'plannedPaymentType' => $this->plannedPaymentType,
-        'plannedPaymentExtraType' => $this->plannedPaymentExtraType,
-        'plannedPaymentAmount' => $this->plannedPaymentAmount,
-        'plannedPaymentExtraAmount' => $this->plannedPaymentExtraAmount
-    ]);
+        $this->plannedPaymentResetField[] = 'plannedPaymentMoreState';
+        $this->reset($this->plannedPaymentResetField);
+        $this->dispatchBrowserEvent('close-modalPlannedPayment');
+        $this->dispatchBrowserEvent('trigger-eventPlannedPayment', [
+            'plannedPaymentType' => $this->plannedPaymentType,
+            'plannedPaymentExtraType' => $this->plannedPaymentExtraType,
+            'plannedPaymentAmount' => $this->plannedPaymentAmount,
+            'plannedPaymentExtraAmount' => $this->plannedPaymentExtraAmount,
+            'plannedPaymentCategory' => $this->plannedPaymentCategory,
+            'plannedPaymentWallet' => $this->plannedPaymentWallet,
+            'plannedPaymentWalletTransfer' => $this->plannedPaymentWalletTransfer,
+            'plannedPaymentRepeatType' => $this->plannedPaymentRepeatType,
+            'plannedPaymentTag' => $this->plannedPaymentTag
+        ]);
     }
 }
