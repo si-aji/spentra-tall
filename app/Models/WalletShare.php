@@ -61,7 +61,11 @@ class WalletShare extends Model
      */
     public function walletShareDetail()
     {
-        return $this->hasMany(\App\Models\WalletShareDetail::class, 'wallet_share_id');
+        // return $this->hasMany(\App\Models\WalletShareDetail::class, 'wallet_share_id');
+        return $this->belongsToMany(\App\models\Wallet::class, (new \App\Models\WalletShareDetail())->getTable())
+            ->using(\App\Models\WalletShareDetail::class)
+            ->withTimestamps()
+            ->withTrashed();
     }
 
     /**

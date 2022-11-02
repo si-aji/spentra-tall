@@ -1,6 +1,6 @@
 <div>
     {{-- If your happiness depends on money, you will never be happy with yourself. --}}
-    <form id="wallet_share-form" wire:submit.prevent="save()">
+    <form id="wallet_share-form">
         <div class="offcanvas offcanvas-end" tabindex="-1" id="modal-wallet_share" aria-labelledby="offcanvasLabel" wire:init="" wire:ignore.self x-data="{
             passphraseState: false
         }">
@@ -23,7 +23,7 @@
                 {{-- Passphrase --}}
                 <div class="form-group tw__mb-4">
                     <label>Passphrase</label>
-                    <input type="text" class="form-control @error('walletSharePassphrase') is-invalid @enderror" placeholder="Passphrase" @input.debounce="$el.value.length > 0 ? (passphraseState = true) : (passphraseState = false)">
+                    <input type="text" class="form-control @error('walletSharePassphrase') is-invalid @enderror" placeholder="Passphrase" id="input_wallet_share-passphrase" @input.debounce="$el.value.length > 0 ? (passphraseState = true) : (passphraseState = false)">
                     @error('walletSharePassphrase')
                         <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
@@ -34,8 +34,8 @@
                 {{-- Note --}}
                 <div class="form-group tw__mb-4">
                     <label>Note</label>
-                    <textarea class="form-control @error('walletShareDescription') is-invalid @enderror" placeholder="Some notes to remember"></textarea>
-                    @error('walletShareDescription')
+                    <textarea class="form-control @error('walletShareNote') is-invalid @enderror" placeholder="Some notes to remember" id="input_wallet_share-note"></textarea>
+                    @error('walletShareNote')
                         <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
                 </div>
@@ -44,7 +44,7 @@
                 <div class="form-group tw__mb-4">
                     <label>Time Limit</label>
                     <div wire:ignore>
-                        <select class="form-control" id="input_wallet_share-time_limit">
+                        <select class="form-control @error('walletShareTimeLimit') is-invalid @enderror" id="input_wallet_share-time_limit">
                             <option value="">Search for Time Limit</option>
                             <option value="lifetime" selected>Lifetime</option>
                             <option value="period" disabled>Until specific Date</option>
@@ -57,7 +57,7 @@
                 </div>
 
                 {{-- Item --}}
-                <div class="form-group">
+                <div class="form-group tw__mb-4">
                     <label>Share Item</label>
                     <div wire:ignore>
                         <select class="form-control" id="input_wallet_share-wallet_id" name="wallet_id" placeholder="Search for Wallet Data" multiple>
@@ -78,6 +78,11 @@
                         <span class="invalid-feedback tw__block">{{ $message }}</span>
                     @enderror
                 </div>
+
+                <button type="submit" class="btn btn-primary mb-2 d-grid w-100">Submit</button>
+                <button type="button" class="btn btn-outline-secondary d-grid w-100" data-bs-dismiss="offcanvas">
+                    Cancel
+                </button>
             </div>
         </div>
     </form>
@@ -116,6 +121,23 @@
                     shouldSort: false
                 });
             }
+
+            document.getElementById('wallet_share-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                let selectedWallet = [];
+                if(walletShareModalWalletChoice !== null){
+                    walletShareModalWalletChoice.getValue().forEach((e, key) => {
+                        selectedWallet.push(e.value);
+                    });
+                }
+
+                @this.set('user_timezone', document.getElementById('user_timezone').value);
+                @this.set('walletSharePassphrase', e.target.querySelector('#input_wallet_share-passphrase').value);
+                @this.set('walletShareNote', e.target.querySelector('#input_wallet_share-note').value);
+                @this.set('walletShareItem', selectedWallet);
+                @this.call('save');
+            });
         });
 
         document.addEventListener('wallet_share_wire-init', () => {

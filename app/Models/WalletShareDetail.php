@@ -6,9 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class WalletShareDetail extends Model
+use Illuminate\Database\Eloquent\Relations\Pivot;
+
+class WalletShareDetail extends Pivot
 {
     use HasFactory;
+
+    protected $table = 'wallet_share_details';
 
     /**
      * The attributes that are mass assignable.
@@ -53,21 +57,12 @@ class WalletShareDetail extends Model
      * 
      * @return model
      */
-    public function walletShare()
-    {
-        return $this->belongsTo(\App\Models\WalletShare::class, 'wallet_share_id');
-    }
 
     /**
      * Foreign Key Relation
      * 
      * @return model
      */
-    public function wallet()
-    {
-        return $this->belongsTo(\App\Models\Wallet::class, 'wallet_id')
-            ->withTrashed();
-    }
 
     /**
      * The "boot" method of the model.
