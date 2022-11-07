@@ -98,6 +98,9 @@ class WalletGroup extends Model
             $walletList = $this->walletGroupList()
                 ->withoutTrashed()
                 ->pluck('wallet_id');
+        } else if($walletList === 'all' && \Auth::check()){
+            $walletList = \App\Models\Wallet::where('user_id', \Auth::user()->id)
+                ->pluck('id');
         }
 
         $record = new \App\Models\Record();
@@ -106,8 +109,21 @@ class WalletGroup extends Model
             ->whereIn('wallet_id', $walletList)
             ->where('status', 'complete');
 
-        if (!empty($period) && validateDate($period, 'Y-m-d H:i:s')) {
-            $balance->where('datetime', '<', $period);
+        if (!empty($period)){
+            if(is_array($period)){
+                $start = $period[0];
+                $end = $period[1];
+
+                if(validateDate($start, 'Y-m-d') && validateDate($end, 'Y-m-d')){
+                    $balance->whereBetween('date', [$start, $end]);
+                } else if(validateDate($start, 'Y-m-d H:i:s') && validateDate($end, 'Y-m-d H:i:s')){
+                    $balance->whereBetween('datetime', [$start, $end]);
+                }
+            } else if(validateDate($period, 'Y-m-d')) {
+                $balance->where('date', '<', $period);
+            } else if(validateDate($period, 'Y-m-d H:i:s')) {
+                $balance->where('datetime', '<', $period);
+            }
         }
         if(!empty($type) && $type !== 'all'){
             $balance->where('type', $type);

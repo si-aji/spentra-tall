@@ -164,191 +164,133 @@
         </div>
         <!--/ Order Statistics -->
 
-        <!-- Expense Overview -->
+        <!-- Weekly Overview -->
         <div class="col-md-6 col-lg-4 order-1 mb-4">
-            <div class="card h-100">
+            <div class="card h-100" x-data="{
+                selectedRecordType: 'Income'
+            }">
                 <div class="card-header">
-                    <ul class="nav nav-pills" role="tablist">
-                        <li class="nav-item">
-                            <button
-                                type="button"
-                                class="nav-link active"
-                                role="tab"
-                                data-bs-toggle="tab"
-                                data-bs-target="#navs-tabs-line-card-income"
-                                aria-controls="navs-tabs-line-card-income"
-                                aria-selected="true"
-                            >
-                                Income
+                    <div class=" tw__flex tw__justify-between">
+                        <ul class="nav nav-pills tw__justify-center" role="tablist">
+                            <li class="nav-item">
+                                <button type="button" class="nav-link" x-on:click="selectedRecordType = 'Income';@this.set('weeklyRecordType', 'income');" :class="selectedRecordType === 'Income' ? 'active' : ''">
+                                    Income
+                                </button>
+                            </li>
+                            <li class="nav-item">
+                                <button type="button" class="nav-link" x-on:click="selectedRecordType = 'Expense';@this.set('weeklyRecordType', 'expense');" :class="selectedRecordType === 'Expense' ? 'active' : ''">
+                                    Expense
+                                </button>
+                            </li>
+                        </ul>
+                        
+                        <div class="dropdown">
+                            <button class="btn p-0" type="button" id="orederStatistics" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="bx bx-cog"></i>
                             </button>
-                        </li>
-                        <li class="nav-item">
-                            <button type="button" class="nav-link" role="tab">Expenses</button>
-                        </li>
-                        <li class="nav-item">
-                            <button type="button" class="nav-link" role="tab">Profit</button>
-                        </li>
-                    </ul>
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="orederStatistics">
+                                <a class="dropdown-item" href="javascript:void(0);">Select All</a>
+                                <a class="dropdown-item" href="javascript:void(0);">Refresh</a>
+                                <a class="dropdown-item" href="javascript:void(0);">Share</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body px-0">
-                    <div class="tab-content p-0">
-                        <div class="tab-pane fade show active" id="navs-tabs-line-card-income" role="tabpanel">
-                            <div class="d-flex p-4 pt-3">
-                                <div class="avatar flex-shrink-0 me-3">
-                                    <img src="{{ asset('assets/themes/sneat/img/icons/unicons/wallet.png') }}" alt="User" />
-                                </div>
-                                <div>
-                                    <small class="text-muted d-block">Total Balance</small>
-                                    <div class="d-flex align-items-center">
-                                        <h6 class="mb-0 me-1">$459.10</h6>
-                                        <small class="text-success fw-semibold">
-                                            <i class="bx bx-chevron-up"></i>
-                                            42.9%
-                                        </small>
-                                    </div>
-                                </div>
+                <div class="card-body px-0 tw__pt-24 tw__relative">
+                    <div class=" tw__absolute tw__top-4 tw__w-full tw__px-4">
+                        <div class=" tw__flex tw__justify-between">
+                            <div class=" tw__flex tw__flex-col">
+                                <small>Last week</small>
+                                <span class="weekly-report" data-date="{{ $weeklyStart }}">-</span>
+                                @if ($weeklyEnd !== $weeklyStart)
+                                    <span class="weekly-report" data-date="{{ $weeklyEnd }}">-</span>
+                                @endif
                             </div>
-                            <div id="incomeChart"></div>
-                            <div class="d-flex justify-content-center pt-4 gap-2">
-                                <div class="flex-shrink-0">
-                                    <div id="expensesOfWeek"></div>
-                                </div>
-                                <div>
-                                <p class="mb-n1 mt-1">Expenses This Week</p>
-                                    <small class="text-muted">$39 less than last week</small>
-                                </div>
+                            <div class=" tw__flex tw__flex-col">
+                                <small>This week</small>
+                                <span class="weekly-report" data-date="{{ $prevWeeklyStart }}">-</span>
+                                @if ($prevWeeklyEnd !== $prevWeeklyStart)
+                                    <span class="weekly-report" data-date="{{ $prevWeeklyEnd }}">-</span>
+                                @endif
                             </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex p-4 pt-3">
+                        <div class="avatar flex-shrink-0 me-3">
+                            <img src="{{ asset('assets/themes/sneat/img/icons/unicons/wallet-info.png') }}" alt="User" />
+                        </div>
+                        <div>
+                            <small class="text-muted d-block">This Week Amount</small>
+                            <div class="d-flex align-items-center">
+                                <h6 class="mb-0 me-1">{{ formatRupiah($weeklyAmount) }}</h6>
+                                <small class="text-{{ $weeklyRecordType === 'expense' ? ($weeklyAmount < $prevWeeklyAmount ? 'success' : 'danger') : ($weeklyAmount < $prevWeeklyAmount ? 'danger' : 'success') }} fw-semibold">
+                                    <i class="bx bx-chevron-{{ $weeklyAmount < $prevWeeklyAmount ? 'down' : 'up' }}"></i>
+                                    {{ number_format((float)$weeklyPercentage, 2, '.', '') }}%
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex p-4 pt-3">
+                        <div class="avatar flex-shrink-0 me-3">
+                            <img src="{{ asset('assets/themes/sneat/img/icons/unicons/wallet-info.png') }}" alt="User" />
+                        </div>
+                        <div>
+                            <small class="text-muted d-block">Last Week Amount</small>
+                            <div class="d-flex align-items-center">
+                                <h6 class="mb-0 me-1">{{ formatRupiah($prevWeeklyAmount) }}</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center pt-4 gap-2">
+                        <div>
+                            <p class="mb-n1 mt-1 tw__text-center" x-text="`${selectedRecordType} This Week`"></p>
+                            <small class="text-muted">{{ $weeklyAmount !== $prevWeeklyAmount ? ($weeklyAmount > $prevWeeklyAmount ? formatRupiah($weeklyAmount - $prevWeeklyAmount) : formatRupiah($prevWeeklyAmount - $weeklyAmount)) : '' }}{{ ($weeklyAmount === $prevWeeklyAmount ? 'same with' : ($weeklyAmount > $prevWeeklyAmount ? ' more than' : ' less than')) }} last week</small>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!--/ Expense Overview -->
+        <!--/ Weekly Overview -->
 
-        <!-- Transactions -->
+        <!-- Wallet List -->
         <div class="col-md-6 col-lg-4 order-2 mb-4">
             <div class="card h-100">
                 <div class="card-header d-flex align-items-center justify-content-between">
-                    <h5 class="card-title m-0 me-2">Transactions</h5>
-                    <div class="dropdown">
-                        <button
-                            class="btn p-0"
-                            type="button"
-                            id="transactionID"
-                            data-bs-toggle="dropdown"
-                            aria-haspopup="true"
-                            aria-expanded="false"
-                        >
-                            <i class="bx bx-dots-vertical-rounded"></i>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="transactionID">
-                            <a class="dropdown-item" href="javascript:void(0);">Last 28 Days</a>
-                            <a class="dropdown-item" href="javascript:void(0);">Last Month</a>
-                            <a class="dropdown-item" href="javascript:void(0);">Last Year</a>
-                        </div>
-                    </div>
+                    <h5 class="card-title m-0 me-2">
+                        <span>{{ count($walletData) }} Wallet(s)</span>
+                    </h5>
                 </div>
-                <div class="card-body">
+                <div class="card-body tw__overflow-y-auto tw__max-h-[335px]">
                     <ul class="p-0 m-0">
-                        <li class="d-flex mb-4 pb-1">
-                            <div class="avatar flex-shrink-0 me-3">
-                                <img src="{{ asset('assets/themes/sneat/img/icons/unicons/paypal.png') }}" alt="User" class="rounded" />
-                            </div>
-                            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                <div class="me-2">
-                                    <small class="text-muted d-block mb-1">Paypal</small>
-                                    <h6 class="mb-0">Send money</h6>
+                        @foreach ($walletData as $wallet)
+                            <li class="d-flex mb-4 pb-1">
+                                <div class="avatar flex-shrink-0 me-3">
+                                    <span class=" tw__w-full tw__h-full tw__flex tw__items-center tw__justify-center tw__rounded {{ $wallet->type === 'general' ? 'tw__bg-slate-200' : ($wallet->type === 'saving' ? 'tw__bg-green-200' : 'tw__bg-purple-200') }}">
+                                        <i class="bx bx-wallet-alt"></i>
+                                    </span>
                                 </div>
-                                <div class="user-progress d-flex align-items-center gap-1">
-                                    <h6 class="mb-0">+82.6</h6>
-                                    <span class="text-muted">USD</span>
+                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                    <div class="me-2">
+                                        <small class="text-muted d-block mb-1">{{ ucwords($wallet->type) }}</small>
+                                        <h6 class="mb-0">{{ ($wallet->parent()->exists() ? $wallet->parent->name.' - ' : '').$wallet->name }}</h6>
+                                    </div>
+                                    <div class="user-progress d-flex align-items-center gap-1">
+                                        <a href="{{ route('sys.wallet.list.show', $wallet->uuid) }}" class=" tw__text-black"><i class="bx bx-dots-vertical-rounded"></i></a>
+                                    </div>
                                 </div>
-                            </div>
-                        </li>
-                        <li class="d-flex mb-4 pb-1">
-                            <div class="avatar flex-shrink-0 me-3">
-                                <img src="{{ asset('assets/themes/sneat/img/icons/unicons/wallet.png') }}" alt="User" class="rounded" />
-                            </div>
-                            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                <div class="me-2">
-                                    <small class="text-muted d-block mb-1">Wallet</small>
-                                    <h6 class="mb-0">Mac'D</h6>
-                                </div>
-                                <div class="user-progress d-flex align-items-center gap-1">
-                                    <h6 class="mb-0">+270.69</h6>
-                                    <span class="text-muted">USD</span>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="d-flex mb-4 pb-1">
-                            <div class="avatar flex-shrink-0 me-3">
-                                <img src="{{ asset('assets/themes/sneat/img/icons/unicons/chart.png') }}" alt="User" class="rounded" />
-                            </div>
-                            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                <div class="me-2">
-                                    <small class="text-muted d-block mb-1">Transfer</small>
-                                    <h6 class="mb-0">Refund</h6>
-                                </div>
-                                <div class="user-progress d-flex align-items-center gap-1">
-                                    <h6 class="mb-0">+637.91</h6>
-                                    <span class="text-muted">USD</span>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="d-flex mb-4 pb-1">
-                            <div class="avatar flex-shrink-0 me-3">
-                                <img src="{{ asset('assets/themes/sneat/img/icons/unicons/cc-success.png') }}" alt="User" class="rounded" />
-                            </div>
-                            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                <div class="me-2">
-                                    <small class="text-muted d-block mb-1">Credit Card</small>
-                                    <h6 class="mb-0">Ordered Food</h6>
-                                </div>
-                                <div class="user-progress d-flex align-items-center gap-1">
-                                    <h6 class="mb-0">-838.71</h6>
-                                    <span class="text-muted">USD</span>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="d-flex mb-4 pb-1">
-                            <div class="avatar flex-shrink-0 me-3">
-                                <img src="{{ asset('assets/themes/sneat/img/icons/unicons/wallet.png') }}" alt="User" class="rounded" />
-                            </div>
-                            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                <div class="me-2">
-                                    <small class="text-muted d-block mb-1">Wallet</small>
-                                    <h6 class="mb-0">Starbucks</h6>
-                                </div>
-                                <div class="user-progress d-flex align-items-center gap-1">
-                                    <h6 class="mb-0">+203.33</h6>
-                                    <span class="text-muted">USD</span>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="d-flex">
-                            <div class="avatar flex-shrink-0 me-3">
-                                <img src="{{ asset('assets/themes/sneat/img/icons/unicons/cc-warning.png') }}" alt="User" class="rounded" />
-                            </div>
-                            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                <div class="me-2">
-                                    <small class="text-muted d-block mb-1">Mastercard</small>
-                                    <h6 class="mb-0">Ordered Food</h6>
-                                </div>
-                                <div class="user-progress d-flex align-items-center gap-1">
-                                    <h6 class="mb-0">-92.45</h6>
-                                    <span class="text-muted">USD</span>
-                                </div>
-                            </div>
-                        </li>
+                            </li>
+                        @endforeach
                     </ul>
                 </div>
             </div>
         </div>
-        <!--/ Transactions -->
+        <!--/ Wallet List -->
     </div>
 </div>
 
 @section('js_inline')
+    {{-- Chart --}}
     <script>
         // JS global variables
         let config = {
@@ -564,5 +506,21 @@
             const growthChart = new ApexCharts(growthChartEl, growthChartOptions);
             growthChart.render();
         }
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (e) => {
+            // Weekly Report
+            window.dispatchEvent(new Event('dashboardWireInit'));
+        });
+
+        window.addEventListener('dashboardWireInit', (e) => {
+            if(document.querySelectorAll('.weekly-report').length > 0){
+                document.querySelectorAll('.weekly-report').forEach((el) => {
+                    let date = el.dataset.date;
+                    el.innerHTML = momentDateTime(date, 'DD MMM, YYYY');
+                });
+            }
+        });
     </script>
 @endsection

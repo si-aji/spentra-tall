@@ -156,4 +156,15 @@ class NotificationFeature extends Component
         $plannedRecordModal = new \App\Http\Livewire\Sys\Component\PlannedPaymentRecordModal();
         return $plannedRecordModal->skipRecord($plannedPaymentRecord->uuid, $plannedPayment->uuid);
     }
+
+    public function getPaginateToday()
+    {
+        $this->loadData();
+        return $this->paginateToday;
+    }
+    public function getPaginateOverdue()
+    {
+        $this->loadData();
+        return $this->paginateOverdue;
+    }
 }

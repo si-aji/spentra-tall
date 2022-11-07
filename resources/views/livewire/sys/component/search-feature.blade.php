@@ -71,6 +71,30 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="row row-bordered overflow-visible g-0">
+                                        <div class="dropdown-shortcuts-item col tw__flex tw__flex-col tw__gap-1 tw__p-4 tw__opacity-75 tw__cursor-not-allowed">
+                                            <div class=" tw__self-center">
+                                                <span class="dropdown-shortcuts-icon bg-label-secondary rounded-circle mb-2 tw__h-12 tw__w-12 tw__flex tw__items-center tw__justify-center">
+                                                    <i class="bx bx-cog fs-4"></i>
+                                                </span>
+                                            </div>
+                                            <div class=" tw__self-center tw__text-center tw__mt-2">
+                                                <a href="javascript:void(0)" class="stretched-link tw__cursor-not-allowed">Conf</a>
+                                                <small class="text-muted mb-0 tw__block">Open Personalization Conf</small>
+                                            </div>
+                                        </div>
+                                        <div class="dropdown-shortcuts-item col tw__flex tw__flex-col tw__gap-1 tw__p-4 tw__opacity-75 tw__cursor-not-allowed">
+                                            <div class=" tw__self-center">
+                                                <span class="dropdown-shortcuts-icon bg-label-secondary rounded-circle mb-2 tw__h-12 tw__w-12 tw__flex tw__items-center tw__justify-center">
+                                                    <i class="bx bx-info-circle fs-4"></i>
+                                                </span>
+                                            </div>
+                                            <div class=" tw__self-center tw__text-center tw__mt-2">
+                                                <a href="javascript:void(0)" class="stretched-link tw__cursor-not-allowed">TBD</a>
+                                                <small class="text-muted mb-0 tw__block">To be decided</small>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </li>

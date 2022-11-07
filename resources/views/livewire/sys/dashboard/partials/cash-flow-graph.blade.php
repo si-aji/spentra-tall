@@ -7,21 +7,15 @@
         <div class="col-md-4 tw__flex tw__flex-col">
             <div class=" tw__p-6">
                 <div class="text-center">
-                    <div class="dropdown">
-                        <button
-                        class="btn btn-sm btn-outline-primary dropdown-toggle"
-                        type="button"
-                        id="growthReportId"
-                        data-bs-toggle="dropdown"
-                        aria-haspopup="true"
-                        aria-expanded="false"
-                        >
-                        2022
-                        </button>
+                    <div class="dropdown" x-data="{
+                        selectedYear: '{{ date("Y") }}'
+                    }">
+                        <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" id="growthReportId" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" x-text="selectedYear"></button>
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="growthReportId">
-                        <a class="dropdown-item" href="javascript:void(0);">Income</a>
-                        <a class="dropdown-item" href="javascript:void(0);">Expense</a>
-                        <a class="dropdown-item" href="javascript:void(0);">2019</a>
+                            @for ($i = date("Y-01-01"); $i >= date("Y-01-01", strtotime(\Auth::user()->getFirstYearRecord().'-01-01')); $i = date("Y-01-01", strtotime($i.' -1 years')))
+                                <a href="javascript:void(0)" class="dropdown-item" x-on:click="selectedYear = '{{ date("Y", strtotime($i)) }}'">{{ date("Y", strtotime($i)) }}</a>
+                                {{-- <option value="{{ date("Y", strtotime($i)) }}" {{ $dataSelectedYear == date("Y", strtotime($i)) ? 'selected' : '' }}>{{ date("Y", strtotime($i)) }}</option> --}}
+                            @endfor
                         </div>
                     </div>
                 </div>

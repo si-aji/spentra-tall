@@ -166,94 +166,6 @@
 
 {{-- JS Inline --}}
 @section('baseJsInline')
-    {{-- <script>
-        var searchTimeout = null;
-        if(document.getElementById('sia-search_input')){
-            window.addEventListener('DOMContentLoaded', (e) => {
-                shortcut.set({
-                    "control-/" : () => { 
-                        document.getElementById('sia-search_input').focus()
-                    },
-                });
-            });
-
-            if(document.getElementById('search-result')){
-                document.getElementById('sia-search_input').addEventListener('keyup', function(e){
-                    clearTimeout(searchTimeout);
-                    searchTimeout = setTimeout(() => {
-                        if((e.target.value).length >= 3){
-                            // Show search result
-                            document.getElementById('search-result').classList.remove('tw__hidden');
-                            document.getElementById('search-result').classList.add('tw__block');
-                            // Show Overlay
-                            if(document.querySelector('.content-backdrop')){
-                                document.querySelector('.content-backdrop').classList.remove('fade');
-                                document.querySelector('.content-backdrop').classList.add('show');
-                            }
-                        } else {
-                            // Hide search result
-                            document.getElementById('search-result').classList.remove('tw__block');
-                            document.getElementById('search-result').classList.add('tw__hidden');
-                            // Show Overlay
-                            if(document.querySelector('.content-backdrop')){
-                                document.querySelector('.content-backdrop').classList.remove('show');
-                                document.querySelector('.content-backdrop').classList.add('fade');
-                            }
-                        }
-                    }, 500);
-                });
-                document.getElementById('sia-search_input').addEventListener('focusin', function(e){
-                    if((e.target.value).length >= 3){
-                        // Show search result
-                        document.getElementById('search-result').classList.remove('tw__hidden');
-                        document.getElementById('search-result').classList.add('tw__block');
-                        // Show Overlay
-                        if(document.querySelector('.content-backdrop')){
-                            document.querySelector('.content-backdrop').classList.remove('fade');
-                            document.querySelector('.content-backdrop').classList.add('show');
-                        }
-                    }
-
-                    if(document.getElementById('toggle-search')){
-                        document.getElementById('toggle-search').classList.remove('bx-search');
-                        document.getElementById('toggle-search').classList.add('bx-x');
-                    }
-                });
-                document.getElementById('sia-search_input').addEventListener('focusout', function(e){
-                    // Hide search result
-                    document.getElementById('search-result').classList.remove('tw__block');
-                    document.getElementById('search-result').classList.add('tw__hidden');
-                    // Hide Overlay
-                    if(document.querySelector('.content-backdrop')){
-                        document.querySelector('.content-backdrop').classList.remove('show');
-                        document.querySelector('.content-backdrop').classList.add('fade');
-                    }
-
-                    setTimeout(() => {
-                        if(document.getElementById('toggle-search') && document.getElementById('toggle-search').classList.contains('bx-x')){
-                            document.getElementById('toggle-search').classList.remove('bx-x');
-                            document.getElementById('toggle-search').classList.add('bx-search');
-                        }
-                    }, 200)
-                });
-                document.getElementById('toggle-search').addEventListener('click', (e) => {   
-                    console.log(e.target.classList.contains('bx-search') ? 'TRUE' : 'FALSE');
-                    console.log(e.target.classList);
-
-                    if(e.target.classList.contains('bx-search')){
-                        document.getElementById('sia-search_input').focus();
-                        e.target.classList.remove('bx-search');
-                        e.target.classList.add('bx-x');
-                    } else {
-                        document.getElementById('sia-search_input').value = '';
-                        e.target.classList.remove('bx-x');
-                        e.target.classList.add('bx-search');
-                    }
-                });
-            }
-        }
-    </script> --}}
-
     {{-- Handle tooltip --}}
     <script>
         if(document.querySelectorAll('[data-bs-tt="tooltip"]').length > 0){
@@ -275,6 +187,16 @@
                 text: result.message,
             });
         });
+    </script>
+
+    {{-- Handle Session TZ --}}
+    <script>
+        // document.addEventListener('DOMContentLoaded', (e) => {
+        //     Livewire.hook('message.sent', (message, component) => {
+        //         console.log(message);
+        //         console.log(component);
+        //     });
+        // });
     </script>
 
     @yield('js_inline')

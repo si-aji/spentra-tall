@@ -4,7 +4,7 @@
         <div class="mb-2 mb-md-0">
             © <script> document.write(new Date().getFullYear()); </script>, Theme by
             <a href="https://themeselection.com" target="_blank" class="footer-link fw-bolder">ThemeSelection.</a>
-            <span>Made with made with ❤️ by <a href="javascript:void(0)">SIAJI</a></span>
+            <span>Made with ❤️ by <a href="javascript:void(0)">SIAJI</a></span>
         </div>
         <div>
             <a href="https://themeselection.com/license/" class="footer-link me-4" target="_blank">License</a>
