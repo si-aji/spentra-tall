@@ -30,6 +30,7 @@ class WalletShareModal extends Component
         'refreshComponent' => '$refresh',
         'openModal' => 'openModal',
         'closeModal' => 'closeModal',
+        'editAction' => 'editAction'
     ];
 
     protected $rules = [
@@ -85,11 +86,16 @@ class WalletShareModal extends Component
             // ]);
 
             $data = new \App\Models\WalletShare();
+            if($this->walletShareUuid){
+                $data = \App\Models\WalletShare::where(\DB::raw('BINARY `uuid`'), $this->walletShareUuid)
+                    ->firstOrFail();
+            }
+
             $data->user_id = \Auth::user()->id;
             $data->share_limit = $this->walletShareTimeLimit;
             $data->limit_period = null;
             $data->limit_open = null;
-            $data->passphrase = siacryption($this->walletSharePassphrase, true);
+            $data->passphrase = $this->walletSharePassphrase ? siacryption($this->walletSharePassphrase, true) : null;
             if(empty($this->walletShareUuid)){
                 $data->token = generateRandomString(12);
             }
@@ -106,6 +112,36 @@ class WalletShareModal extends Component
             'message' => 'Successfully '.(empty($this->walletShareUuid) ? 'store new' : 'update').' Wallet Share Data'
         ]);
         $this->reset($this->walleShareResetField);
+        $this->dispatchBrowserEvent('trigger-eventWalletShare', [
+            'walletShareToken' => $this->walletShareToken,
+            'walletShareNote' => $this->walletShareNote,
+            'walletSharePassphrase' => $this->walletSharePassphrase,
+            'walletShareItem' => $this->walletShareItem,
+        ]);
+    }
+
+    /**
+     * Handle edit request data
+     */
+    public function editAction($uuid, $detailPage = false)
+    {
+        $this->walletShareTitle = 'Wallet Share: Edit';
+
+        $data = \App\Models\WalletShare::where(\DB::raw('BINARY `uuid`'), $uuid)
+            ->firstOrFail();
+        $this->walletShareUuid = $data->uuid;
+        $this->walletShareToken = $data->token;
+        $this->walletShareNote = $data->note;
+        $this->walletSharePassphrase = !empty($data->passphrase) ? siacryption($data->passphrase) : null;
+        $this->walletShareItem = $data->walletShareDetail()->get()->pluck('uuid')->toArray();
+
+        $this->dispatchBrowserEvent('trigger-eventWalletShare', [
+            'walletShareToken' => $this->walletShareToken,
+            'walletShareNote' => $this->walletShareNote,
+            'walletSharePassphrase' => $this->walletSharePassphrase,
+            'walletShareItem' => $this->walletShareItem,
+        ]);
+        $this->dispatchBrowserEvent('wallet_share_wire-modalShow');
     }
 
     // Handle Modal

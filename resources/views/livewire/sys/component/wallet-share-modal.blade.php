@@ -12,7 +12,7 @@
                 {{-- Token --}}
                 <div class="form-group tw__mb-4">
                     <label>Token</label>
-                    <input type="text" class="form-control @error('walletShareToken') is-invalid @enderror" placeholder="Share Token" readonly>
+                    <input type="text" class="form-control @error('walletShareToken') is-invalid @enderror" id="input_wallet_share-token" placeholder="Share Token" readonly>
                     @error('walletShareToken')
                         <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
@@ -147,6 +147,37 @@
             document.getElementById('modal-wallet_share').addEventListener('shown.bs.offcanvas', (e) => {
                 @this.set('walletShareModalState', 'show');
             });
+        });
+
+        window.addEventListener('wallet_share_wire-modalShow', (event) => {
+            var myModalEl = document.getElementById('modal-wallet_share')
+            var modal = new bootstrap.Offcanvas(myModalEl)
+            modal.show();
+        });
+        window.addEventListener('wallet_share_wire-modalHide', (event) => {
+            var myModalEl = document.getElementById('modal-wallet_share')
+            var modal = bootstrap.Offcanvas.getInstance(myModalEl);
+            modal.hide();
+        });
+
+        window.addEventListener('trigger-eventWalletShare', (event) => {
+            let modal = document.getElementById('modal-wallet_share');
+            let el = event.detail;
+            if(el.hasOwnProperty('walletShareToken')){
+                modal.querySelector('#input_wallet_share-token').value = el.walletShareToken;
+            }
+            if(el.hasOwnProperty('walletShareNote')){
+                modal.querySelector('#input_wallet_share-note').value = el.walletShareNote;
+            }
+            if(el.hasOwnProperty('walletSharePassphrase')){
+                modal.querySelector('#input_wallet_share-passphrase').value = el.walletSharePassphrase;
+            }
+            if(el.hasOwnProperty('walletShareItem')){
+                walletShareModalWalletChoice.removeActiveItems();
+                if((el.walletShareItem).length > 0){
+                    walletShareModalWalletChoice.setChoiceByValue(el.walletShareItem);
+                }
+            }
         });
     </script>
 @endpush

@@ -89,6 +89,7 @@ function ucwords(str){
         // Fix date format on safari browser
         defaultTimezone = new Date(`${moment(date).format('ddd, DD MMM YYYY HH:mm:ss')} GMT+0000`);
     }
+
     const tzOffset = defaultTimezone.getTimezoneOffset();
     let formatedDate = format;
 
@@ -111,4 +112,21 @@ function ucwords(str){
     }
 
     return moment(convertDateTime(defaultTimezone)).format(formatedDate);
+}
+
+function clipboardTooltip(el, action = 'show', message = '')
+{
+    var triggerEl = el;
+    var tooltip = bootstrap.Tooltip.getOrCreateInstance(triggerEl) // Returns a Bootstrap tooltip instance
+
+    if(action === 'show'){
+        // Show tooltip
+        triggerEl.setAttribute('title', message);
+        triggerEl.setAttribute('data-bs-original-title', message);
+        tooltip.show();
+    } else {
+        // Hide tooltip
+        tooltip.dispose();
+    }
+    return true;
 }

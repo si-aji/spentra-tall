@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -52,6 +54,19 @@ class WalletShare extends Model
     public function getRouteKeyName()
     {
         return 'uuid';
+    }
+
+    /**
+     * Getter
+     * 
+     */
+    public function getCreatedAtAttribute($value)
+    {
+        return date("Y-m-d H:i:s", strtotime($value));
+    }
+    public function getUpdatedAtAttribute($value)
+    {
+        return date("Y-m-d H:i:s", strtotime($value));
     }
 
     /**
