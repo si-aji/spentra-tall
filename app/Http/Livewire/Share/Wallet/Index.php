@@ -16,6 +16,7 @@ class Index extends Component
     public $shareData;
     public $recordData = [];
     public $passphrase = '';
+    public $selectedWallet = [];
     // Filter
     public $filterShare = [];
     public $filterYear;
@@ -32,17 +33,15 @@ class Index extends Component
 
     public function fetchRecordData()
     {
-        $wallet = $this->shareData->walletShareDetail()->pluck((new \App\Models\Wallet())->getTable().'.id')->toArray();
-        if(count($this->filterShare) > 0){
-            $wallet = \App\Models\Wallet::whereIn(\DB::raw('BINARY `uuid`'), $this->filterShare)
-                ->pluck('id')
-                ->toArray();
-        }
+        \Log::debug("Debug on selected wallet", [
+            'selectedWallet' => $this->selectedWallet,
+            'filterShare' => $this->filterShare
+        ]);
 
         $recordLivewire = (new \App\Http\Livewire\Sys\Record\Index());
         $recordLivewire->dataSelectedYear = $this->filterYear;
         $recordLivewire->dataSelectedMonth = $this->filterMonth;
-        $recordLivewire->fetchRecordData($wallet);
+        $recordLivewire->fetchRecordData($this->selectedWallet);
         $this->recordData = $recordLivewire->dataRecord;
         $this->recordPaginate = $recordLivewire->getPaginate();
 
@@ -71,6 +70,16 @@ class Index extends Component
         $view = 'livewire.share.wallet.index';
         if(!empty($this->shareData->passphrase) && !(\Session::has('wallet_share-'.$this->shareData->token))){
             $view = 'livewire.share.wallet.passphrase';
+        }
+
+        $this->selectedWallet = $this->shareData
+            ->walletShareDetail()
+            ->pluck((new \App\Models\Wallet())->getTable().'.id')
+            ->toArray();
+        if(count($this->filterShare) > 0){
+            $this->selectedWallet = \App\Models\Wallet::whereIn(\DB::raw('BINARY `uuid`'), $this->filterShare)
+                ->pluck('id')
+                ->toArray();
         }
 
         // Fetch Record

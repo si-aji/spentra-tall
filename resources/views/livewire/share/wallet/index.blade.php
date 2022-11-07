@@ -22,7 +22,12 @@
                             {{-- Wallet Filter --}}
                             <ul class="list-group" id="wallet-list" wire:ignore>
                                 @foreach ($shareData->walletShareDetail as $key => $wallet)
-                                    <li class="list-group-item" data-uuid="{{ $wallet->uuid }}" wire:click="monthChanged">{{ ($wallet->parent()->exists() ? $wallet->parent->name.' - ' : '').$wallet->name }}</li>
+                                    <li class="list-group-item" data-uuid="{{ $wallet->uuid }}" wire:click="monthChanged">
+                                        <span class=" tw__flex tw__flex-col lg:tw__flex-row lg:tw__items-center lg:tw__justify-between">
+                                            <span>{{ ($wallet->parent()->exists() ? $wallet->parent->name.' - ' : '').$wallet->name }}</span>
+                                            <small class=" text-muted">{{ formatRupiah($wallet->getBalance()) }}</small>
+                                        </span>
+                                    </li>
                                 @endforeach
                             </ul>
                         </div>
@@ -37,6 +42,9 @@
                                             @endfor
                                         </select>
                                     </div>
+                                </div>
+                                <div class="col-12 col-lg-10 tw__flex tw__items-center lg:tw__text-right lg:tw__justify-end">
+                                    <span>Total Balance, <strong>{{ formatRupiah((new \App\Models\WalletGroup)->getBalance($selectedWallet)) }}</strong></span>
                                 </div>
                             </div>
                         </div>
@@ -157,7 +165,7 @@
             if(document.getElementById('wallet-list') && document.getElementById('wallet-list').querySelectorAll('.list-group-item').length > 0){
                 document.getElementById('wallet-list').querySelectorAll('.list-group-item').forEach((el) => {
                     el.addEventListener('click', (e) => {
-                        e.target.classList.toggle('active');
+                        e.target.closest('.list-group-item').classList.toggle('active');
 
                         let selected = [...document.getElementById('wallet-list').querySelectorAll('.list-group-item.active')].map((e) => {
                             return e.dataset.uuid;
@@ -225,13 +233,13 @@
                         // Append Action
                         let action = [];
                         // Detail Action
-                        action.push(`
-                            <li>
-                                <a class="dropdown-item tw__text-blue-400" href="{{ route('sys.record.index') }}/${val.uuid}">
-                                    <span class=" tw__flex tw__items-center"><i class="bx bx-show tw__mr-2"></i>Detail</span>
-                                </a>
-                            </li>
-                        `);
+                        // action.push(`
+                        //     <li>
+                        //         <a class="dropdown-item tw__text-blue-400" href="{{ route('sys.record.index') }}/${val.uuid}">
+                        //             <span class=" tw__flex tw__items-center"><i class="bx bx-show tw__mr-2"></i>Detail</span>
+                        //         </a>
+                        //     </li>
+                        // `);
 
                         // Append Item
                         item.innerHTML = recordContentFormat(val, index, action);
