@@ -878,6 +878,12 @@ select {
 .tw__w-36 {
   width: 9rem !important;
 }
+.tw__w-3\/5 {
+  width: 60% !important;
+}
+.tw__w-2\/5 {
+  width: 40% !important;
+}
 .tw__min-w-\[40px\] {
   min-width: 40px !important;
 }
@@ -932,11 +938,20 @@ select {
 .tw__grid-flow-row {
   grid-auto-flow: row !important;
 }
+.tw__grid-flow-col {
+  grid-auto-flow: column !important;
+}
 .tw__grid-cols-2 {
   grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
 }
 .tw__grid-cols-1 {
   grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+}
+.tw__grid-cols-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+.tw__flex-row {
+  flex-direction: row !important;
 }
 .tw__flex-row-reverse {
   flex-direction: row-reverse !important;
@@ -952,6 +967,9 @@ select {
 }
 .tw__items-center {
   align-items: center !important;
+}
+.tw__justify-end {
+  justify-content: flex-end !important;
 }
 .tw__justify-center {
   justify-content: center !important;
@@ -1024,6 +1042,9 @@ select {
 }
 .tw__border-b {
   border-bottom-width: 1px !important;
+}
+.tw__border-t {
+  border-top-width: 1px !important;
 }
 .tw__border-gray-300 {
   --tw-border-opacity: 1 !important;
@@ -1187,6 +1208,9 @@ select {
 }
 .tw__pb-0 {
   padding-bottom: 0px !important;
+}
+.tw__pb-4 {
+  padding-bottom: 1rem !important;
 }
 .tw__text-center {
   text-align: center !important;
@@ -1566,12 +1590,28 @@ select {
     display: inline !important;
   }
 
+  .lg\:tw__grid {
+    display: grid !important;
+  }
+
   .lg\:tw__hidden {
     display: none !important;
   }
 
   .lg\:tw__w-\[calc\(100\%-calc\(0\.625rem\*2\)-15rem\)\] {
     width: calc(100% - calc(0.625rem * 2) - 15rem) !important;
+  }
+
+  .lg\:tw__w-1\/5 {
+    width: 20% !important;
+  }
+
+  .lg\:tw__w-1\/6 {
+    width: 16.666667% !important;
+  }
+
+  .lg\:tw__w-1\/4 {
+    width: 25% !important;
   }
 
   .lg\:tw__min-w-\[25rem\] {
@@ -1588,6 +1628,10 @@ select {
 
   .lg\:tw__grid-cols-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+
+  .lg\:tw__flex-row {
+    flex-direction: row !important;
   }
 
   .lg\:tw__flex-nowrap {
@@ -1609,5 +1653,9 @@ select {
   .lg\:tw__px-8 {
     padding-left: 2rem !important;
     padding-right: 2rem !important;
+  }
+
+  .lg\:tw__text-right {
+    text-align: right !important;
   }
 }

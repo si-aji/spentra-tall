@@ -304,8 +304,6 @@
                         extra.forEach((el) => {
                             el.remove();
                         });
-                    } else {
-
                     }
                 } else {
                     // Data not found

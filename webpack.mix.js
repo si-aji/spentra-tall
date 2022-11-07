@@ -84,3 +84,5 @@ mix.js('resources/js/plugins/nestable/script.js', 'public/assets/plugins/nestabl
 // Moment JS
 mix.copy('node_modules/moment/dist/locale', 'public/assets/plugins/moment/locale');
 mix.copy('node_modules/moment/min/moment.min.js', 'public/assets/plugins/moment');
+// Clipboard
+mix.copy('node_modules/clipboard/dist/clipboard.min.js', 'public/assets/plugins/clipboard/').version();

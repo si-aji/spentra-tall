@@ -81,11 +81,14 @@ class WalletGroupModal extends Component
     {
         $selectedWallet = [];
         if(!empty($this->walletGroupList)){
-            foreach ($this->walletGroupList as $wallet) {
-                $walletData = \App\Models\Wallet::where(\DB::raw('BINARY `uuid`'), $wallet)->firstOrFail();
+            $selectedWallet = \App\Models\Wallet::whereIn(\DB::raw('BINARY `uuid`'), $this->walletGroupList)
+                ->pluck('id')
+                ->toArray();
+            // foreach ($this->walletGroupList as $wallet) {
+            //     $walletData = \App\Models\Wallet::where(\DB::raw('BINARY `uuid`'), $wallet)->firstOrFail();
 
-                $selectedWallet[] = $walletData->id;
-            }
+            //     $selectedWallet[] = $walletData->id;
+            // }
         }
 
         $this->validate();

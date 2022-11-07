@@ -94,8 +94,8 @@
         @livewire(\App\Http\Livewire\Sys\Component\RecordTemplateModal::class, ['user' => \Auth::user()], key(generateRandomString()))
     @endif
 
+    {{-- Wallet Modal --}}
     @if (isset($componentWallet) && $componentWallet)
-        {{-- Wallet Modal --}}
         @livewire(\App\Http\Livewire\Sys\Component\WalletModal::class, ['user' => \Auth::user()], key(generateRandomString()))
         {{-- Wallet Balance Modal --}}
         @livewire(\App\Http\Livewire\Sys\Component\WalletBalanceModal::class, ['user' => \Auth::user()], key(generateRandomString()))
@@ -103,6 +103,10 @@
     @if (isset($componentWalletGroup) && $componentWalletGroup)
         {{-- Wallet Group Modal --}}
         @livewire(\App\Http\Livewire\Sys\Component\WalletGroupModal::class, ['user' => \Auth::user()], key(generateRandomString()))
+    @endif
+    @if (isset($componentWalletShare) && $componentWalletShare)
+        {{-- Wallet Group Modal --}}
+        @livewire(\App\Http\Livewire\Sys\Component\WalletShareModal::class, ['user' => \Auth::user()], key(generateRandomString()))
     @endif
 
     {{-- Planned Payment Record --}}

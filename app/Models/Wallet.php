@@ -93,6 +93,12 @@ class Wallet extends Model
             ->using(\App\Models\WalletGroupList::class)
             ->withTimestamps();
     }
+    public function walletShare()
+    {
+        return $this->belongsToMany(\App\Models\WalletShare::class, (new \App\Models\WalletShareDetail())->getTable())
+            ->using(\App\Models\WalletShareDetail::class)
+            ->withTimestamps();
+    }
 
     /**
      * The "boot" method of the model.

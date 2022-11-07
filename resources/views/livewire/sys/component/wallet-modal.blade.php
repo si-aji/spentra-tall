@@ -64,10 +64,10 @@
             }
 
             document.getElementById('modal-wallet').addEventListener('hidden.bs.offcanvas', (e) => {
-                Livewire.emitTo('sys.component.wallet-modal', 'closeModal');
+                @this.call('closeModal')
             });
             document.getElementById('modal-wallet').addEventListener('shown.bs.offcanvas', (e) => {
-                Livewire.emitTo('sys.component.wallet-modal', 'localUpdate', 'walletModalState', 'show');
+                @this.set('walletModalState', 'show');
             });
         });
 
