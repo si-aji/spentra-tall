@@ -41,6 +41,7 @@ class Index extends Component
         $recordLivewire = (new \App\Http\Livewire\Sys\Record\Index());
         $recordLivewire->dataSelectedYear = $this->filterYear;
         $recordLivewire->dataSelectedMonth = $this->filterMonth;
+        $recordLivewire->loadPerPage = $this->loadPerPage;
         $recordLivewire->fetchRecordData($this->selectedWallet);
         $this->recordData = $recordLivewire->dataRecord;
         $this->recordPaginate = $recordLivewire->getPaginate();
