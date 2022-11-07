@@ -191,13 +191,14 @@
         });
 
         const generateList = () => {
+            // console.log("Generate List");
             if(document.getElementById('record-container')){
                 document.getElementById('record-container').innerHTML = ``;
             }
 
             let data = @this.get('recordData');
             let paneEl = document.getElementById('record-container');
-            console.log(data);
+            // console.log(data);
             if(data.length > 0){
                 if(!paneEl.querySelector(`.content-wrapper`)){
                     recordContent = document.createElement('div');
