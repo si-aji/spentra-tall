@@ -71,8 +71,10 @@ class Index extends Component
         }
 
         // Get This week
+        $rawWeeklyStart = (clone $now)->modify('Last Monday');
         $this->weeklyStart = (clone $now)->modify('Last Monday')->format('Y-m-d');
         if(strtolower((clone $now)->format('D')) === 'mon'){
+            $rawWeeklyStart = (clone $now);
             $this->weeklyStart = (clone $now)->format('Y-m-d');
         }
         $rawWeeklyEnd = (clone $now)->modify('Next Sunday');
@@ -82,8 +84,8 @@ class Index extends Component
             $this->weeklyEnd = (clone $rawWeeklyEnd)->format('Y-m-d');
         }
         // Get Prev week
-        $this->prevWeeklyStart = (clone $now)->modify('Last Monday')->format('Y-m-d');
-        $this->prevWeeklyEnd = (clone $now)->modify('Last '.(clone $rawWeeklyEnd)->format('l'))->format('Y-m-d');
+        $this->prevWeeklyStart = (clone $rawWeeklyStart)->modify('Last Monday')->format('Y-m-d');
+        $this->prevWeeklyEnd = (clone $rawWeeklyStart)->modify('Last '.(clone $rawWeeklyEnd)->format('l'))->format('Y-m-d');
 
         // Get Balance
         $this->weeklyAmount = (new \App\Models\WalletGroup())->getBalance('all', [$this->weeklyStart, $this->weeklyEnd], $recordType);

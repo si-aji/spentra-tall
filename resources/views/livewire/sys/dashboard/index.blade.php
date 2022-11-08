@@ -200,17 +200,17 @@
                     <div class=" tw__absolute tw__top-4 tw__w-full tw__px-4">
                         <div class=" tw__flex tw__justify-between">
                             <div class=" tw__flex tw__flex-col">
-                                <small>Last week</small>
-                                <span class="weekly-report" data-date="{{ $weeklyStart }}">-</span>
-                                @if ($weeklyEnd !== $weeklyStart)
-                                    <span class="weekly-report" data-date="{{ $weeklyEnd }}">-</span>
+                                <small>Last Week</small>
+                                <span class="weekly-report" data-date="{{ $prevWeeklyStart }}">-</span>
+                                @if ($prevWeeklyEnd !== $prevWeeklyStart)
+                                    <span class="weekly-report" data-date="{{ $prevWeeklyEnd }}">-</span>
                                 @endif
                             </div>
                             <div class=" tw__flex tw__flex-col">
                                 <small>This week</small>
-                                <span class="weekly-report" data-date="{{ $prevWeeklyStart }}">-</span>
-                                @if ($prevWeeklyEnd !== $prevWeeklyStart)
-                                    <span class="weekly-report" data-date="{{ $prevWeeklyEnd }}">-</span>
+                                <span class="weekly-report" data-date="{{ $weeklyStart }}">-</span>
+                                @if ($weeklyEnd !== $weeklyStart)
+                                    <span class="weekly-report" data-date="{{ $weeklyEnd }}">-</span>
                                 @endif
                             </div>
                         </div>
