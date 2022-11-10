@@ -8,7 +8,7 @@
  */
 function recordContainerFormat(val, index){
     return `
-        <div class=" tw__p-4 tw__text-center">
+        <div class=" tw__py-4 md:tw__px-4 tw__text-center">
             <!-- This is for date -->
             <div class="tw__sticky lg:tw__top-24 tw__top-40">
                 <span class="tw__font-semibold">${momentDateTime(val.datetime, 'ddd')}</span>

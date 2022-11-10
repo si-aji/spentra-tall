@@ -266,6 +266,8 @@ h4 {
 		.choices__list {
 			padding: unset;
 			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
 		}
 	}
 	.choices__list {

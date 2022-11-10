@@ -95,7 +95,6 @@
                             <h2 class="mb-2">8,258</h2>
                             <span>Total Orders</span>
                         </div>
-                        <div id="orderStatisticsChart"></div>
                     </div>
                     <ul class="p-0 m-0">
                         <li class="d-flex mb-4 pb-1">
@@ -222,8 +221,8 @@
                         </div>
                         <div>
                             <small class="text-muted d-block">This Week Amount</small>
-                            <div class="d-flex align-items-center">
-                                <h6 class="mb-0 me-1">{{ formatRupiah($weeklyAmount) }}</h6>
+                            <div class="d-flex align-items-center" x-data="{toggle: false}">
+                                <h6 class="mb-0 me-1" data-orig="{{ formatRupiah($weeklyAmount) }}" data-short="{{ formatRupiah($weeklyAmount, 'Rp', true) }}" x-on:click="toggle = !toggle;$el.innerHTML = `${toggle ? $el.dataset.orig : $el.dataset.short}`">{{ formatRupiah($weeklyAmount, 'Rp', true) }}</h6>
                                 <small class="text-{{ $weeklyRecordType === 'expense' ? ($weeklyAmount < $prevWeeklyAmount ? 'success' : 'danger') : ($weeklyAmount < $prevWeeklyAmount ? 'danger' : 'success') }} fw-semibold">
                                     <i class="bx bx-chevron-{{ $weeklyAmount < $prevWeeklyAmount ? 'down' : 'up' }}"></i>
                                     {{ number_format((float)$weeklyPercentage, 2, '.', '') }}%
@@ -237,15 +236,16 @@
                         </div>
                         <div>
                             <small class="text-muted d-block">Last Week Amount</small>
-                            <div class="d-flex align-items-center">
-                                <h6 class="mb-0 me-1">{{ formatRupiah($prevWeeklyAmount) }}</h6>
+                            <div class="d-flex align-items-center" x-data="{toggle: false}">
+                                <h6 class="mb-0 me-1" data-orig="{{ formatRupiah($prevWeeklyAmount) }}" data-short="{{ formatRupiah($prevWeeklyAmount, 'Rp', true) }}" x-on:click="toggle = !toggle;$el.innerHTML = `${toggle ? $el.dataset.orig : $el.dataset.short}`">{{ formatRupiah($prevWeeklyAmount, 'Rp', true) }}</h6>
                             </div>
                         </div>
                     </div>
                     <div class="d-flex justify-content-center pt-4 gap-2">
-                        <div>
+                        <div x-data="{toggle: false}">
+                                {{-- <h6 class="mb-0 me-1" data-orig="{{ formatRupiah($weeklyAmount) }}" data-short="{{ formatRupiah($weeklyAmount, 'Rp', true) }}" x-on:click="toggle = !toggle;$el.innerHTML = `${toggle ? $el.dataset.orig : $el.dataset.short}`">{{ formatRupiah($weeklyAmount, 'Rp', true) }}</h6> --}}
                             <p class="mb-n1 mt-1 tw__text-center" x-text="`${selectedRecordType} This Week`"></p>
-                            <small class="text-muted">{{ $weeklyAmount !== $prevWeeklyAmount ? ($weeklyAmount > $prevWeeklyAmount ? formatRupiah($weeklyAmount - $prevWeeklyAmount) : formatRupiah($prevWeeklyAmount - $weeklyAmount)) : '' }}{{ ($weeklyAmount === $prevWeeklyAmount ? 'same with' : ($weeklyAmount > $prevWeeklyAmount ? ' more than' : ' less than')) }} last week</small>
+                            <small class="text-muted">{{ $weeklyAmount !== $prevWeeklyAmount ? ($weeklyAmount > $prevWeeklyAmount ? formatRupiah($weeklyAmount - $prevWeeklyAmount, 'Rp', true) : formatRupiah($prevWeeklyAmount - $weeklyAmount, 'Rp', true)) : '' }}{{ ($weeklyAmount === $prevWeeklyAmount ? 'same with' : ($weeklyAmount > $prevWeeklyAmount ? ' more than' : ' less than')) }} last week</small>
                         </div>
                     </div>
                 </div>
@@ -290,7 +290,7 @@
 </div>
 
 @section('js_inline')
-    {{-- Chart --}}
+    {{-- Cashflow Chart --}}
     <script>
         // JS global variables
         let config = {
@@ -320,191 +320,206 @@
         // Cash Flow Report Chart - Bar Chart
         // --------------------------------------------------------------------
         const cashFlowChartEl = document.querySelector('#cashFlowChart'),
-        cashFlowChartOptions = {
-            series: [
-                {
-                    name: 'Income',
-                    data: @json($cashFlowIncome)
-                }, {
-                    name: 'Expense',
-                    data: @json($cashFlowExpense)
-                }
-            ],
-            chart: {
-                height: 300,
-                stacked: true,
-                type: 'bar',
-                toolbar: { show: false }
-            },
-            plotOptions: {
-                bar: {
-                    horizontal: false,
-                    columnWidth: '20%',
-                    borderRadius: 5,
-                    startingShape: 'rounded',
-                    endingShape: 'rounded'
-                }
-            },
-            colors: [config.colors.primary, config.colors.info],
-            dataLabels: {
-                enabled: false
-            },
-            // stroke: {
-            //     curve: 'smooth',
-            //     width: 0,
-            //     lineCap: 'round',
-            //     colors: [cardColor]
-            // },
-            legend: {
-                show: true,
-                horizontalAlign: 'left',
-                position: 'top',
-                markers: {
-                    height: 8,
-                    width: 8,
-                    radius: 12,
-                    offsetX: -3
+            cashFlowChartOptions = {
+                series: [
+                    {
+                        name: 'Income',
+                        data: @json($cashFlowIncome)
+                    }, {
+                        name: 'Expense',
+                        data: @json($cashFlowExpense)
+                    }
+                ],
+                chart: {
+                    height: 300,
+                    stacked: true,
+                    type: 'bar',
+                    toolbar: { show: false }
                 },
-                labels: {
-                    colors: axisColor
+                plotOptions: {
+                    bar: {
+                        horizontal: false,
+                        columnWidth: '20%',
+                        borderRadius: 5,
+                        startingShape: 'rounded',
+                        endingShape: 'rounded'
+                    }
                 },
-                itemMargin: {
-                    horizontal: 10
-                }
-            },
-            grid: {
-                borderColor: borderColor,
-                padding: {
-                    top: 0,
-                    bottom: -8,
-                    left: 20,
-                    right: 20
-                }
-            },
-            xaxis: {
-                categories: @json($cashFlowLabel),
-                labels: {
-                    style: {
-                        fontSize: '13px',
+                colors: [config.colors.primary, config.colors.info],
+                dataLabels: {
+                    enabled: false
+                },
+                legend: {
+                    show: true,
+                    horizontalAlign: 'left',
+                    position: 'top',
+                    markers: {
+                        height: 8,
+                        width: 8,
+                        radius: 12,
+                        offsetX: -3
+                    },
+                    labels: {
                         colors: axisColor
+                    },
+                    itemMargin: {
+                        horizontal: 10
                     }
                 },
-                axisTicks: {
-                    show: false
-                },
-                axisBorder: {
-                    show: false
-                }
-            },
-            yaxis: {
-                labels: {
-                    style: {
-                        fontSize: '13px',
-                        colors: axisColor
-                    }
-                }
-            },
-            states: {
-                hover: {
-                    filter: {
-                        type: 'none'
+                grid: {
+                    borderColor: borderColor,
+                    padding: {
+                        top: 0,
+                        bottom: -8,
+                        left: 20,
+                        right: 20
                     }
                 },
-                active: {
-                    filter: {
-                        type: 'none'
+                xaxis: {
+                    categories: @json($cashFlowLabel),
+                    labels: {
+                        style: {
+                            fontSize: '13px',
+                            colors: axisColor
+                        }
+                    },
+                    axisTicks: {
+                        show: false
+                    },
+                    axisBorder: {
+                        show: false
                     }
-                }
-            },
-            tooltip: {
-                shared: true,
-                intersect: false
-            },
-        };
+                },
+                yaxis: {
+                    labels: {
+                        style: {
+                            fontSize: '13px',
+                            colors: axisColor
+                        },
+                        formatter: (value) => {
+                            return formatRupiah(value);
+                        },
+                    }
+                },
+                states: {
+                    hover: {
+                        filter: {
+                            type: 'none'
+                        }
+                    },
+                    active: {
+                        filter: {
+                            type: 'none'
+                        }
+                    }
+                },
+                tooltip: {
+                    shared: true,
+                    intersect: false
+                },
+                responsive: [
+                    {
+                        breakpoint: 425,
+                        options: {
+                            plotOptions: {
+                                bar: {
+                                    horizontal: false,
+                                    columnWidth: '30%',
+                                    borderRadius: 3,
+                                    startingShape: 'rounded',
+                                    endingShape: 'rounded'
+                                }
+                            },
+                            xaxis: {
+                                categories: @js($cashFlowLabel).map((e) => {
+                                    return `${moment().month(e).format('M')}`;
+                                }),
+                            }
+                        }
+                    }
+                ]
+            };
         if (typeof cashFlowChartEl !== undefined && cashFlowChartEl !== null) {
             const cashFlowChart = new ApexCharts(cashFlowChartEl, cashFlowChartOptions);
             cashFlowChart.render();
         }
-
-        // Growth Chart - Radial Bar Chart
+    </script>
+    {{-- Category --}}
+    <script>
+        // Order Statistics Chart
         // --------------------------------------------------------------------
-        const growthChartEl = document.querySelector('#growthChart'),
-        growthChartOptions = {
-            series: [78],
-            labels: ['Growth'],
-            chart: {
-                height: 240,
-                type: 'radialBar'
-            },
-            plotOptions: {
-                radialBar: {
-                size: 150,
-                    offsetY: 10,
-                    startAngle: -150,
-                    endAngle: 150,
-                    hollow: {
-                        size: '55%'
-                    },
-                    track: {
-                        background: cardColor,
-                        strokeWidth: '100%'
-                    },
-                    dataLabels: {
-                        name: {
-                            offsetY: 15,
-                            color: headingColor,
-                            fontSize: '15px',
-                            fontWeight: '600',
-                            fontFamily: 'Public Sans'
-                        },
-                        value: {
-                            offsetY: -25,
-                            color: headingColor,
-                            fontSize: '22px',
-                            fontWeight: '500',
-                            fontFamily: 'Public Sans'
+        let dataset = @js($categoryGraphData);
+        const chartOrderStatistics = document.querySelector('#orderStatisticsChart'),
+            orderChartConfig = {
+                chart: {
+                    type: 'donut'
+                },
+                labels: @js($categoryGraphLabel),
+                series: dataset,
+                tooltip: {
+                    y: {
+                        formatter: function(value) {
+                            return formatRupiah(value, 'Rp', true);
+                        }
+                    }
+                },
+                colors: [config.colors.primary, config.colors.secondary, config.colors.info, config.colors.success],
+                stroke: {
+                    width: 5,
+                    colors: cardColor
+                },
+                dataLabels: {
+                    enabled: false,
+                    formatter: function (val, opt) {
+                        return parseInt(val) + '%';
+                    }
+                },
+                legend: {
+                    show: false
+                },
+                grid: {
+                    padding: {
+                        top: 0,
+                        bottom: 0,
+                        right: 15
+                    }
+                },
+                plotOptions: {
+                    pie: {
+                        donut: {
+                            size: '75%',
+                            labels: {
+                                show: true,
+                                value: {
+                                    fontSize: '1.5rem',
+                                    fontFamily: 'Public Sans',
+                                    // color: headingColor,
+                                    offsetY: -15,
+                                    formatter: function (val) {
+                                        return !(isNaN(val)) ? formatRupiah(val, 'Rp', true) : val;
+                                    }
+                                },
+                                name: {
+                                    offsetY: 20,
+                                    fontFamily: 'Public Sans',
+                                },
+                                total: {
+                                    show: true,
+                                    fontSize: '0.8125rem',
+                                    color: axisColor,
+                                    label: 'by Category',
+                                    formatter: function (w) {
+                                        return 'Cashflow';
+                                    }
+                                }
+                            },
                         }
                     }
                 }
-            },
-            colors: [config.colors.primary],
-            fill: {
-                type: 'gradient',
-                gradient: {
-                    shade: 'dark',
-                    shadeIntensity: 0.5,
-                    gradientToColors: [config.colors.primary],
-                    inverseColors: true,
-                    opacityFrom: 1,
-                    opacityTo: 0.6,
-                    stops: [30, 70, 100]
-                }
-            },
-            stroke: {
-                dashArray: 5
-            },
-            grid: {
-                padding: {
-                    top: -35,
-                    bottom: -10
-                }
-            },
-            states: {
-                hover: {
-                    filter: {
-                        type: 'none'
-                    }
-                },
-                active: {
-                    filter: {
-                        type: 'none'
-                    }
-                }
-            }
-        };
-        if (typeof growthChartEl !== undefined && growthChartEl !== null) {
-            const growthChart = new ApexCharts(growthChartEl, growthChartOptions);
-            growthChart.render();
+            };
+        if (typeof chartOrderStatistics !== undefined && chartOrderStatistics !== null) {
+            const statisticsChart = new ApexCharts(chartOrderStatistics, orderChartConfig);
+            statisticsChart.render();
         }
     </script>
 

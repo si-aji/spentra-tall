@@ -51,6 +51,8 @@ class NotificationFeature extends Component
         $datetime = date("Y-m-d H:i:s");
         if(\Session::has('SAUSER_TZ_OFFSET')){
             $datetime = (new DateTime('now', new DateTimeZone(\Session::get('SAUSER_TZ'))))->format('Y-m-d');
+        } else {
+            $datetime = date("Y-m-d", strtotime($datetime));
         }
 
         // Main QUery

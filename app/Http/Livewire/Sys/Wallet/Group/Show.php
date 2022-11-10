@@ -11,6 +11,11 @@ class Show extends Component
     public $walletGroup = null;
     public $walletGroupUuid = null;
 
+    // Paginate
+    public $loadPerPage = 10;
+    // Record
+    public $walletRecordData;
+
     protected $listeners = [
         'refreshComponent' => '$refresh',
     ];
@@ -32,13 +37,26 @@ class Show extends Component
      */
     public function render()
     {
-        $this->dispatchBrowserEvent('walletGroupShow-loadData');
+        $recordLivewire = new \App\Http\Livewire\Sys\Record\Index();
+        $recordLivewire->loadPerPage = $this->loadPerPage;
+        $recordLivewire->fetchRecordData($this->walletGroup->walletGroupList()->pluck((new \App\Models\Wallet())->getTable().'.id')->toArray());
+        $this->walletRecordData = $recordLivewire->dataRecord;
 
-        return view('livewire.sys.wallet.group.show')->extends('layouts.sneat', [
+
+        $this->dispatchBrowserEvent('walletGroupShow-loadData');
+        $this->dispatchBrowserEvent('walletGroupShowRecordLoadData');
+        return view('livewire.sys.wallet.group.show', [
+            'paginate' => $recordLivewire->getPaginate()
+        ])->extends('layouts.sneat', [
             'menuState' => $this->menuState,
             'submenuState' => $this->submenuState,
             'componentWalletGroup' => true,
             'componentWallet' => true
         ]);
+    }
+
+    public function loadMore()
+    {
+        $this->loadPerPage += $this->loadPerPage;
     }
 }

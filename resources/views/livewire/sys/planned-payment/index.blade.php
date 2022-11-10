@@ -154,7 +154,7 @@
         const generateList = () => {
             // Get data from Component
             let data = @this.get('dataPlannedPayment');
-            console.log(data);
+            // console.log(data);
             // Define container
             let paneEl = document.getElementById('plannedPayment-container');
             let plannedContent = null;
@@ -173,7 +173,26 @@
                 }
 
                 // Loop through data
+                let lastPeriod = null;
                 data.forEach((val, index) => {
+                    let currentMonthPeriod = moment(val.next_date).format('YYYY-MM');
+                    if(lastPeriod !== null && lastPeriod !== currentMonthPeriod){
+                        let divider = document.createElement('div');
+                        divider.classList.add('divider');
+                        plannedContent.appendChild(divider);
+                        divider.innerHTML = `
+                            <div class="divider-text">
+                                <span class=" tw__flex tw__items-center tw__gap-1">
+                                    <i class='bx bx-time'></i>
+                                </span>
+                            </div>
+                        `;
+
+                        lastPeriod = currentMonthPeriod;
+                    } else if(lastPeriod !== currentMonthPeriod){
+                        lastPeriod = currentMonthPeriod;
+                    }
+
                     let listContainer = document.createElement('div');
                     listContainer.classList.add('list-wrapper', 'tw__flex', 'tw__gap-4');
                     plannedContent.appendChild(listContainer);

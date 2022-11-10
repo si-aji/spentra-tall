@@ -17,7 +17,7 @@ const isEmptyObject = (obj) => {
  * @param {*} prefix 
  * @returns 
  */
-function formatRupiah(angka, prefix = 'Rp'){
+function formatRupiah(angka, prefix = 'Rp', short = false){
     let negative = angka < 0 ? true : false;
 
     // let balanceHide_state = false;
@@ -26,22 +26,45 @@ function formatRupiah(angka, prefix = 'Rp'){
     //     return prefix == undefined ? rupiah : prefix+" "+rupiah;
     // }
 
-    angka = Math.round(angka * 100) / 100;
-    let split = angka.toString().split('.');
-    let decimal = 0;
-    if(split.length > 1){
-        angka = split[0];
-        decimal = split[1];
-    }
-    var	reverse = angka.toString().split('').reverse().join(''),
-	rupiah 	= reverse.match(/\d{1,3}/g);
-    rupiah	= rupiah.join('.').split('').reverse().join('');
+    // Check if short parameter is true
+    if(short){
+        rupiah = shortNumber(angka);
+    } else {
+        angka = Math.round(angka * 100) / 100;
 
-    if(split.length > 1){
-        rupiah += `,${decimal}`;
+        let split = angka.toString().split('.');
+        let decimal = 0;
+        if(split.length > 1){
+            angka = split[0];
+            decimal = split[1];
+        }
+        var	reverse = angka.toString().split('').reverse().join(''),
+        rupiah 	= reverse.match(/\d{1,3}/g);
+        rupiah	= rupiah.join('.').split('').reverse().join('');
+        if(split.length > 1){
+            rupiah += `,${decimal}`;
+        }
     }
     
     return `${(prefix == undefined ? `${negative ? '(-' : ''}${rupiah}${negative ? ')' : ''}` : `${prefix} ${negative ? '(-' : ''}${rupiah}${negative ? ')' : ''}`)}`;
+}
+
+/**
+ * Make short number from large number
+ * 
+ * Example: 1.000.000 will be converted to 1M
+ * 
+ * @param {*} number 
+ * @returns 
+ */
+function shortNumber(number){
+    let units = ['', 'K', 'M', 'B', 'T'];
+    let i = 0;
+    for(i = 0;number >= 1000; i++){
+      number /= 1000;
+    }
+    
+    return `${Math.round((number + Number.EPSILON) * 100) / 100}${units[i]}`;
 }
 
 /**
@@ -130,3 +153,13 @@ function clipboardTooltip(el, action = 'show', message = '')
     }
     return true;
 }
+
+// export default {
+//     isEmptyObject,
+//     formatRupiah,
+//     shortNumber,
+//     ucwords,
+//     convertDateTime,
+//     momentDateTime,
+//     clipboardTooltip
+// };
