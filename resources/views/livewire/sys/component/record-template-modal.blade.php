@@ -346,6 +346,7 @@
         });
         window.addEventListener('trigger-eventRecordTemplate', (event) => {
             let el = event.detail;
+            console.log(event);
             if(el.hasOwnProperty('recordTemplateType')){
                 let data = el.recordTemplateType;
                 document.querySelectorAll('a.record_template-type').forEach((el) => {

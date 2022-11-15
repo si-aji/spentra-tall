@@ -27,7 +27,7 @@ return [
                 'icon' => 'bx bx-money',
                 'route' => null,
                 'is_header' => false,
-                'state' => null,
+                'state' => 'budget',
                 'sub' => [],
                 'disabled' => true
             ], [

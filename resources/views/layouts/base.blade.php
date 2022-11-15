@@ -49,6 +49,10 @@
         </script> --}}
         @stack('javascript')
 
+        {{-- PACE Loader --}}
+        <link href="{{ mix('assets/plugins/pace-js/themes/purple/pace-theme-minimal.css') }}" rel="stylesheet">
+        <script src="{{ mix('assets/plugins/pace-js/pace.js') }}"></script>
+
         <!-- CSRF Token -->
         <meta name="csrf-token" content="{{ csrf_token() }}">
     </head>

@@ -536,6 +536,9 @@
                     }
                 });
             }
+            if(el.hasOwnProperty('recordTemplate')){
+                recordModalTemplateChoice.setChoiceByValue(el.recordTemplate);
+            }
             if(el.hasOwnProperty('recordCategory')){
                 recordModalCategoryChoice.setChoiceByValue(el.recordCategory);
             }

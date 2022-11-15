@@ -214,6 +214,16 @@ class RecordTemplateModal extends Component
             'message' => 'Successfully '.(empty($this->recordTemplateUuid) ? 'store new' : 'update').' Record Template Data'
         ]);
         $this->reset($this->recordResetField);
+        $this->dispatchBrowserEvent('trigger-eventRecordTemplate', [
+            'recordTemplateType' => $this->recordTemplateType,
+            'recordTemplateAmount' => $this->recordTemplateAmount,
+            'recordTemplateExtraType' => $this->recordTemplateExtraType,
+            'recordTemplateExtraAmount' => $this->recordTemplateExtraAmount,
+            'recordTemplateCategory' => $this->recordTemplateCategory,
+            'recordTemplateWallet' => $this->recordTemplateWallet,
+            'recordTemplateWalletTransfer' => $this->recordTemplateWalletTransfer,
+            'recordTemplateTag' => $this->recordTemplateTag,
+        ]);
     }
     
     /**
@@ -261,7 +271,7 @@ class RecordTemplateModal extends Component
         $this->reset($this->recordResetField);
         $this->dispatchBrowserEvent('close-modalRecordTemplate');
         $this->dispatchBrowserEvent('trigger-eventRecordTemplate', [
-            'recordTemplateype' => $this->recordTemplateType,
+            'recordTemplateType' => $this->recordTemplateType,
             'recordTemplateAmount' => $this->recordTemplateAmount,
             'recordTemplateExtraType' => $this->recordTemplateExtraType,
             'recordTemplateExtraAmount' => $this->recordTemplateExtraAmount,

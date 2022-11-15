@@ -91,7 +91,8 @@ class RecordModal extends Component
             'recordCategory' => $this->recordCategory,
             'recordWallet' => $this->recordWallet,
             'recordWalletTransfer' => $this->recordWalletTransfer,
-            'recordTag' => $this->recordTag
+            'recordTag' => $this->recordTag,
+            'recordTemplate' => $this->recordTemplate,
         ]);
     }
 
@@ -229,7 +230,8 @@ class RecordModal extends Component
             'recordCategory' => $this->recordCategory,
             'recordWallet' => $this->recordWallet,
             'recordWalletTransfer' => $this->recordWalletTransfer,
-            'recordTag' => $this->recordTag
+            'recordTag' => $this->recordTag,
+            'recordTemplate' => $this->recordTemplate,
         ]);
         $this->dispatchBrowserEvent('open-modal');
     }
@@ -541,6 +543,7 @@ class RecordModal extends Component
                 'recordWallet' => $this->recordWallet,
                 'recordWalletTransfer' => $this->recordWalletTransfer,
                 'recordTag' => $this->recordTag,
+                'recordTemplate' => $this->recordTemplate,
                 'resetPeriod' => true
             ]);
             $this->dispatchBrowserEvent('wire-action', [
@@ -631,7 +634,8 @@ class RecordModal extends Component
             'recordCategory' => $this->recordCategory,
             'recordWallet' => $this->recordWallet,
             'recordWalletTransfer' => $this->recordWalletTransfer,
-            'recordTag' => $this->recordTag
+            'recordTag' => $this->recordTag,
+            'recordTemplate' => $this->recordTemplate,
         ]);
         $this->resetValidation();
     }
