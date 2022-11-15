@@ -25,11 +25,10 @@ return [
             ], [
                 'name' => 'Budget',
                 'icon' => 'bx bx-money',
-                'route' => null,
+                'route' => 'sys.budget.index',
                 'is_header' => false,
-                'state' => null,
+                'state' => 'budget',
                 'sub' => [],
-                'disabled' => true
             ], [
                 'name' => 'Goals',
                 'icon' => 'bx bx-bullseye',

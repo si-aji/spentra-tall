@@ -156,6 +156,10 @@ Route::group([
     Route::get('/', \App\Http\Livewire\Sys\Dashboard\Index::class)
         ->name('index');
 
+    // Budget
+    Route::get('budget', \App\Http\Livewire\Sys\Budget\Index::class)
+        ->name('budget.index');
+
     // Planned Payment
     Route::get('planned-payment/{uuid}', \App\Http\Livewire\Sys\PlannedPayment\Show::class)
         ->name('planned-payment.show');
