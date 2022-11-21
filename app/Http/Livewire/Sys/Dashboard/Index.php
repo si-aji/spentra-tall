@@ -35,23 +35,20 @@ class Index extends Component
     // Category Graph
     public $categoryGraphLabel = [];
     public $categoryGraphData = [];
+    public $categoryGraphColor = [];
     public function fetchCategoryGraph()
     {
-        $query = \App\Models\Category::whereHas('record', function($q){
-            $now = new \DateTime(date("Y-m-d H:i:s"));
-            if(\Session::has('SAUSER_TZ')){
-                $now = $now->setTimezone(new \DateTimeZone(\Session::get('SAUSER_TZ')));
-            }
-
-            return $q->where('status', 'complete')
-                ->whereYear('datetime', $now->format('Y'));
-        })
-        ->limit(4);
+        $query = \App\Models\Category::limit(4);
 
         $this->categoryGraphLabel = (clone $query)->pluck('name')
             ->toArray();
-        foreach((clone $query)->pluck('id')->toArray() as $categoryId){
-            array_push($this->categoryGraphData, ((rand(1, 15) * 1000)) * [-1, 1][rand(0, 1)]);
+        foreach((clone $query)->get() as $key => $category){
+            // array_push($this->categoryGraphData, ((rand(1, 15) * 1000)) * 1);
+            $value = ((rand(1, 15) * [1000, 10000][rand(0, 1)])) * [-1, 1][rand(0, 1)];
+            array_push($this->categoryGraphData, $value * ($value < 0 ? -1 : 1));
+            array_push($this->categoryGraphColor, !empty($category->color) ? $category->color : 'rgba(133, 146, 163, 1)');
+
+            $this->categoryGraphLabel[$key] = '('.($value < 0 ? '-' : '+').') '.$this->categoryGraphLabel[$key];
         }
     }
 

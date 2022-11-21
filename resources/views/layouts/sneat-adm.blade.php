@@ -1,6 +1,7 @@
 @extends('layouts.base', [
     'sbodyClass' => '',
-    'shtmlClass' => 'light-style layout-menu-fixed'
+    'shtmlClass' => 'light-style layout-menu-fixed',
+    'parentTitle' => 'Admin'
 ])
 
 {{-- Fonts --}}
@@ -56,12 +57,12 @@
 
         <div class="layout-container">
             <!-- Layout Sidebar -->
-            @include('layouts.partials.sys.sidebar')
+            @include('layouts.partials.adm.sidebar')
 
             <!-- Layout container -->
             <div class="layout-page before:tw__fixed before:tw__block before:tw__w-full before:tw__h-4 before:tw__bg-gradient-to-t tw__to-[rgba(245,245,249,.6)] before:tw__backdrop-blur-[10px] before:tw__z-[9]">
                 <!-- Layout Navbar -->
-                @include('layouts.partials.sys.navbar')
+                @include('layouts.partials.adm.navbar')
 
                 <!-- Content wrapper -->
                 <div class="content-wrapper tw__mt-20">
@@ -75,7 +76,7 @@
                     </div>
 
                     <!-- Layout Footer -->
-                    @include('layouts.partials.sys.footer')
+                    @include('layouts.partials.adm.footer')
                 </div>
             </div>
         </div>

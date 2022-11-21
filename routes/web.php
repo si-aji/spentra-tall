@@ -22,8 +22,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function(){
-    \Session::forget('SAUSER_TZ');
-    \Session::forget('SAUSER_TZ_OFFSET');
     return view('welcome');
 })->name('home');
 

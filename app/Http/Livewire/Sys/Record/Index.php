@@ -149,16 +149,17 @@ class Index extends Component
         $this->dataRecord = $this->dataRecord->values()->take($this->loadPerPage);
     }
     public function mount()
-    {
+    {    
         $this->dataSelectedYear = date("Y");
-        $this->dataSelectedMonth = date("Y-m-01", strtotime($this->dataSelectedYear.'-'.($this->dataSelectedYear !== date("Y") ? '12' : date("m")).'-01'));
-        
+
         $this->menuState = 'record';
         $this->submenuState = null;
     }
 
     public function render()
     {
+        $this->dataSelectedMonth = date("Y-m-01", strtotime($this->dataSelectedYear.'-'.($this->dataSelectedYear !== date("Y") ? '12' : date("m")).'-01'));
+
         // Get Record Data
         $this->fetchRecordData();
         

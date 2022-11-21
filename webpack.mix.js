@@ -90,3 +90,6 @@ mix.copy('node_modules/clipboard/dist/clipboard.min.js', 'public/assets/plugins/
 mix.copyDirectory('node_modules/pace-js/templates', 'public/assets/plugins/pace-js/templates');
 mix.copyDirectory('node_modules/pace-js/themes', 'public/assets/plugins/pace-js/themes');
 mix.copy('node_modules/pace-js/pace.js', 'public/assets/plugins/pace-js/pace.js').version();
+// Color Pickr
+mix.copy('node_modules/@simonwep/pickr/dist/pickr.min.js', 'public/assets/plugins/color-pickr/pickr.min.js').version();
+mix.copyDirectory('node_modules/@simonwep/pickr/dist/themes', 'public/assets/plugins/color-pickr/themes');

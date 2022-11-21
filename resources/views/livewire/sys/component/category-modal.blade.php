@@ -1,6 +1,6 @@
 <div>
     {{-- If your happiness depends on money, you will never be happy with yourself. --}}
-    <form id="category-form" wire:submit.prevent="save()">
+    <form id="category-form" wire.>
         <div class="offcanvas offcanvas-end" tabindex="-1" id="modal-category" aria-labelledby="offcanvasLabel" wire:init="" wire:ignore.self x-data="">
             <div class="offcanvas-header">
                 <h5 id="offcanvasLabel" class="offcanvas-title">Category: {{ $categoryTitle }}</h5>
@@ -10,12 +10,14 @@
                 {{-- Parent --}}
                 <div class="form-group tw__mb-4">
                     <label for="input_category-category_id" data-selected="{{ $categoryParent }}">Parent</label>
-                    <select class="form-control @error('categoryParent') is-invalid @enderror" id="input_category-category_id" name="category_id" placeholder="Search for Category Data" x-on:change="$wire.localUpdate('categoryParent', $event.target.value)" {{ isset($categoryUuid) && !empty($categoryUuid) ? 'disabled' : '' }}>
-                        <option value="" {{ $categoryParent == '' ? 'selected' : '' }}>Search for Category Data</option>
-                        @foreach ($listCategory as $category)
-                            <option value="{{ $category->uuid }}" {{ !empty($categoryParent) && $category->uuid === $categoryParent ? 'selected' : '' }}>{{ $category->name }}</option>
-                        @endforeach
-                    </select>
+                    <div wire:ignore>
+                        <select class="form-control @error('categoryParent') is-invalid @enderror" id="input_category-category_id" name="category_id" placeholder="Search for Category Data" x-on:change="$wire.localUpdate('categoryParent', $event.target.value)" {{ isset($categoryUuid) && !empty($categoryUuid) ? 'disabled' : '' }}>
+                            <option value="" {{ $categoryParent == '' ? 'selected' : '' }}>Search for Category Data</option>
+                            @foreach ($listCategory as $category)
+                                <option value="{{ $category->uuid }}">{{ $category->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                     @error('categoryParent')
                         <small class="invalid-feedback tw__block">{{ $message }}</small>
                     @enderror
@@ -27,10 +29,19 @@
                 {{-- Name --}}
                 <div class="form-group tw__mb-4">
                     <label for="input_category-name">Name</label>
-                    <input type="text" class="form-control @error('categoryName') is-invalid @enderror" name="name" id="input_category-name" placeholder="Name" wire:model.defer="categoryName" value="{{ $categoryName }}">
-                    @error('categoryName')
-                        <small class="invalid-feedback tw__block">{{ $message }}</small>
-                    @enderror
+                    <div class=" tw__flex tw__items-center tw__gap-2">
+                        <div class="" wire:ignore>
+                            <div class=" tw__h-9 tw__w-9 tw__rounded tw__border tw__border-[#d9dee3]" id="category-color_pickr">
+                            </div>
+                            <input type="hidden" name="categoryColor" id="input_category-color" readonly>
+                        </div>
+                        <div class=" tw__w-full">
+                            <input type="text" class="form-control @error('categoryName') is-invalid @enderror" name="name" id="input_category-name" placeholder="Name" wire:model.defer="categoryName" value="{{ $categoryName }}">
+                            @error('categoryName')
+                                <small class="invalid-feedback tw__block">{{ $message }}</small>
+                            @enderror
+                        </div>
+                    </div>
                 </div>
     
                 <button type="submit" class="btn btn-primary mb-2 d-grid w-100">Submit</button>
@@ -49,8 +60,113 @@
 @push('javascript')
     <script>
         window.addEventListener('category_wire-init', (event) => {
+            document.getElementById('modal-category').addEventListener('hidden.bs.offcanvas', (e) => {
+                Livewire.emitTo('sys.component.category-modal', 'closeModal');
+                colorPickrInit();
+            });
+            document.getElementById('modal-category').addEventListener('shown.bs.offcanvas', (e) => {
+                Livewire.emitTo('sys.component.category-modal', 'localUpdate', 'categoryModalState', 'show');
+            });
+        });
+
+        window.addEventListener('category_wire-modalShow', (event) => {
+            colorPickrInit(@this.get('categoryColor'));
+
+            var myModalEl = document.getElementById('modal-category')
+            var modal = new bootstrap.Offcanvas(myModalEl)
+            modal.show();
+        });
+
+        let colorPickr = null;
+        const colorPickrInit = (defaultColor = null) => {
+            const el = document.createElement('p');
+            el.classList.add('tw__w-full', 'tw__h-full', 'tw__flex');
+            document.getElementById('category-color_pickr').appendChild(el);
+            if(colorPickr){
+                colorPickr.destroyAndRemove();
+            }
+
+            let conf = {
+                el: el,
+                theme: 'monolith',
+                swatches: JSON.parse(localStorage.getItem('pickrPalette')),
+                components: {
+                    preview: false,
+                    opacity: false,
+                    hue: true,
+                    interaction: {
+                        hex: false,
+                        rgba: false,
+                        hsva: false,
+                        input: true,
+                        clear: true,
+                        save: true,
+                        cancel: true
+                    }
+                },
+                defaultRepresentation: 'HEXA'
+            };
+            // Set Default Color
+            if(defaultColor !== null){
+                // Push default color to existing conf
+                conf.default = defaultColor;
+            }
+
+            // Color Pickr
+            colorPickr = new Pickr(conf);
+            colorPickr.on('init', (instance) => {
+                instance._root.button.closest('div').style.display = 'flex';
+                instance._root.button.closest('div').style.width = '100%';
+                instance._root.button.closest('div').style.height = '100%';
+                instance._root.button.style.width = '100%';
+                instance._root.button.style.height = '100%';
+
+                instance._root.interaction.cancel.value = `Palette Reset`;
+                instance._root.interaction.save.value = `Palette Add`;
+            }).on('change', (color, source, instance) => {
+                colorPickr.applyColor(true);
+                if(document.getElementById('input_category-color')){
+                    document.getElementById('input_category-color').value = color.toRGBA().toString();
+                }
+            }).on('save', (color, instance) => {
+                if(color !== null){
+                    let palette = [];
+                    if(localStorage.getItem('pickrPalette')){
+                        palette = JSON.parse(localStorage.getItem('pickrPalette'));
+                    }
+
+                    let selected = color.toRGBA().toString();
+                    if(!palette.includes(selected)){
+                        palette.push(selected);
+
+                        colorPickr.addSwatch(selected);
+                        localStorage.setItem('pickrPalette', JSON.stringify(palette));
+                    }
+
+                }
+            }).on('cancel', (e) => {
+                let palette = JSON.parse(localStorage.getItem('pickrPalette'));
+                palette.forEach((val, index) => {
+                    colorPickr.removeSwatch(0);
+                });
+                localStorage.setItem('pickrPalette', JSON.stringify([]));
+            });
+        }
+
+        let categoryChoice = null;
+        document.addEventListener('DOMContentLoaded', (e) => {
+            if(document.getElementById('category-form')){
+                document.getElementById('category-form').addEventListener('submit', (e) => {
+                    e.preventDefault();
+
+                    @this.set('categoryParent', document.getElementById('input_category-category_id').value);
+                    @this.set('categoryName', document.getElementById('input_category-name').value);
+                    @this.set('categoryColor', document.getElementById('input_category-color').value);
+                    @this.save();
+                });
+            }
+
             // Choices
-            let categoryChoice = null;
             if(document.getElementById('input_category-category_id')){
                 const categoryEl = document.getElementById('input_category-category_id');
                 categoryChoice = new Choices(categoryEl, {
@@ -63,18 +179,8 @@
                 });
             }
 
-            document.getElementById('modal-category').addEventListener('hidden.bs.offcanvas', (e) => {
-                Livewire.emitTo('sys.component.category-modal', 'closeModal');
-            });
-            document.getElementById('modal-category').addEventListener('shown.bs.offcanvas', (e) => {
-                Livewire.emitTo('sys.component.category-modal', 'localUpdate', 'categoryModalState', 'show');
-            });
-        });
-
-        window.addEventListener('category_wire-modalShow', (event) => {
-            var myModalEl = document.getElementById('modal-category')
-            var modal = new bootstrap.Offcanvas(myModalEl)
-            modal.show();
+            // Color Pickr
+            colorPickrInit();
         });
     </script>
 @endpush

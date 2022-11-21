@@ -4,9 +4,9 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         @hasSection('title')
-            <title>@yield('title') - {{ config('app.name') }}</title>
+            <title>{{ isset($parentTitle) && !empty($parentTitle) ? ($parentTitle).' | ' : '' }}@yield('title') - {{ config('app.name') }}</title>
         @else
-            <title>{{ config('app.name') }}</title>
+            <title>{{ (isset($parentTitle) && !empty($parentTitle) ? ($parentTitle).' | ' : '').config('app.name') }}</title>
         @endif
 
         <!-- Favicon -->

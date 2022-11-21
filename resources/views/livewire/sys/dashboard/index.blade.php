@@ -456,6 +456,7 @@
                 },
                 labels: @js($categoryGraphLabel),
                 series: dataset,
+                colors: @js($categoryGraphColor),
                 tooltip: {
                     y: {
                         formatter: function(value) {
@@ -463,7 +464,6 @@
                         }
                     }
                 },
-                colors: [config.colors.primary, config.colors.secondary, config.colors.info, config.colors.success],
                 stroke: {
                     width: 5,
                     colors: cardColor
@@ -493,7 +493,6 @@
                                 value: {
                                     fontSize: '1.5rem',
                                     fontFamily: 'Public Sans',
-                                    // color: headingColor,
                                     offsetY: -15,
                                     formatter: function (val) {
                                         return !(isNaN(val)) ? formatRupiah(val, 'Rp', true) : val;
@@ -517,6 +516,7 @@
                     }
                 }
             };
+
         if (typeof chartOrderStatistics !== undefined && chartOrderStatistics !== null) {
             const statisticsChart = new ApexCharts(chartOrderStatistics, orderChartConfig);
             statisticsChart.render();

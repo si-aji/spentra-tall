@@ -20,6 +20,7 @@ class CategoryModal extends Component
     public $categoryUuid = null; // State current active data
     public $categoryParent = '';
     public $categoryName = null;
+    public $categoryColor = null;
 
     public $categoryResetField = [];
     protected $listeners = [
@@ -44,6 +45,7 @@ class CategoryModal extends Component
             'categoryTitle',
             'categoryParent',
             'categoryName',
+            'categoryColor'
         ];
     }
 
@@ -114,6 +116,7 @@ class CategoryModal extends Component
         $data->user_id = \Auth::user()->id;
         $data->parent_id = !empty($parent) ? $parent->id : null;
         $data->name = $this->categoryName;
+        $data->color = $this->categoryColor;
         $data->save();
 
         $this->fetchMainCategory();
@@ -141,6 +144,7 @@ class CategoryModal extends Component
         $this->categoryTitle = 'Edit';
         $this->categoryParent = $data->parent()->exists() ? $data->parent->uuid : '';
         $this->categoryName = $data->name;
+        $this->categoryColor = $data->color;
 
         $this->dispatchBrowserEvent('category_wire-modalShow');
     }

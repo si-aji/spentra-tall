@@ -706,6 +706,9 @@ select {
 .tw__z-\[1050\] {
   z-index: 1050 !important;
 }
+.tw__order-first {
+  order: -9999 !important;
+}
 .tw__col-span-2 {
   grid-column: span 2 / span 2 !important;
 }
@@ -819,6 +822,9 @@ select {
 .tw__h-20 {
   height: 5rem !important;
 }
+.tw__h-9 {
+  height: 2.25rem !important;
+}
 .tw__h-12 {
   height: 3rem !important;
 }
@@ -872,6 +878,9 @@ select {
 }
 .tw__w-12 {
   width: 3rem !important;
+}
+.tw__w-9 {
+  width: 2.25rem !important;
 }
 .tw__w-24 {
   width: 6rem !important;
@@ -1078,6 +1087,10 @@ select {
 }
 .tw__border-transparent {
   border-color: transparent !important;
+}
+.tw__border-\[\#d9dee3\] {
+  --tw-border-opacity: 1 !important;
+  border-color: rgb(217 222 227 / var(--tw-border-opacity)) !important;
 }
 .tw__border-\[\#696cff\] {
   --tw-border-opacity: 1 !important;
@@ -1621,6 +1634,10 @@ select {
 
   .lg\:tw__right-0 {
     right: 0px !important;
+  }
+
+  .lg\:tw__order-last {
+    order: 9999 !important;
   }
 
   .lg\:tw__mt-2 {

@@ -9,8 +9,8 @@
     "/assets/plugins/imask/imask.js": "/assets/plugins/imask/imask.js?id=61ea916a83f0dd57efdd860de9fc39cf",
     "/assets/plugins/nestable/nestable.js": "/assets/plugins/nestable/nestable.js?id=05dffd372da8ef19c0fd2dca1af340f7",
     "/assets/themes/sneat/css/siaji.css": "/assets/themes/sneat/css/siaji.css?id=0424d2ac45f44672407773b90dc229ca",
-    "/assets/css/app.css": "/assets/css/app.css?id=559a09ef48219ebd8b953176f26088bd",
-    "/assets/css/tailwind.css": "/assets/css/tailwind.css?id=b8d775603d8d4f1daf89cbbb769339a0",
+    "/assets/css/app.css": "/assets/css/app.css?id=df855d2cbee8dde6c4108f7b017f367e",
+    "/assets/css/tailwind.css": "/assets/css/tailwind.css?id=804b1525b511189cda9bd0f10be14d75",
     "/assets/js/shortcut.js": "/assets/js/shortcut.js?id=fd71a4084bf58a49747df5790c639b06",
     "/assets/js/siaji.js": "/assets/js/siaji.js?id=ac35cb1b738c7e75002bf375a99b1cf6",
     "/assets/js/format-record.js": "/assets/js/format-record.js?id=08d0aa7ef1c2387f5160390013b2a89c",
@@ -419,5 +419,10 @@
     "/assets/plugins/pace-js/themes/yellow/pace-theme-mac-osx.css": "/assets/plugins/pace-js/themes/yellow/pace-theme-mac-osx.css?id=fbd2585c5515cc8d5424472092562cc9",
     "/assets/plugins/pace-js/themes/yellow/pace-theme-material.css": "/assets/plugins/pace-js/themes/yellow/pace-theme-material.css?id=e5113d84a8e24d02bb3e0f81d90bd919",
     "/assets/plugins/pace-js/themes/yellow/pace-theme-minimal.css": "/assets/plugins/pace-js/themes/yellow/pace-theme-minimal.css?id=5d58f58738de69794a1d7d714540a804",
-    "/assets/plugins/pace-js/pace.js": "/assets/plugins/pace-js/pace.js?id=b91ce8d10b82be5e97ff1afd731fb14c"
+    "/assets/plugins/pace-js/pace.js": "/assets/plugins/pace-js/pace.js?id=b91ce8d10b82be5e97ff1afd731fb14c",
+    "/assets/plugins/color-pickr/pickr.min.js": "/assets/plugins/color-pickr/pickr.min.js?id=7994604c603d5bc54fb725733baf414a",
+    "/assets/plugins/color-pickr/pickr.js": "/assets/plugins/color-pickr/pickr.js?id=a08e3e74bf8f22981672b0a18bd0ead2",
+    "/assets/plugins/color-pickr/themes/classic.min.css": "/assets/plugins/color-pickr/themes/classic.min.css?id=0ae5a44ba880f8cc9aa2a98ad043871c",
+    "/assets/plugins/color-pickr/themes/monolith.min.css": "/assets/plugins/color-pickr/themes/monolith.min.css?id=ebffdcd4a2bffd36847cf865ebbd7d2b",
+    "/assets/plugins/color-pickr/themes/nano.min.css": "/assets/plugins/color-pickr/themes/nano.min.css?id=66f5c6110a7c12dab1061f2c1edfc509"
 }
