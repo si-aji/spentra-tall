@@ -442,6 +442,7 @@
                     `;
                     e.target.querySelector('button[type="submit"]').disabled = true;
                 }
+                
                 // Get Tags Data
                 let selectedTags = [];
                 recordModalTagChoice.getValue().forEach((e, key) => {

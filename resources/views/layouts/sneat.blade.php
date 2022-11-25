@@ -127,6 +127,14 @@
         {{-- Tag Modal --}}
         @livewire(\App\Http\Livewire\Sys\Component\TagModal::class, ['user' => \Auth::user()], key(generateRandomString()))
     @endif
+
+    {{-- Shopping List --}}
+    @if (isset($componentShoppingList) && $componentShoppingList)
+        {{-- Shopping List Modal --}}
+        @livewire(\App\Http\Livewire\Sys\Component\ShoppingListModal::class, ['user' => \Auth::user()], key(generateRandomString()))
+        {{-- Shopping List Item Modal --}}
+        @livewire(\App\Http\Livewire\Sys\Component\ShoppingListItemModal::class, ['user' => \Auth::user()], key(generateRandomString()))
+    @endif
 @endsection
 
 

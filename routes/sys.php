@@ -178,6 +178,12 @@ Route::group([
     Route::get('record', \App\Http\Livewire\Sys\Record\Index::class)
         ->name('record.index');
 
+    // Shopping List
+    Route::get('shopping-list/{uuid}', \App\Http\Livewire\Sys\ShoppingList\Show::class)
+        ->name('shopping-list.show');
+    Route::get('shopping-list', \App\Http\Livewire\Sys\ShoppingList\Index::class)
+        ->name('shopping-list.index');
+
     // Wallet
     Route::group([
         'prefix' => 'wallet',

@@ -28,6 +28,9 @@ function formatRupiah(angka, prefix = 'Rp', short = false){
 
     // Check if short parameter is true
     if(short){
+        if(angka < 0){
+            angka *= -1;
+        }
         rupiah = shortNumber(angka);
     } else {
         angka = Math.round(angka * 100) / 100;
