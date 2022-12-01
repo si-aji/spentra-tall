@@ -6,18 +6,35 @@ use Livewire\Component;
 
 class ReOrder extends Component
 {
+    /**
+     * Sidebar Configuration
+     */
     public $menuState = null;
     public $submenuState = null;
-    public $extraMenu = [];
 
+    /**
+     * Component Variable
+     */
+    public $extraMenu = [];
     // List / Select
     public $listCategory;
 
+    /**
+     * Validation
+     */
+    // 
+
+    /**
+     * Livewire Event Listener
+     */
     protected $listeners = [
         'refreshComponent' => '$refresh',
         'reOrder' => 'reOrder',
     ];
 
+    /**
+     * Livewire Mount
+     */
     public function mount()
     {
         $this->menuState = 'profile';
@@ -35,21 +52,7 @@ class ReOrder extends Component
     }
 
     /**
-     * Fetch List Data
-     */
-    public function fetchMainCategory()
-    {
-        // Category
-        $this->listCategory = \App\Models\Category::with('child', 'parent')
-            ->where('user_id', \Auth::user()->id)
-            ->whereNull('parent_id')
-            ->orderBy('order_main', 'asc')
-            ->get();
-    }
-
-    /**
-     * Render component livewire view
-     * 
+     * Livewire Component Render
      */
     public function render()
     {
@@ -64,9 +67,19 @@ class ReOrder extends Component
     }
 
     /**
-     * Handle Re-Order
-     * 
+     * Function
      */
+    // Fetch List Data
+    public function fetchMainCategory()
+    {
+        // Category
+        $this->listCategory = \App\Models\Category::with('child', 'parent')
+            ->where('user_id', \Auth::user()->id)
+            ->whereNull('parent_id')
+            ->orderBy('order_main', 'asc')
+            ->get();
+    }
+    // Handle Re-Order
     public function reOrder($order = null)
     {
         $numorder = 0;

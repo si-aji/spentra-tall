@@ -6,10 +6,16 @@ use Livewire\Component;
 
 class Index extends Component
 {
+    /**
+     * Sidebar Configuration
+     */
     public $menuState = null;
     public $submenuState = null;
-    public $menuSearch = null;
 
+    /**
+     * Component Variable
+     */
+    public $menuSearch = null;
     // Cashflow Graph
     public $cashFlowLabel = [];
     public $cashFlowIncome = [];
@@ -31,7 +37,6 @@ class Index extends Component
             $this->cashFlowExpenseSum += $expense;
         }
     }
-
     // Category Graph
     public $categoryGraphLabel = [];
     public $categoryGraphData = [];
@@ -51,10 +56,8 @@ class Index extends Component
             $this->categoryGraphLabel[$key] = '('.($value < 0 ? '-' : '+').') '.$this->categoryGraphLabel[$key];
         }
     }
-
     // Report - Wallet List
     public $walletData;
-
     // Report - Weekly record
     public $weeklyRecordType = 'income';
     public $weeklyStart, 
@@ -65,18 +68,56 @@ class Index extends Component
         $prevWeeklyAmount,
         $weeklyPercentage;
 
+    /**
+     * Validation
+     */
+    // 
+
+    /**
+     * Livewire Event Listener
+     */
+    protected $listeners = ['searchKeyword'];
+
+    /**
+     * Livewire Mount
+     */
     public function mount()
     {
         $this->menuState = 'dashboard';
         $this->submenuState = null;
     }
 
-    protected $listeners = ['searchKeyword'];
+    /**
+     * Livewire Component Render
+     */
+    public function render()
+    {
+        $notificationLivewire = (new \App\Http\Livewire\Sys\Component\NotificationFeature());
+        $this->plannedPaymentCount = $notificationLivewire->getPaginateToday()->total();
+        $this->plannedPaymentOverdueCount = $notificationLivewire->getPaginateOverdue()->total();
+
+        // Fetch Related Data
+        $this->fetchWeeklyRecord();
+        $this->fetchWalletData();
+        // Fetch Graph
+        $this->fetchCashflowGraph();
+        $this->fetchCategoryGraph();
+
+        $this->dispatchBrowserEvent('dashboardWireInit');
+
+        return view('livewire.sys.dashboard.index')->extends('layouts.sneat', [
+            'menuState' => $this->menuState,
+            'submenuState' => $this->submenuState,
+        ]);
+    }
+
+    /**
+     * Function
+     */
     public function searchKeyword($value)
     {
         $this->menuSearch = $value;
     }
-    
     private function fetchWalletData()
     {
         $this->walletData = \App\Models\Wallet::with('parent')
@@ -133,26 +174,5 @@ class Index extends Component
         if($divide === 0){
             $this->weeklyPercentage = 100;
         }
-    }
-
-    public function render()
-    {
-        $notificationLivewire = (new \App\Http\Livewire\Sys\Component\NotificationFeature());
-        $this->plannedPaymentCount = $notificationLivewire->getPaginateToday()->total();
-        $this->plannedPaymentOverdueCount = $notificationLivewire->getPaginateOverdue()->total();
-
-        // Fetch Related Data
-        $this->fetchWeeklyRecord();
-        $this->fetchWalletData();
-        // Fetch Graph
-        $this->fetchCashflowGraph();
-        $this->fetchCategoryGraph();
-
-        $this->dispatchBrowserEvent('dashboardWireInit');
-
-        return view('livewire.sys.dashboard.index')->extends('layouts.sneat', [
-            'menuState' => $this->menuState,
-            'submenuState' => $this->submenuState,
-        ]);
     }
 }

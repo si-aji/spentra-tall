@@ -6,23 +6,39 @@ use Livewire\Component;
 
 class WalletGroupModal extends Component
 {
+    /**
+     * Sidebar Configuration
+     */
     public $menuState = null;
     public $submenuState = null;
 
+    /**
+     * Component Variable
+     */
     // List / Select
     public $listWallet;
-
     // Modal
     public $forceHide = false;
     public $walletGroupModalState = 'hide';
     public $walletGroupTitle = 'Add new';
-
     // Form Field
     public $walletGroupUuid = null;
     public $walletGroupList = null;
     public $walletGroupName = null;
-
+    // Reset Field
     public $walletGroupResetField = [];
+
+    /**
+     * Validation
+     */
+    protected $rules = [
+        'walletGroupList' => ['nullable'],
+        'walletGroupName' => ['required'],
+    ];
+
+    /**
+     * Livewire Event Listener
+     */
     protected $listeners = [
         'refreshComponent' => '$refresh',
         'openModal' => 'openModal',
@@ -33,24 +49,9 @@ class WalletGroupModal extends Component
         'editAction' => 'editAction'
     ];
 
-    protected $rules = [
-        'walletGroupList' => ['nullable'],
-        'walletGroupName' => ['required'],
-    ];
-
     /**
-     * Fetch List Data
+     * Livewire Mount
      */
-    public function fetchWallet()
-    {
-        // Wallet
-        $this->listWallet = \App\Models\Wallet::with('child', 'parent')
-            ->where('user_id', \Auth::user()->id)
-            ->whereNull('parent_id')
-            ->orderBy('order_main', 'asc')
-            ->get();
-    }
-
     public function mount()
     {
         $this->walletGroupResetField = [
@@ -63,8 +64,7 @@ class WalletGroupModal extends Component
     }
 
     /**
-     * Render component livewire view
-     * 
+     * Livewire Component Render
      */
     public function render()
     {
@@ -75,8 +75,19 @@ class WalletGroupModal extends Component
     }
 
     /**
-     * CRUD Action
+     * Function
      */
+    // Fetch List Data
+    public function fetchWallet()
+    {
+        // Wallet
+        $this->listWallet = \App\Models\Wallet::with('child', 'parent')
+            ->where('user_id', \Auth::user()->id)
+            ->whereNull('parent_id')
+            ->orderBy('order_main', 'asc')
+            ->get();
+    }
+    // CRUD Action
     public function save()
     {
         $selectedWallet = [];
@@ -120,10 +131,7 @@ class WalletGroupModal extends Component
         $this->reset($this->walletGroupResetField);
         $this->emit('refreshComponent');
     }
-
-    /**
-     * Handle edit request data
-     */
+    // Handle edit request data
     public function editAction($uuid, $detailPage = false)
     {
         $data = \App\Models\WalletGroup::where(\DB::raw('BINARY `uuid`'), $uuid)
@@ -144,7 +152,6 @@ class WalletGroupModal extends Component
             $this->forceHide = true;
         }
     }
-
     // Handle Modal
     public function openModal()
     {
@@ -154,7 +161,8 @@ class WalletGroupModal extends Component
     {
         $this->walletGroupModalState = 'hide';
         $this->reset($this->walletGroupResetField);
-    }// Update Model / Variable
+    }
+    // Update Model / Variable
     public function localUpdate($key, $value): void
     {
         // \Log::debug("Debug on Local Update function", [

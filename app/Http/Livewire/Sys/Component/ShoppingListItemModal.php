@@ -6,12 +6,17 @@ use Livewire\Component;
 
 class ShoppingListItemModal extends Component
 {
+    /**
+     * Sidebar Configuration
+     */
     public $menuState = null;
     public $submenuState = null;
 
+    /**
+     * Component Variable
+     */
     // Modal
     public $shoppingListItemModalState = 'hide';
-
     // Form Field
     public $shoppingListUuid = '';
     public $shoppingListItemUuid = '';
@@ -19,14 +24,26 @@ class ShoppingListItemModal extends Component
     public $shoppingListItemName = '';
     public $shoppingListItemPrice = '';
     public $shoppingListItemQty = '';
-
+    // Reset Field
     public $shoppingListItemResetField = [];
+
+    /**
+     * Validation
+     */
+    // 
+
+    /**
+     * Livewire Event Listener
+     */
     protected $listeners = [
         'refreshComponent' => '$refresh',
         'openModal' => 'openModal',
         'closeModal' => 'closeModal',
     ];
 
+    /**
+     * Livewire Mount
+     */
     public function mount()
     {
         $this->shoppingListItemResetField = [
@@ -39,12 +56,18 @@ class ShoppingListItemModal extends Component
         ];
     }
 
+    /**
+     * Livewire Component Render
+     */
     public function render()
     {
         $this->dispatchBrowserEvent('shopping_list_item_wire-init');
         return view('livewire.sys.component.shopping-list-item-modal');
     }
 
+    /**
+     * Function
+     */
     // Handle Modal
     public function openModal()
     {
@@ -54,7 +77,6 @@ class ShoppingListItemModal extends Component
     {
         $this->shoppingListItemModalState = 'hide';
     }
-
     // Store to Database
     public function save()
     {

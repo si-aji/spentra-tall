@@ -6,27 +6,39 @@ use Livewire\Component;
 
 class Index extends Component
 {
+    /**
+     * Sidebar Configuration
+     */
     public $menuState = null;
     public $submenuState = null;
 
+    /**
+     * Component Variable
+     */
     // Load More Conf
-    public $loadPerPage = 10;
-    public $user_timezone = '';
-
+    public $loadPerPage = 10,
+        $user_timezone = '';
     // List
-    public $listWallet = null;
-    public $listCategory = null;
-
+    public $listWallet = null,
+        $listCategory = null;
     // List Data
-    public $dataSelectedYear = '';
-    public $dataSelectedMonth = '';
-    public $dataSelectedType = '';
-    public $dataSelectedWallet = '';
-    public $dataSelectedCategory = '';
-    public $dataSelectedNote = '';
-    public $dataRecord;
+    public $dataSelectedYear = '',
+        $dataSelectedMonth = '',
+        $dataSelectedType = '',
+        $dataSelectedWallet = '',
+        $dataSelectedCategory = '',
+        $dataSelectedNote = '',
+        $dataRecord;
     protected $recordPaginate;
 
+    /**
+     * Validation
+     */
+    // 
+    
+    /**
+     * Livewire Event Listener
+     */
     protected $listeners = [
         'refreshComponent' => '$refresh',
         'loadMore' => 'loadMore',
@@ -34,6 +46,44 @@ class Index extends Component
         'removeData' => 'removeData'
     ];
 
+    /**
+     * Livewire Mount
+     */
+    public function mount()
+    {    
+        $this->dataSelectedYear = date("Y");
+
+        $this->menuState = 'record';
+        $this->submenuState = null;
+    }
+
+    /**
+     * Livewire Component Render
+     */
+    public function render()
+    {
+        if($this->dataSelectedMonth === ''){
+            $this->dataSelectedMonth = date("Y-m-01", strtotime($this->dataSelectedYear.'-'.($this->dataSelectedYear !== date("Y") ? '12' : date("m")).'-01'));
+        }
+
+        // Get Record Data
+        $this->fetchRecordData();
+        
+        $this->fetchMainCategory();
+        $this->fetchMainWallet();
+        // $this->dispatchBrowserEvent('recordPluginsInit');
+        $this->dispatchBrowserEvent('recordLoadData');
+        return view('livewire.sys.record.index', [
+            'paginate' => $this->recordPaginate
+        ])->extends('layouts.sneat', [
+            'menuState' => $this->menuState,
+            'submenuState' => $this->submenuState,
+        ]);
+    }
+
+    /**
+     * Function
+     */
     public function fetchMainWallet()
     {
         // Wallet
@@ -148,33 +198,6 @@ class Index extends Component
         $this->recordPaginate = $this->dataRecord->paginate($this->loadPerPage);
         $this->dataRecord = $this->dataRecord->values()->take($this->loadPerPage);
     }
-    public function mount()
-    {    
-        $this->dataSelectedYear = date("Y");
-
-        $this->menuState = 'record';
-        $this->submenuState = null;
-    }
-
-    public function render()
-    {
-        $this->dataSelectedMonth = date("Y-m-01", strtotime($this->dataSelectedYear.'-'.($this->dataSelectedYear !== date("Y") ? '12' : date("m")).'-01'));
-
-        // Get Record Data
-        $this->fetchRecordData();
-        
-        $this->fetchMainCategory();
-        $this->fetchMainWallet();
-        // $this->dispatchBrowserEvent('recordPluginsInit');
-        $this->dispatchBrowserEvent('recordLoadData');
-        return view('livewire.sys.record.index', [
-            'paginate' => $this->recordPaginate
-        ])->extends('layouts.sneat', [
-            'menuState' => $this->menuState,
-            'submenuState' => $this->submenuState,
-        ]);
-    }
-
     public function loadMore()
     {
         $this->loadPerPage += $this->loadPerPage;
@@ -185,7 +208,6 @@ class Index extends Component
             'loadPerPage'
         ]);
     }
-
     // Update Model / Variable
     public function localUpdate($key, $value): void
     {
@@ -202,7 +224,6 @@ class Index extends Component
                 break;
         }
     }
-
     // Remove Data
     public function removeData($uuid)
     {
@@ -217,7 +238,6 @@ class Index extends Component
 
         return $uuid;
     }
-
     public function getPaginate()
     {
         return $this->recordPaginate;

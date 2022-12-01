@@ -136,4 +136,8 @@ class Wallet extends Model
 
         return $balance->sum(\DB::raw('(amount + extra_amount) * IF(type = "expense", -1, 1)'));
     }
+    public function scopeGetLastTransaction($query)
+    {
+        return $this->record()->where('status', 'complete')->orderBy('datetime', 'desc')->first() ?? [];
+    }
 }

@@ -9,28 +9,66 @@ class Index extends Component
 {
     use WithPagination;
 
+    /**
+     * Sidebar Configuration
+     */
     public $menuState = null;
     public $submenuState = null;
 
+    /**
+     * Component Variable
+     */
     // Load More Conf
     public $loadPerPage = 10;
-
     // List Data
     public $dataWalletShare;
     protected $paginateWalletShare;
-
     // Filter Data
     public $filterWalletShareNote = '';
     // Sort Data
     public $sortKeyWalletShare = 'created_at';
     public $sortTypeWalletShare = 'desc';
 
+    /**
+     * Validation
+     */
+    // 
+
+    /**
+     * Livewire Event Listener
+     */
     protected $listeners = [
         'refreshComponent' => '$refresh',
     ];
 
     /**
-     * 
+     * Livewire Mount
+     */
+    public function mount()
+    {
+        $this->menuState = 'wallet';
+        $this->submenuState = 'share';
+    }
+
+    /**
+     * Livewire Component Render
+     */
+    public function render()
+    {
+        $this->fetchWalletShareData();
+        $this->dispatchBrowserEvent('wallet_share_index_wire-init');
+
+        return view('livewire.sys.wallet.share.index', [
+            'paginate' => $this->paginateWalletShare
+        ])->extends('layouts.sneat', [
+            'menuState' => $this->menuState,
+            'submenuState' => $this->submenuState,
+            'componentWalletShare' => true
+        ]);
+    }
+
+    /**
+     * Function
      */
     public function fetchWalletShareData() : void
     {
@@ -54,33 +92,5 @@ class Index extends Component
         $this->dataWalletShare = (collect($this->dataWalletShare->paginate($this->loadPerPage)->items()))->map(function($data){
             return $data;
         })->values();
-    }
-
-    /**
-     * 
-     * 
-     */
-    public function mount()
-    {
-        $this->menuState = 'wallet';
-        $this->submenuState = 'share';
-    }
-
-    /**
-     * 
-     * 
-     */
-    public function render()
-    {
-        $this->fetchWalletShareData();
-        $this->dispatchBrowserEvent('wallet_share_index_wire-init');
-
-        return view('livewire.sys.wallet.share.index', [
-            'paginate' => $this->paginateWalletShare
-        ])->extends('layouts.sneat', [
-            'menuState' => $this->menuState,
-            'submenuState' => $this->submenuState,
-            'componentWalletShare' => true
-        ]);
     }
 }

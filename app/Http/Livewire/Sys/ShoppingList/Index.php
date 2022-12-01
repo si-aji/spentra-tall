@@ -3,27 +3,50 @@
 namespace App\Http\Livewire\Sys\ShoppingList;
 
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
+    use WithPagination;
+
+    /**
+     * Sidebar Configuration
+     */
     public $menuState = null;
     public $submenuState = null;
 
+    /**
+     * Component Variable
+     */
     // Load More Conf
     public $loadPerPage = 10;
-
     // List Data
     public $dataShoppingList;
 
+    /**
+     * Validation
+     */
+    // 
+
+    /**
+     * Livewire Event Listener
+     */
     protected $listeners = [
         'refreshComponent' => '$refresh',
         'removeData' => 'removeData'
     ];
+
+    /**
+     * Livewire Mount
+     */
     public function mount()
     {
         $this->menuState = 'shopping-list';
     }
 
+    /**
+     * Livewire Component Render
+     */
     public function render()
     {
         $this->dataShoppingList = \App\Models\ShoppingList::with('shoppingListItem')
@@ -43,6 +66,10 @@ class Index extends Component
                 'componentShoppingList' => true
             ]);
     }
+
+    /**
+     * Function
+     */
     // Remove Data
     public function removeData($uuid)
     {

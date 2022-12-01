@@ -6,34 +6,52 @@ use Livewire\Component;
 
 class Index extends Component
 {
+    /**
+     * Sidebar Configuration
+     */
     public $menuState = null;
     public $submenuState = null;
 
+    /**
+     * Component Variable
+     */
     // Filter
     public $filterName = null;
     // Sort
     public $sortKey = null;
     public $sortType = null;
-
     // Load More Conf
     public $loadPerPage = 10;
     public $user_timezone = '';
-
     // List Data
     public $dataPlannedPayment;
 
+    /**
+     * Validation
+     */
+    // 
+
+    /**
+     * Livewire Event Listener
+     */
     protected $listeners = [
         'refreshComponent' => '$refresh',
         'loadMore' => 'loadMore',
         'removeData' => 'removeData',
     ];
     
+    /**
+     * Livewire Mount
+     */
     public function mount()
     {
         $this->menuState = 'planned-payment';
         $this->submenuState = null;
     }
 
+    /**
+     * Livewire Component Render
+     */
     public function render()
     {
         $this->dataPlannedPayment = \App\Models\PlannedPayment::with('category.parent', 'wallet.parent', 'walletTransferTarget.parent', 'plannedPaymentTags')
@@ -68,11 +86,13 @@ class Index extends Component
         ])->section('content');
     }
 
+    /**
+     * Function
+     */
     public function loadMore()
     {
         $this->loadPerPage += $this->loadPerPage;
     }
-
     public function loadListData()
     {
         $this->dispatchBrowserEvent('plannedPaymentLoadData', []);

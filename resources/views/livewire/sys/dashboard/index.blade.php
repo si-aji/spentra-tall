@@ -183,7 +183,7 @@
                             </li>
                         </ul>
                         
-                        <div class="dropdown">
+                        {{-- <div class="dropdown">
                             <button class="btn p-0" type="button" id="orederStatistics" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="bx bx-cog"></i>
                             </button>
@@ -192,7 +192,7 @@
                                 <a class="dropdown-item" href="javascript:void(0);">Refresh</a>
                                 <a class="dropdown-item" href="javascript:void(0);">Share</a>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
                 <div class="card-body px-0 tw__pt-24 tw__relative">

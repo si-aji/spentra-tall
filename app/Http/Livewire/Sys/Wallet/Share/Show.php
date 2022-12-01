@@ -6,13 +6,32 @@ use Livewire\Component;
 
 class Show extends Component
 {
+    /**
+     * Sidebar Configuration
+     */
     public $menuState = null;
     public $submenuState = null;
 
+    /**
+     * Component Variable
+     */
     // Data
     public $walletShareUuid = '';
     public $walletShareData;
 
+    /**
+     * Validation
+     */
+    // 
+
+    /**
+     * Livewire Event Listener
+     */
+    // 
+
+    /**
+     * Livewire Mount
+     */
     public function mount($uuid)
     {
         $this->menuState = 'wallet';
@@ -21,6 +40,9 @@ class Show extends Component
         $this->walletShareUuid = $uuid;
     }
 
+    /**
+     * Livewire Component Render
+     */
     public function render()
     {
         $this->walletShareData = \App\Models\WalletShare::where('user_id', \Auth::user()->id)
@@ -33,4 +55,9 @@ class Show extends Component
             'componentWalletShare' => true
         ]);
     }
+
+    /**
+     * Function
+     */
+    // 
 }

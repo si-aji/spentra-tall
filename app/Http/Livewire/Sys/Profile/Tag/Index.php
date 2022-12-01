@@ -6,10 +6,30 @@ use Livewire\Component;
 
 class Index extends Component
 {
+    /**
+     * Sidebar Configuration
+     */
     public $menuState = null;
     public $submenuState = null;
+    
+    /**
+     * Component Variable
+     */
     public $extraMenu = [];
 
+    /**
+     * Validation
+     */
+    // 
+
+    /**
+     * Livewire Event Listener
+     */
+    // 
+
+    /**
+     * Livewire Mount
+     */
     public function mount()
     {
         $this->menuState = 'profile';
@@ -27,8 +47,7 @@ class Index extends Component
     }
 
     /**
-     * Render component livewire view
-     * 
+     * Livewire Component Render
      */
     public function render()
     {
@@ -39,4 +58,9 @@ class Index extends Component
                 'componentTag' => true
             ]);
     }
+
+    /**
+     * Function
+     */
+    // 
 }

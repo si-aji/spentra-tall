@@ -6,20 +6,38 @@ use Livewire\Component;
 
 class ShoppingListModal extends Component
 {
+    /**
+     * Sidebar Configuration
+     */
     public $menuState = null;
     public $submenuState = null;
 
+    /**
+     * Component Variable
+     */
     // Modal
     public $shoppingListModalState = 'hide';
     public $shoppingListTitle = 'Add new';
-
     // Form Field
     public $shoppingListUuid = null;
     public $shoppingListName = null;
     public $shoppingListDescription = null;
     public $shoppingListBudget = null;
-
+    // Reset Field
     public $shoppingListResetField = [];
+
+    /**
+     * Validation
+     */
+    protected $rules = [
+        'shoppingListName' => ['required'],
+        'shoppingListDescription' => ['nullable', 'string'],
+        'shoppingListBudget' => ['nullable', 'numeric']
+    ];
+
+    /**
+     * Livewire Event Listener
+     */
     protected $listeners = [
         'refreshComponent' => '$refresh',
         'openModal' => 'openModal',
@@ -29,12 +47,9 @@ class ShoppingListModal extends Component
         'editAction' => 'editAction'
     ];
 
-    protected $rules = [
-        'shoppingListName' => ['required'],
-        'shoppingListDescription' => ['nullable', 'string'],
-        'shoppingListBudget' => ['nullable', 'numeric']
-    ];
-
+    /**
+     * Livewire Mount
+     */
     public function mount()
     {
         $this->shoppingListResetField = [
@@ -46,6 +61,9 @@ class ShoppingListModal extends Component
         ];
     }
 
+    /**
+     * Livewire Component Render
+     */
     public function render()
     {
         $this->dispatchBrowserEvent('shoppingList_wire-init');
@@ -53,9 +71,9 @@ class ShoppingListModal extends Component
     }
 
     /**
-     * Function to save to database
-     * 
+     * Function
      */
+    // Function to save to database
     public function save()
     {
         $this->validate();
@@ -84,10 +102,7 @@ class ShoppingListModal extends Component
             'shoppingListBudget' => $this->shoppingListBudget,
         ]);
     }
-
-    /**
-     * Handle edit request data
-     */
+    // Handle edit request data
     public function editAction($uuid)
     {
         $data = \App\Models\ShoppingList::where(\DB::raw('BINARY `uuid`'), $uuid)

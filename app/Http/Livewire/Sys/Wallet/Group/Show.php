@@ -6,20 +6,37 @@ use Livewire\Component;
 
 class Show extends Component
 {
+    /**
+     * Sidebar Configuration
+     */
     public $menuState = null;
     public $submenuState = null;
+
+    /**
+     * Component Variable
+     */
     public $walletGroup = null;
     public $walletGroupUuid = null;
-
     // Paginate
     public $loadPerPage = 10;
     // Record
     public $walletRecordData;
 
+    /**
+     * Validation
+     */
+    // 
+
+    /**
+     * Livewire Event Listener
+     */
     protected $listeners = [
         'refreshComponent' => '$refresh',
     ];
 
+    /**
+     * Livewire Mount
+     */
     public function mount($uuid)
     {
         $this->menuState = 'wallet';
@@ -32,8 +49,7 @@ class Show extends Component
     }
 
     /**
-     * Render component livewire view
-     * 
+     * Livewire Component Render
      */
     public function render()
     {
@@ -55,6 +71,9 @@ class Show extends Component
         ]);
     }
 
+    /**
+     * Function
+     */
     public function loadMore()
     {
         $this->loadPerPage += $this->loadPerPage;

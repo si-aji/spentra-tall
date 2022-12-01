@@ -6,20 +6,24 @@ use Livewire\Component;
 
 class PlannedPaymentModal extends Component
 {
+    /**
+     * Sidebar Configuration
+     */
     public $menuState = null;
     public $submenuState = null;
 
+    /**
+     * Component Variable
+     */
     // List
     public $listTemplate;
     public $listCategory;
     public $listWallet;
     public $listTag;
-
     // Modal
     public $plannedPaymentModalState = 'hide';
     public $plannedPaymentTitle = 'Add new';
-
-    // Field
+    // Form Field
     public $user_timezone = null;
     public $plannedPaymentUuid = '';
     public $plannedPaymentName = '';
@@ -38,8 +42,17 @@ class PlannedPaymentModal extends Component
     public $plannedPaymentRepeatType = '';
     public $plannedPaymentTag;
     public $plannedPaymentMoreState = '';
-
+    // Reset Field
     public $plannedPaymentResetField = [];
+
+    /**
+     * Validation
+     */
+    // 
+
+    /**
+     * Livewire Event Listener
+     */
     protected $listeners = [
         'refreshComponent' => '$refresh',
         'openModal' => 'openModal',
@@ -47,6 +60,9 @@ class PlannedPaymentModal extends Component
         'editAction' => 'editAction'
     ];
 
+    /**
+     * Livewire Mount
+     */
     public function mount()
     {
         $this->plannedPaymentResetField = [
@@ -69,7 +85,22 @@ class PlannedPaymentModal extends Component
         ];
     }
 
-    // Fetch List
+    /**
+     * Livewire Component Render
+     */
+    public function render()
+    {
+        $this->fetchListCategory();
+        $this->fetchListWallet();
+        $this->fetchListTag();
+
+        $this->dispatchBrowserEvent('plannedPaymentModal_wire-init');
+        return view('livewire.sys.component.planned-payment-modal');
+    }
+
+    /**
+     * Function
+     */
     public function fetchListCategory()
     {
         // Category
@@ -95,17 +126,6 @@ class PlannedPaymentModal extends Component
             ->orderBy('name', 'asc')
             ->get();
     }
-
-    public function render()
-    {
-        $this->fetchListCategory();
-        $this->fetchListWallet();
-        $this->fetchListTag();
-
-        $this->dispatchBrowserEvent('plannedPaymentModal_wire-init');
-        return view('livewire.sys.component.planned-payment-modal');
-    }
-
     // Handle Data
     public function save()
     {
@@ -294,7 +314,6 @@ class PlannedPaymentModal extends Component
         ]);
         $this->dispatchBrowserEvent('open-modalPlannedPayment');
     }
-
     // Handle Modal
     public function openModal()
     {

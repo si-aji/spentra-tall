@@ -8,20 +8,42 @@ use Livewire\Component;
 
 class SearchFeature extends Component
 {
+    /**
+     * Sidebar Configuration
+     */
+    // 
+
+    /**
+     * Component Variable
+     */
     public $search = '';
     public $result = null;
     public $avatar = '';
     public $notificationState = false;
 
+    /**
+     * Validation
+     */
+    // 
+
+    /**
+     * Livewire Event Listener
+     */
+    protected $listeners = [
+        'refreshComponent' => '$refresh'
+    ];
+
+    /**
+     * Livewire Mount
+     */
     public function mount()
     {        
         $this->avatar = \Auth::user()->getProfilePicture();
     }
 
-    protected $listeners = [
-        'refreshComponent' => '$refresh'
-    ];
-
+    /**
+     * Livewire Component Render
+     */
     public function render()
     {
         $this->avatar = \Auth::user()->getProfilePicture();
@@ -51,4 +73,8 @@ class SearchFeature extends Component
             'result' => strlen($this->search),
         ]);
     }
+
+    /**
+     * Function
+     */
 }

@@ -9,21 +9,25 @@ class RecordModal extends Component
 {
     use WithFileUploads;
 
+    /**
+     * Sidebar Configuration
+     */
     public $menuState = null;
     public $submenuState = null;
 
+    /**
+     * Component Variable
+     */
     // List
     public $listTemplate;
     public $listCategory;
     public $listWallet;
     public $listTag;
-
     // Modal
     public $recordModalState = true;
     public $recordUuid = null;
     public $recordTitle = 'Add new Record';
-
-    // Field
+    // Form Field
     public $user_timezone = null;
     public $recordTemplate = '';
     public $recordType = 'income';
@@ -41,8 +45,17 @@ class RecordModal extends Component
     public $recordReceiptTemp = null;
     public $recordMoreState = false;
     public $recordTag = [];
+    // Reset Field
     public $recordResetField = [];
 
+    /**
+     * Validation
+     */
+    // 
+
+    /**
+     * Livewire Event Listener
+     */
     protected $listeners = [
         'refreshComponent' => '$refresh',
         'closeModal' => 'closeModal',
@@ -50,6 +63,54 @@ class RecordModal extends Component
         'editAction' => 'editAction'
     ];
 
+    /**
+     * Livewire Mount
+     */
+    public function mount()
+    {
+        $this->recordResetField = [
+            'recordUuid',
+            'recordTemplate',
+            'recordType',
+            'recordCategory',
+            'recordWallet',
+            'recordWalletTransfer',
+            'recordAmount',
+            'recordExtraType',
+            'recordExtraAmount',
+            'recordFinalAmount',
+            'recordPeriod',
+            'recordPeriodChanged',
+            'recordNote',
+            'recordReceipt',
+            'recordReceiptTemp',
+            'recordTag'
+        ];
+    }
+
+    /**
+     * Livewire Component Render
+     */
+    public function render()
+    {
+        $this->fetchListTemplate();
+        $this->fetchListCategory();
+        $this->fetchListWallet();
+        $this->fetchListTag();
+
+        // \Log::debug("Debug on Record Modal render", [
+        //     'category' => $this->recordCategory,
+        //     'wallet' => $this->recordWallet,
+        //     'walletTransfer' => $this->recordWalletTransfer,
+        // ]);
+
+        $this->dispatchBrowserEvent('recordModal_wire-init');
+        return view('livewire.sys.component.record-modal');
+    }
+
+    /**
+     * Function
+     */
     // Fetch Data
     public function fetchDataTemplateData($uuid = null)
     {
@@ -95,7 +156,6 @@ class RecordModal extends Component
             'recordTemplate' => $this->recordTemplate,
         ]);
     }
-
     // Fetch List
     public function fetchListTemplate()
     {
@@ -130,46 +190,6 @@ class RecordModal extends Component
             ->orderBy('name', 'asc')
             ->get();
     }
-
-    public function mount()
-    {
-        $this->recordResetField = [
-            'recordUuid',
-            'recordTemplate',
-            'recordType',
-            'recordCategory',
-            'recordWallet',
-            'recordWalletTransfer',
-            'recordAmount',
-            'recordExtraType',
-            'recordExtraAmount',
-            'recordFinalAmount',
-            'recordPeriod',
-            'recordPeriodChanged',
-            'recordNote',
-            'recordReceipt',
-            'recordReceiptTemp',
-            'recordTag'
-        ];
-    }
-
-    public function render()
-    {
-        $this->fetchListTemplate();
-        $this->fetchListCategory();
-        $this->fetchListWallet();
-        $this->fetchListTag();
-
-        // \Log::debug("Debug on Record Modal render", [
-        //     'category' => $this->recordCategory,
-        //     'wallet' => $this->recordWallet,
-        //     'walletTransfer' => $this->recordWalletTransfer,
-        // ]);
-
-        $this->dispatchBrowserEvent('recordModal_wire-init');
-        return view('livewire.sys.component.record-modal');
-    }
-
     public function updatedRecordReceipt()
     {
         // if($this->recordReceipt){
@@ -184,7 +204,8 @@ class RecordModal extends Component
             'recordReceipt' => 'mimes:jpg,jpeg,png,pdf|max:1024',
         ]);
     }
-    public function editAction($uuid){
+    public function editAction($uuid)
+    {
         $record = \App\Models\Record::with('wallet', 'walletTransferTarget', 'category', 'recordTags')
             ->where('user_id', \Auth::user()->id)
             ->where(\DB::raw('BINARY `uuid`'), $uuid)
@@ -555,7 +576,6 @@ class RecordModal extends Component
         
         $this->emit('refreshComponent');
     }
-
     // Update Model / Variable
     public function localUpdate($key, $value): void
     {
@@ -598,7 +618,6 @@ class RecordModal extends Component
                 break;
         }
     }
-
     public function removeReceipt(): void
     {
         // \Log::debug("Remove Receipt", [
@@ -612,7 +631,6 @@ class RecordModal extends Component
             $this->recordReceipt = null;
         }
     }
-
     // Handle Modal
     public function openModal()
     {

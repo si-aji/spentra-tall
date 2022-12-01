@@ -6,9 +6,15 @@ use Livewire\Component;
 
 class TagModal extends Component
 {
+    /**
+     * Sidebar Configuration
+     */
     public $menuState = null;
     public $submenuState = null;
 
+    /**
+     * Component Variable
+     */
     // Modal
     public $tagModalState = 'hide';
     public $tagTitle = 'Add new';
@@ -16,8 +22,19 @@ class TagModal extends Component
     // Form Field
     public $tagUuid = null;
     public $tagName = null;
-
+    // Reset Field
     public $tagResetField = [];
+
+    /**
+     * Validation
+     */
+    protected $rules = [
+        'tagName' => ['required'],
+    ];
+
+    /**
+     * Livewire Event Listener
+     */
     protected $listeners = [
         'refreshComponent' => '$refresh',
         'openModal' => 'openModal',
@@ -27,10 +44,9 @@ class TagModal extends Component
         'editAction' => 'editAction'
     ];
 
-    protected $rules = [
-        'tagName' => ['required'],
-    ];
-
+    /**
+     * Livewire Mount
+     */
     public function mount()
     {
         $this->tagResetField = [
@@ -41,8 +57,7 @@ class TagModal extends Component
     }
 
     /**
-     * Render component livewire view
-     * 
+     * Livewire Component Render
      */
     public function render()
     {
@@ -51,9 +66,9 @@ class TagModal extends Component
     }
 
     /**
-     * Function to save to database
-     * 
+     * Function
      */
+    // Function to save to database
     public function save()
     {
         $this->validate();
@@ -75,10 +90,7 @@ class TagModal extends Component
         $this->reset($this->tagResetField);
         $this->emit('refreshComponent');
     }
-
-    /**
-     * Handle edit request data
-     */
+    // Handle edit request data
     public function editAction($uuid)
     {
         $data = \App\Models\Tag::where(\DB::raw('BINARY `uuid`'), $uuid)
@@ -90,7 +102,6 @@ class TagModal extends Component
 
         $this->dispatchBrowserEvent('tag_wire-modalShow');
     }
-
     // Handle Modal
     public function openModal()
     {

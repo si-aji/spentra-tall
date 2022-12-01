@@ -6,23 +6,39 @@ use Livewire\Component;
 
 class CategoryModal extends Component
 {
+    /**
+     * Sidebar Configuration
+     */
     public $menuState = null;
     public $submenuState = null;
 
+    /**
+     * Component Variable
+     */
     // List / Select
     public $listCategory;
-
     // Modal
     public $categoryModalState = 'hide';
     public $categoryTitle = 'Add new';
-
     // Form Field
     public $categoryUuid = null; // State current active data
     public $categoryParent = '';
     public $categoryName = null;
     public $categoryColor = null;
-
+    // Reset Field
     public $categoryResetField = [];
+
+    /**
+     * Validation
+     */
+    protected $rules = [
+        'categoryParent' => ['nullable'],
+        'categoryName' => ['required'],
+    ];
+
+    /**
+     * Livewire Event Listener
+     */
     protected $listeners = [
         'refreshComponent' => '$refresh',
         'openModal' => 'openModal',
@@ -33,11 +49,9 @@ class CategoryModal extends Component
         'editAction' => 'editAction'
     ];
 
-    protected $rules = [
-        'categoryParent' => ['nullable'],
-        'categoryName' => ['required'],
-    ];
-
+    /**
+     * Livewire Mount
+     */
     public function mount()
     {
         $this->categoryResetField = [
@@ -50,21 +64,7 @@ class CategoryModal extends Component
     }
 
     /**
-     * Fetch List Data
-     */
-    public function fetchMainCategory()
-    {
-        // Category
-        $this->listCategory = \App\Models\Category::with('child', 'parent')
-            ->where('user_id', \Auth::user()->id)
-            ->whereNull('parent_id')
-            ->orderBy('order_main', 'asc')
-            ->get();
-    }
-
-    /**
-     * Render component livewire view
-     * 
+     * Livewire Component Render
      */
     public function render()
     {
@@ -75,9 +75,19 @@ class CategoryModal extends Component
     }
 
     /**
-     * Function to save to database
-     * 
+     * Function
      */
+    // Fetch List Data
+    public function fetchMainCategory()
+    {
+        // Category
+        $this->listCategory = \App\Models\Category::with('child', 'parent')
+            ->where('user_id', \Auth::user()->id)
+            ->whereNull('parent_id')
+            ->orderBy('order_main', 'asc')
+            ->get();
+    }
+    // Function to save to database
     public function save()
     {
         $parent = null;
@@ -131,10 +141,7 @@ class CategoryModal extends Component
         // Create Category Re-Order Request
         (new \App\Http\Livewire\Sys\Profile\Category\ReOrder())->reOrder(null);
     }
-
-    /**
-     * Handle edit request data
-     */
+    // Handle edit request data
     public function editAction($uuid)
     {
         $data = \App\Models\Category::where(\DB::raw('BINARY `uuid`'), $uuid)
@@ -148,7 +155,6 @@ class CategoryModal extends Component
 
         $this->dispatchBrowserEvent('category_wire-modalShow');
     }
-
     // Handle Modal
     public function openModal()
     {

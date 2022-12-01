@@ -205,7 +205,7 @@
                             <div class=" tw__grid tw__grid-flow-row lg:tw__grid-flow-col tw__grid-cols-1 lg:tw__grid-cols-3 tw__items-center tw__gap-2 lg:tw__gap-4">
                                 <div class="">
                                     <strong class="">${val.name}</strong>
-                                    <small class=" tw__hidden lg:tw__flex tw__items-center tw__gap-1"><i class="bx bx-align-left"></i>${val.note ?? 'No Description'}</small>
+                                    <small class=" tw__hidden lg:tw__flex tw__items-center tw__gap-1"><i class="bx bx-align-left"></i>${val.note ? val.note : 'No Description'}</small>
                                 </div>
                                 <div class="">
                                     ${extraInformation.join('')}

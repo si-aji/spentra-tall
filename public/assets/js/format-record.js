@@ -77,7 +77,7 @@ function recordContentFormat(val, index, action = []){
 
         <div class="tw__my-2 tw__mt-4 lg:tw__mt-2 tw__flex tw__items-center tw__gap-4">
             <div class="tw__min-h-[35px] tw__min-w-[35px] tw__rounded-full tw__text-white ${val.to_wallet_id ? 'tw__bg-gray-400' : (val.type === 'expense' ? 'tw__bg-red-400' : 'tw__bg-green-400')} tw__bg-opacity-75 tw__flex tw__items-center tw__justify-center">
-                <i class="bx bx${val.to_wallet_id ? '-transfer' : (val.type === 'expense' ? 's-arrow-from-bottom' : 's-arrow-from-bottom')}"></i>
+                <i class="bx bx${val.to_wallet_id ? '-transfer' : (val.type === 'expense' ? 's-arrow-from-bottom' : 's-arrow-to-bottom')}"></i>
             </div>
             <div class="tw__flex tw__items-center tw__gap-4 tw__w-full">
                 <div class="tw__mr-auto">

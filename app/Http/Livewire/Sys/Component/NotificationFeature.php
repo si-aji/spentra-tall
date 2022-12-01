@@ -8,30 +8,40 @@ use Livewire\Component;
 
 class NotificationFeature extends Component
 {
+    /**
+     * Sidebar Configuration
+     */
     public $menuState = null;
     public $submenuState = null;
 
+    /**
+     * Component Variable
+     */
+    // List / Select
+    public $dataOverdue;
+    public $dataToday;
+    public $dataUpcoming;
     // Modal
     public $notificationModalState = 'hide';
-
     // Load More Conf
     public $loadPerPageOverdue = 3;
     public $loadPerPageToday = 3;
     public $loadPerPageUpcoming = 3;
-
     // Paginate
     protected $paginateOverdue = null;
     protected $paginateToday = null;
     protected $paginateUpcoming = null;
-
     // Extra Conf
     public $upcomingConf = 7; // Get X days upcoming planned payments
 
-    // List Data
-    public $dataOverdue;
-    public $dataToday;
-    public $dataUpcoming;
+    /**
+     * Validation
+     */
+    // 
 
+    /**
+     * Livewire Event Listener
+     */
     protected $listeners = [
         'refreshComponent' => '$refresh',
         'openModal' => 'openModal',
@@ -42,10 +52,31 @@ class NotificationFeature extends Component
         'editAction' => 'editAction'
     ];
 
+    /**
+     * Livewire Mount
+     */
     public function mount()
     {
         // 
     }
+
+    /**
+     * Livewire Component Render
+     */
+    public function render()
+    {
+        $this->loadData();
+
+        return view('livewire.sys.component.notification-feature', [
+            'paginateOverdue' => $this->paginateOverdue,
+            'paginateToday' => $this->paginateToday,
+            'paginateUpcoming' => $this->paginateUpcoming,
+        ]);
+    }
+
+    /**
+     * Function
+     */
     private function loadData():void
     {
         $datetime = date("Y-m-d H:i:s");
@@ -89,18 +120,6 @@ class NotificationFeature extends Component
 
         $this->dispatchBrowserEvent('notificationGenerateOverdueList');
     }
-
-    public function render()
-    {
-        $this->loadData();
-
-        return view('livewire.sys.component.notification-feature', [
-            'paginateOverdue' => $this->paginateOverdue,
-            'paginateToday' => $this->paginateToday,
-            'paginateUpcoming' => $this->paginateUpcoming,
-        ]);
-    }
-
     public function loadMoreOverdue($limit = 10)
     {
         $this->loadData();
@@ -122,7 +141,6 @@ class NotificationFeature extends Component
         $this->notificationModalState = 'show';
         $this->loadPerPageUpcoming += $limit;
     }
-
     // Handle Modal
     public function openModal()
     {
@@ -143,7 +161,6 @@ class NotificationFeature extends Component
 
         $this->notificationModalState = 'hide';
     }
-
     // 
     public function skipPeriod($uuid)
     {
@@ -158,7 +175,6 @@ class NotificationFeature extends Component
         $plannedRecordModal = new \App\Http\Livewire\Sys\Component\PlannedPaymentRecordModal();
         return $plannedRecordModal->skipRecord($plannedPaymentRecord->uuid, $plannedPayment->uuid);
     }
-
     public function getPaginateToday()
     {
         $this->loadData();

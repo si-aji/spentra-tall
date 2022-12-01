@@ -106,7 +106,7 @@
                 <div class=" tw__w-full tw__flex tw__overflow-x-auto tw__pb-2">
                     <div class=" nav nav-tabs tw__flex-nowrap tw__flex-row-reverse md:tw__flex-row md:tw__min-w-full" id="monthly-key" role="tablist">
                         @for ($i = date('Y-01-01', strtotime($dataSelectedYear.'-01-01')); $i <= date('Y-m-01', strtotime($dataSelectedYear."-".($dataSelectedYear !== date("Y") ? '12' : date("m"))."-01")); $i = date("Y-m-01", strtotime($i.' +1 months')))
-                            <button type="button" class="tabbed-month nav-link {{ date("Y-m-01", strtotime($dataSelectedMonth)) === date("Y-m-01", strtotime($i)) ? 'active' : '' }}" data-date="{{ date("Y-m-01", strtotime($i)) }}" data-selected="{{ date("Y-m-01", strtotime($dataSelectedMonth)) }}" data-bs-toggle="tab" role="tab" wire:click="monthChanged" x-on:click="$wire.localUpdate('dataSelectedMonth', $event.target.dataset.date)">{{ date('M', strtotime($i)) }}</button>
+                            <button type="button" class="tabbed-month nav-link {{ date("Y-m-01", strtotime($dataSelectedMonth)) === date("Y-m-01", strtotime($i)) ? 'active' : '' }}" data-date="{{ date("Y-m-01", strtotime($i)) }}" data-selected="{{ date("Y-m-01", strtotime($dataSelectedMonth)) }}" data-bs-toggle="tab" role="tab" wire:click="monthChanged" x-on:click="console.log($event.target.dataset.date);@this.set('dataSelectedMonth', $event.target.dataset.date)">{{ date('M', strtotime($i)) }}</button>
                         @endfor
                     </div>
                 </div>
@@ -250,6 +250,7 @@
         }
 
         const generateList = () => {
+            console.log("Generate List");
             if(document.getElementById('record-container')){
                 document.getElementById('record-container').innerHTML = ``;
             }

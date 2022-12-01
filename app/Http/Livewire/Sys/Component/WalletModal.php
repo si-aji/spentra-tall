@@ -6,23 +6,39 @@ use Livewire\Component;
 
 class WalletModal extends Component
 {
+    /**
+     * Sidebar Configuration
+     */
     public $menuState = null;
     public $submenuState = null;
 
+    /**
+     * Component Variable
+     */
     // List / Select
     public $listWallet;
-
     // Modal
     public $walletModalState = 'hide';
     public $walletTitle = 'Add new';
-
     // Form Field
     public $walletUuid = null;
     public $walletParent = '';
     public $walletName = null;
     public $walletBalance = '';
-
+    // Reset Field
     public $walletResetField = [];
+
+    /**
+     * Validation
+     */
+    protected $rules = [
+        'walletParent' => ['nullable'],
+        'walletName' => ['required'],
+    ];
+
+    /**
+     * Livewire Event Listener
+     */
     protected $listeners = [
         'refreshComponent' => '$refresh',
         'openModal' => 'openModal',
@@ -33,20 +49,9 @@ class WalletModal extends Component
         'editAction' => 'editAction'
     ];
 
-    protected $rules = [
-        'walletParent' => ['nullable'],
-        'walletName' => ['required'],
-    ];
-
-    public function fetchMainWallet()
-    {
-        // Wallet
-        $this->listWallet = \App\Models\Wallet::with('child', 'parent')
-            ->where('user_id', \Auth::user()->id)
-            ->whereNull('parent_id')
-            ->orderBy('order_main', 'asc')
-            ->get();
-    }
+    /**
+     * Livewire Mount
+     */
     public function mount()
     {
         $this->walletResetField = [
@@ -58,6 +63,9 @@ class WalletModal extends Component
         ];
     }
 
+    /**
+     * Livewire Component Render
+     */
     public function render()
     {
         $this->fetchMainWallet();
@@ -66,6 +74,18 @@ class WalletModal extends Component
         return view('livewire.sys.component.wallet-modal');
     }
 
+    /**
+     * Function
+     */
+    public function fetchMainWallet()
+    {
+        // Wallet
+        $this->listWallet = \App\Models\Wallet::with('child', 'parent')
+            ->where('user_id', \Auth::user()->id)
+            ->whereNull('parent_id')
+            ->orderBy('order_main', 'asc')
+            ->get();
+    }
     public function save()
     {
         // \Log::debug("Debug on Wallet Modal Component ~ \App\Http\Livewire\Sys\Component\WalletModal", [
@@ -123,10 +143,7 @@ class WalletModal extends Component
         // Re-Order
         (new \App\Http\Livewire\Sys\Wallet\Lists\ReOrder())->reOrder();
     }
-
-    /**
-     * Handle edit request data
-     */
+    // Handle edit request data
     public function editAction($uuid)
     {
         $data = \App\Models\Wallet::where(\DB::raw('BINARY `uuid`'), $uuid)
@@ -139,7 +156,6 @@ class WalletModal extends Component
 
         $this->dispatchBrowserEvent('wallet_wire-modalShow');
     }
-
     // Handle Modal
     public function openModal()
     {

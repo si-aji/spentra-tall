@@ -9,16 +9,31 @@ class PlannedPaymentRecordModal extends Component
 {
     use WithFileUploads;
 
+    /**
+     * Sidebar Configuration
+     */
     public $menuState = null;
     public $submenuState = null;
 
+    /**
+     * Component Variable
+     */
     // List
     public $listTemplate;
     public $listCategory;
     public $listWallet;
     public $listTag;
-
+    // Reset Field
     public $plannedPaymentRecordResetField = [];
+
+    /**
+     * Validation
+     */
+    // 
+
+    /**
+     * Livewire Event Listener
+     */
     protected $listeners = [
         'refreshComponent' => '$refresh',
         'skipRecord' => 'skipRecord',
@@ -49,6 +64,9 @@ class PlannedPaymentRecordModal extends Component
     public $plannedPaymentRecordReceiptTemp = null;
     public $plannedPaymentRecordTag;
 
+    /**
+     * Livewire Mount
+     */
     public function mount()
     {
         $this->plannedPaymentRecordResetField = [
@@ -70,6 +88,22 @@ class PlannedPaymentRecordModal extends Component
         ];
     }
 
+    /**
+     * Livewire Component Render
+     */
+    public function render()
+    {
+        $this->fetchListCategory();
+        $this->fetchListWallet();
+        $this->fetchListTag();
+        $this->dispatchBrowserEvent('plannedPaymentRecord_wire-init');
+
+        return view('livewire.sys.component.planned-payment-record-modal');
+    }
+
+    /**
+     * Function
+     */
     // Fetch List
     public function fetchListCategory()
     {
@@ -96,17 +130,6 @@ class PlannedPaymentRecordModal extends Component
             ->orderBy('name', 'asc')
             ->get();
     }
-
-    public function render()
-    {
-        $this->fetchListCategory();
-        $this->fetchListWallet();
-        $this->fetchListTag();
-        $this->dispatchBrowserEvent('plannedPaymentRecord_wire-init');
-
-        return view('livewire.sys.component.planned-payment-record-modal');
-    }
-
     // Handle Data
     public function updatedPlannedPaymentRecordReceipt()
     {
@@ -274,7 +297,6 @@ class PlannedPaymentRecordModal extends Component
             'data' => 'ok'
         ];
     }
-
     public function removeReceipt(): void
     {
         if($this->plannedPaymentRecordReceipt){
@@ -285,7 +307,6 @@ class PlannedPaymentRecordModal extends Component
             $this->plannedPaymentRecordReceipt = null;
         }
     }
-
     // Handle Modal
     public function openModal()
     {

@@ -6,16 +6,33 @@ use Livewire\Component;
 
 class Show extends Component
 {
-    public $recordData;
-    public $recordUuid;
-
+    /**
+     * Sidebar Configuration
+     */
     public $menuState = null;
     public $submenuState = null;
     
+    /**
+     * Component Variable
+     */
+    public $recordData,
+        $recordUuid;
+
+    /**
+     * Validation
+     */
+    // 
+
+    /**
+     * Livewire Event Listener
+     */
     protected $listeners = [
         'refreshComponent' => '$refresh',
     ];
 
+    /**
+     * Livewire Mount
+     */
     public function mount($uuid)
     {
         $this->recordData = \App\Models\Record::with('wallet.parent', 'walletTransferTarget.parent', 'category.parent', 'recordTags')
@@ -26,6 +43,9 @@ class Show extends Component
         $this->menuState = 'record';
     }
 
+    /**
+     * Livewire Component Render
+     */
     public function render()
     {
         return view('livewire.sys.record.show')->extends('layouts.sneat', [
@@ -33,4 +53,9 @@ class Show extends Component
             'submenuState' => $this->submenuState,
         ]);
     }
+
+    /**
+     * Function
+     */
+    // 
 }

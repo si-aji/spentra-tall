@@ -6,9 +6,15 @@ use Livewire\Component;
 
 class Show extends Component
 {
+    /**
+     * Sidebar Configuration
+     */
     public $menuState = null;
     public $submenuState = null;
 
+    /**
+     * Component Variable
+     */
     public $quitely = false;
     public $shoppingListData;
     public $shoppingListDataCollect;
@@ -22,16 +28,30 @@ class Show extends Component
     public $shoppingListItemQty;
     public $shoppingListItemPrice;
 
+    /**
+     * Validation
+     */
+    // 
+
+    /**
+     * Livewire Event Listener
+     */
     protected $listeners = [
         'refreshComponent' => '$refresh',
     ];
 
+    /**
+     * Livewire Mount
+     */
     public function mount($uuid)
     {
         $this->menuState = 'shopping-list';
         $this->shoppingListUuid = $uuid;
     }
 
+    /**
+     * Livewire Component Render
+     */
     public function render()
     {
         $this->shoppingListData = \App\Models\ShoppingList::with('shoppingListItem')
@@ -56,6 +76,9 @@ class Show extends Component
             ]);
     }
 
+    /**
+     * Function
+     */
     public function saveItem()
     {
         \Log::debug("Debug on Shopping List Item Save function on Shopping List Show", [
@@ -78,7 +101,6 @@ class Show extends Component
         $shoppingListItemModal->shoppingListItemPrice = $this->shoppingListItemPrice;
         $shoppingListItemModal->save();
     }
-
     // Remove Data
     public function removeData($uuid)
     {
