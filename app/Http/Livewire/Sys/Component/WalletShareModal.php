@@ -6,16 +6,20 @@ use Livewire\Component;
 
 class WalletShareModal extends Component
 {
+    /**
+     * Sidebar Configuration
+     */
     public $menuState = null;
     public $submenuState = null;
 
+    /**
+     * Component Variable
+     */
     // List / Select
     public $listWallet;
-
     // Modal
     public $walletShareModalState = 'hide';
     public $walletShareTitle = 'Add new';
-
     // Form Field
     public $user_timezone;
     public $walletShareUuid = '';
@@ -24,8 +28,21 @@ class WalletShareModal extends Component
     public $walletShareNote = '';
     public $walletShareTimeLimit = 'lifetime';
     public $walletShareItem = [];
-
+    // Reset Field
     public $walleShareResetField = [];
+
+    /**
+     * Validation
+     */
+    protected $rules = [
+        'walletSharePassphrase' => ['nullable', 'string'],
+        'walletShareNote' => ['nullable'],
+        'walletShareItem.*' => ['required']
+    ];
+
+    /**
+     * Livewire Event Listener
+     */
     protected $listeners = [
         'refreshComponent' => '$refresh',
         'openModal' => 'openModal',
@@ -33,21 +50,9 @@ class WalletShareModal extends Component
         'editAction' => 'editAction'
     ];
 
-    protected $rules = [
-        'walletSharePassphrase' => ['nullable', 'string'],
-        'walletShareNote' => ['nullable'],
-        'walletShareItem.*' => ['required']
-    ];
-
-    public function fetchMainWallet()
-    {
-        // Wallet
-        $this->listWallet = \App\Models\Wallet::with('child', 'parent')
-            ->where('user_id', \Auth::user()->id)
-            ->whereNull('parent_id')
-            ->orderBy('order_main', 'asc')
-            ->get();
-    }
+    /**
+     * Livewire Mount
+     */
     public function mount()
     {
         $this->walleShareResetField = [
@@ -60,6 +65,9 @@ class WalletShareModal extends Component
         ];
     }
 
+    /**
+     * Livewire Component Render
+     */
     public function render()
     {
         $this->fetchMainWallet();
@@ -68,6 +76,19 @@ class WalletShareModal extends Component
         return view('livewire.sys.component.wallet-share-modal');
     }
 
+    /**
+     * Function
+     */
+    // Fetch List Data
+    public function fetchMainWallet()
+    {
+        // Wallet
+        $this->listWallet = \App\Models\Wallet::with('child', 'parent')
+            ->where('user_id', \Auth::user()->id)
+            ->whereNull('parent_id')
+            ->orderBy('order_main', 'asc')
+            ->get();
+    }
     public function save()
     {
         $selectedWallet = [];
@@ -119,10 +140,7 @@ class WalletShareModal extends Component
             'walletShareItem' => $this->walletShareItem,
         ]);
     }
-
-    /**
-     * Handle edit request data
-     */
+    // Handle edit request data
     public function editAction($uuid, $detailPage = false)
     {
         $this->walletShareTitle = 'Wallet Share: Edit';
@@ -143,7 +161,6 @@ class WalletShareModal extends Component
         ]);
         $this->dispatchBrowserEvent('wallet_share_wire-modalShow');
     }
-
     // Handle Modal
     public function openModal()
     {

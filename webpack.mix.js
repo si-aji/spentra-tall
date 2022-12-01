@@ -86,3 +86,10 @@ mix.copy('node_modules/moment/dist/locale', 'public/assets/plugins/moment/locale
 mix.copy('node_modules/moment/min/moment.min.js', 'public/assets/plugins/moment');
 // Clipboard
 mix.copy('node_modules/clipboard/dist/clipboard.min.js', 'public/assets/plugins/clipboard/').version();
+// Pace
+mix.copyDirectory('node_modules/pace-js/templates', 'public/assets/plugins/pace-js/templates');
+mix.copyDirectory('node_modules/pace-js/themes', 'public/assets/plugins/pace-js/themes');
+mix.copy('node_modules/pace-js/pace.js', 'public/assets/plugins/pace-js/pace.js').version();
+// Color Pickr
+mix.copy('node_modules/@simonwep/pickr/dist/pickr.min.js', 'public/assets/plugins/color-pickr/pickr.min.js').version();
+mix.copyDirectory('node_modules/@simonwep/pickr/dist/themes', 'public/assets/plugins/color-pickr/themes');

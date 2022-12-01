@@ -442,6 +442,7 @@
                     `;
                     e.target.querySelector('button[type="submit"]').disabled = true;
                 }
+                
                 // Get Tags Data
                 let selectedTags = [];
                 recordModalTagChoice.getValue().forEach((e, key) => {
@@ -535,6 +536,9 @@
                         el.dispatchEvent(new Event('click'));
                     }
                 });
+            }
+            if(el.hasOwnProperty('recordTemplate')){
+                recordModalTemplateChoice.setChoiceByValue(el.recordTemplate);
             }
             if(el.hasOwnProperty('recordCategory')){
                 recordModalCategoryChoice.setChoiceByValue(el.recordCategory);

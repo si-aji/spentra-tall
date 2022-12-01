@@ -7,29 +7,33 @@ use Livewire\Component;
 
 class ReOrder extends Component
 {
+    /**
+     * Sidebar Configuration
+     */
     public $menuState = null;
     public $submenuState = null;
 
+    /**
+     * Component Variable
+     */
     public $listWallet;
 
+    /**
+     * Validation
+     */
+    // 
+
+    /**
+     * Livewire Event Listener
+     */
     protected $listeners = [
         'reOrder' => 'reOrder',
         'refreshComponent' => '$refresh',
     ];
 
     /**
-     * Fetch List Data
+     * Livewire Mount
      */
-    public function fetchMainWallet()
-    {
-        // Wallet
-        $this->listWallet = \App\Models\Wallet::with('child', 'parent')
-            ->where('user_id', \Auth::user()->id)
-            ->whereNull('parent_id')
-            ->orderBy('order_main', 'asc')
-            ->get();
-    }
-
     public function mount()
     {
         $this->menuState = 'wallet';
@@ -37,8 +41,7 @@ class ReOrder extends Component
     }
 
     /**
-     * Render component livewire view
-     * 
+     * Livewire Component Render
      */
     public function render()
     {
@@ -53,9 +56,19 @@ class ReOrder extends Component
     }
 
     /**
-     * Handle Re-Order
-     * 
+     * Function
      */
+    // Fetch List Data
+    public function fetchMainWallet()
+    {
+        // Wallet
+        $this->listWallet = \App\Models\Wallet::with('child', 'parent')
+            ->where('user_id', \Auth::user()->id)
+            ->whereNull('parent_id')
+            ->orderBy('order_main', 'asc')
+            ->get();
+    }
+    // Handle Re-Order
     public function reOrder($order = null)
     {
         \Log::debug("Debug on Re Order function ~ \App\Http\Livewire\Sys\Wallet\Lists\ReOrder", [

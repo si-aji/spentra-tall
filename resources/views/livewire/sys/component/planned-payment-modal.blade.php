@@ -347,6 +347,12 @@
                     shouldSort: false
                 });
             }
+
+            if(document.getElementById('modal-plannedPayment')){
+                document.getElementById('modal-plannedPayment').addEventListener('hidden.bs.modal', (e) => {
+                    Livewire.emitTo('sys.component.search-feature', 'refreshComponent');
+                });
+            }
         });
 
         window.addEventListener('plannedPaymentModal_wire-init', (event) => {

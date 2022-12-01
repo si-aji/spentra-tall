@@ -455,6 +455,7 @@
             document.getElementById('modal-plannedPaymentRecord').addEventListener('hidden.bs.modal', (e) => {
                 @this.removeReceipt();
                 plannedPaymentRecordModalDefaultDateTemp = null;
+                Livewire.emitTo('sys.component.search-feature', 'refreshComponent');
             });
         });
 

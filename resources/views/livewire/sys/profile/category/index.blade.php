@@ -39,6 +39,8 @@
                 <span class=" tw__flex tw__items-center tw__gap-2"><i class="bx bx-plus"></i>Generate Default</span>
             </a>
         @endif
+
+        <div id="sample"></div>
     </div>
     {{-- Be like water. --}}
     <div class="card tw__mt-4" wire:ignore>
@@ -143,5 +145,85 @@
                 });
             });
         }
+
+        let samplePickr = null;
+        const samplePickrInit = (defaultColor = null) => {
+            const el = document.createElement('p');
+            el.classList.add('tw__w-full', 'tw__h-full', 'tw__flex');
+            document.getElementById('sample').appendChild(el);
+            if(samplePickr){
+                samplePickr.destroyAndRemove();
+            }
+
+            let conf = {
+                el: el,
+                theme: 'monolith',
+                swatches: JSON.parse(localStorage.getItem('pickrPalette')),
+                components: {
+                    preview: false,
+                    opacity: false,
+                    hue: true,
+                    interaction: {
+                        hex: false,
+                        rgba: false,
+                        hsva: false,
+                        input: true,
+                        clear: true,
+                        save: true,
+                        cancel: true
+                    }
+                },
+                defaultRepresentation: 'HEXA'
+            };
+            // Set Default Color
+            if(defaultColor !== null){
+                // Push default color to existing conf
+                conf.default = defaultColor;
+            }
+
+            // Color Pickr
+            samplePickr = new Pickr(conf);
+            samplePickr.on('init', (instance) => {
+                instance._root.button.closest('div').style.display = 'flex';
+                instance._root.button.closest('div').style.width = '100%';
+                instance._root.button.closest('div').style.height = '100%';
+                instance._root.button.style.width = '100%';
+                instance._root.button.style.height = '100%';
+
+                instance._root.interaction.cancel.value = `Palette Reset`;
+                instance._root.interaction.save.value = `Palette Add`;
+            }).on('change', (color, source, instance) => {
+                samplePickr.applyColor(true);
+                if(document.getElementById('input_category-color')){
+                    document.getElementById('input_category-color').value = color.toRGBA().toString();
+                }
+            }).on('save', (color, instance) => {
+                if(color !== null){
+                    let palette = [];
+                    if(localStorage.getItem('pickrPalette')){
+                        palette = JSON.parse(localStorage.getItem('pickrPalette'));
+                    }
+
+                    let selected = color.toRGBA().toString();
+                    if(!palette.includes(selected)){
+                        palette.push(selected);
+
+                        samplePickr.addSwatch(selected);
+                        localStorage.setItem('pickrPalette', JSON.stringify(palette));
+                    }
+
+                }
+            }).on('cancel', (e) => {
+                let palette = JSON.parse(localStorage.getItem('pickrPalette'));
+                palette.forEach((val, index) => {
+                    samplePickr.removeSwatch(0);
+                });
+                localStorage.setItem('pickrPalette', JSON.stringify([]));
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', (e) => {
+            samplePickrInit();
+        });
     </script>
 @endsection

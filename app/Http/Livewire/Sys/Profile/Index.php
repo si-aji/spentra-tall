@@ -13,19 +13,28 @@ class Index extends Component
     use WithFileUploads;
     use FileUploadTrait;
 
+    /**
+     * Sidebar Configuration
+     */
     public $menuState = null;
     public $submenuState = null;
-    public $extraMenu = [];
 
+    /**
+     * Component Variable
+     */
+    public $extraMenu = [];
     // Form Field
     public $name = '';
     public $username = '';
     public $email = '';
     public $avatar = '';
     public $photo;
-
+    // 
     public $deletePassword = '';
 
+    /**
+     * Validation
+     */
     protected $rules = [
         'name' => ['required'],
         'username' => ['required', 'alpha_dash'],
@@ -33,6 +42,14 @@ class Index extends Component
         'photo' => ['nullable', 'image', 'max:500', 'mimes:jpeg,jpeg,png']
     ];
 
+    /**
+     * Livewire Event Listener
+     */
+    // 
+
+    /**
+     * Livewire Mount
+     */
     public function mount()
     {
         $this->menuState = 'profile';
@@ -55,8 +72,7 @@ class Index extends Component
     }
 
     /**
-     * Render component livewire view
-     * 
+     * Livewire Component Render
      */
     public function render()
     {
@@ -68,9 +84,9 @@ class Index extends Component
     }
 
     /**
-     * Function to save to database
-     * 
+     * Function
      */
+    // Save to database
     public function save()
     {
         $this->validate();
@@ -104,10 +120,7 @@ class Index extends Component
             'message' => 'Successfully update Profile data'
         ]);
     }
-
-    /**
-     * Check if password is match
-     */
+    // Check if password is match
     public function checkAccount()
     {
         $checkPassword = \Hash::check($this->deletePassword, \Auth::user()->password);
@@ -121,7 +134,6 @@ class Index extends Component
         \Auth::logout();
         return redirect()->route('home');
     }
-
     // Remove temp file
     public function removePhoto(): void
     {

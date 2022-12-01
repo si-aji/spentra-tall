@@ -61,11 +61,17 @@ class Handler extends ExceptionHandler
     {
         \Log::debug("\App\Exceptions\Handler@unauthenticated ~ Debug on Unauthenticated function", [
             'request' => $request->all(),
-            'message' => $exception->getMessage()
+            'message' => $exception->getMessage(),
+            'route' => $request->route()->getName(),
         ]);
+
+        $route = $exception->redirectTo() ?? route('login');
+        if(str_contains($request->route()->getName(), 'adm') !== false){
+            $route = route('adm.login');
+        }
         
         return $this->shouldReturnJson($request, $exception)
                     ? response()->json(['message' => $exception->getMessage()], 401)
-                    : redirect()->guest($exception->redirectTo() ?? route('login'));
+                    : redirect()->guest($route);
     }
 }

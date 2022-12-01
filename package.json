@@ -26,6 +26,7 @@
         "vite": "^3.0.0"
     },
     "dependencies": {
+        "@simonwep/pickr": "^1.8.2",
         "choices.js": "^10.1.0",
         "clipboard": "^2.0.11",
         "datatables.net": "^1.12.1",
@@ -46,6 +47,7 @@
         "jquery-datatables-checkboxes": "^1.2.13",
         "moment": "^2.29.4",
         "nestablejs": "^0.2.0",
+        "pace-js": "^1.2.4",
         "sweetalert2": "^11.4.38"
     }
 }

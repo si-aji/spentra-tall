@@ -54,11 +54,9 @@ return [
             ], [
                 'name' => 'Shopping List',
                 'icon' => 'bx bx-cart-alt',
-                'route' => null,
-                'is_header' => false,
-                'state' => null,
+                'route' => 'sys.shopping-list.index',
+                'state' => 'shopping-list',
                 'sub' => [],
-                'disabled' => true
             ], [
                 'name' => 'Master Data',
                 'icon' => null,

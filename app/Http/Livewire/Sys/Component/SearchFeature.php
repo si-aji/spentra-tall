@@ -8,30 +8,42 @@ use Livewire\Component;
 
 class SearchFeature extends Component
 {
+    /**
+     * Sidebar Configuration
+     */
+    // 
+
+    /**
+     * Component Variable
+     */
     public $search = '';
     public $result = null;
     public $avatar = '';
     public $notificationState = false;
 
-    public function mount()
-    {
-        $datetime = date("Y-m-d H:i:s");
-        if(\Session::has('SAUSER_TZ')){
-            // Get datetime based on Timezone
-            $datetime = (new DateTime('now', new DateTimeZone(\Session::get('SAUSER_TZ'))))->format('Y-m-d H:i:s');
-        }
-        
-        $this->avatar = \Auth::user()->getProfilePicture();
-        $this->notificationState = \App\Models\PlannedPayment::where('user_id', \Auth::user()->id)
-            ->where('next_date', date("Y-m-d", strtotime($datetime)))
-            ->orWhere('next_date', '<', date("Y-m-d", strtotime($datetime)))
-            ->count() > 0;
-    }
+    /**
+     * Validation
+     */
+    // 
 
+    /**
+     * Livewire Event Listener
+     */
     protected $listeners = [
         'refreshComponent' => '$refresh'
     ];
 
+    /**
+     * Livewire Mount
+     */
+    public function mount()
+    {        
+        $this->avatar = \Auth::user()->getProfilePicture();
+    }
+
+    /**
+     * Livewire Component Render
+     */
     public function render()
     {
         $this->avatar = \Auth::user()->getProfilePicture();
@@ -47,8 +59,22 @@ class SearchFeature extends Component
             $this->result = null;
         }
 
+        $datetime = date("Y-m-d H:i:s");
+        if(\Session::has('SAUSER_TZ')){
+            // Get datetime based on Timezone
+            $datetime = (new DateTime('now', new DateTimeZone(\Session::get('SAUSER_TZ'))))->format('Y-m-d H:i:s');
+        }
+        $this->notificationState = \App\Models\PlannedPayment::where('user_id', \Auth::user()->id)
+            ->where('next_date', date("Y-m-d", strtotime($datetime)))
+            ->orWhere('next_date', '<', date("Y-m-d", strtotime($datetime)))
+            ->count() > 0;
+
         return view('livewire.sys.component.search-feature', [
             'result' => strlen($this->search),
         ]);
     }
+
+    /**
+     * Function
+     */
 }

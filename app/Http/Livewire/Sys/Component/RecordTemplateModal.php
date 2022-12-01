@@ -6,19 +6,23 @@ use Livewire\Component;
 
 class RecordTemplateModal extends Component
 {
+    /**
+     * Sidebar Configuration
+     */
     public $menuState = null;
     public $submenuState = null;
 
+    /**
+     * Component Variable
+     */
     // List / Select
     public $listCategory;
     public $listWallet;
     public $listTag;
-
     // Modal
     public $recordTemplateModalState = true;
     public $recordTemplateUuid = null;
     public $recordTemplateTitle = 'Add new Record Template';
-
     // Form Field
     public $recordTemplateType = 'income';
     public $recordTemplateCategory = '';
@@ -32,8 +36,17 @@ class RecordTemplateModal extends Component
     public $recordTemplateNote = '';
     public $recordTemplateMoreState = false;
     public $recordTemplateTag = [];
+    // Reset Field
     public $recordTemplateResetField = [];
 
+    /**
+     * Validation
+     */
+    // 
+
+    /**
+     * Livewire Event Listener
+     */
     protected $listeners = [
         'refreshComponent' => '$refresh',
         'closeModal' => 'closeModal',
@@ -42,8 +55,43 @@ class RecordTemplateModal extends Component
     ];
 
     /**
-     * FetchList Data
+     * Livewire Mount
      */
+    public function mount()
+    {
+        $this->recordResetField = [
+            'recordTemplateUuid',
+            'recordTemplateType',
+            'recordTemplateCategory',
+            'recordTemplateWallet',
+            'recordTemplateWalletTransfer',
+            'recordTemplateAmount',
+            'recordTemplateExtraType',
+            'recordTemplateExtraAmount',
+            'recordTemplateFinalAmount',
+            'recordTemplateName',
+            'recordTemplateNote',
+            'recordTemplateTag'
+        ];
+    }
+
+    /**
+     * Livewire Component Render
+     */
+    public function render()
+    {
+        $this->fetchListCategory();
+        $this->fetchListWallet();
+        $this->fetchListTag();
+        
+        $this->dispatchBrowserEvent('record_template_wire-init');
+        return view('livewire.sys.component.record-template-modal');
+    }
+
+    /**
+     * Function
+     */
+    // Fetch List Data
     public function fetchListCategory()
     {
         // Category
@@ -69,39 +117,6 @@ class RecordTemplateModal extends Component
             ->orderBy('name', 'asc')
             ->get();
     }
-
-    public function mount()
-    {
-        $this->recordResetField = [
-            'recordTemplateUuid',
-            'recordTemplateType',
-            'recordTemplateCategory',
-            'recordTemplateWallet',
-            'recordTemplateWalletTransfer',
-            'recordTemplateAmount',
-            'recordTemplateExtraType',
-            'recordTemplateExtraAmount',
-            'recordTemplateFinalAmount',
-            'recordTemplateName',
-            'recordTemplateNote',
-            'recordTemplateTag'
-        ];
-    }
-
-    /**
-     * Render component livewire view
-     * 
-     */
-    public function render()
-    {
-        $this->fetchListCategory();
-        $this->fetchListWallet();
-        $this->fetchListTag();
-        
-        $this->dispatchBrowserEvent('record_template_wire-init');
-        return view('livewire.sys.component.record-template-modal');
-    }
-
     // Handle Data
     public function save()
     {
@@ -214,11 +229,18 @@ class RecordTemplateModal extends Component
             'message' => 'Successfully '.(empty($this->recordTemplateUuid) ? 'store new' : 'update').' Record Template Data'
         ]);
         $this->reset($this->recordResetField);
+        $this->dispatchBrowserEvent('trigger-eventRecordTemplate', [
+            'recordTemplateType' => $this->recordTemplateType,
+            'recordTemplateAmount' => $this->recordTemplateAmount,
+            'recordTemplateExtraType' => $this->recordTemplateExtraType,
+            'recordTemplateExtraAmount' => $this->recordTemplateExtraAmount,
+            'recordTemplateCategory' => $this->recordTemplateCategory,
+            'recordTemplateWallet' => $this->recordTemplateWallet,
+            'recordTemplateWalletTransfer' => $this->recordTemplateWalletTransfer,
+            'recordTemplateTag' => $this->recordTemplateTag,
+        ]);
     }
-    
-    /**
-     * Handle edit request data
-     */
+    // Handle edit request data
     public function editAction($uuid)
     {
         $data = \App\Models\RecordTemplate::where(\DB::raw('BINARY `uuid`'), $uuid)
@@ -249,7 +271,6 @@ class RecordTemplateModal extends Component
         ]);
         $this->dispatchBrowserEvent('open-modalRecordTemplate');
     }
-
     // Handle Modal
     public function openModal()
     {
@@ -261,7 +282,7 @@ class RecordTemplateModal extends Component
         $this->reset($this->recordResetField);
         $this->dispatchBrowserEvent('close-modalRecordTemplate');
         $this->dispatchBrowserEvent('trigger-eventRecordTemplate', [
-            'recordTemplateype' => $this->recordTemplateType,
+            'recordTemplateType' => $this->recordTemplateType,
             'recordTemplateAmount' => $this->recordTemplateAmount,
             'recordTemplateExtraType' => $this->recordTemplateExtraType,
             'recordTemplateExtraAmount' => $this->recordTemplateExtraAmount,

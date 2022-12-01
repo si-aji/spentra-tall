@@ -390,6 +390,7 @@
                             'icon': 'success',
                             'text': 'Record period successfully skipped'
                         }).then((e) => {
+                            Livewire.emitTo('sys.component.search-feature', 'refreshComponent');
                             // Livewire.emitTo('sys.planned-payment.show', 'refreshComponent');
                         });
                     });

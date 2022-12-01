@@ -23,6 +23,14 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
+                \Log::debug("Debug on Redirect if Authentication route define ~ \App\Http\Middleware\RedirectIfAuthenticated@handle", [
+                    'guard' => $guard
+                ]);
+
+                if($guard === 'adm'){
+                    return redirect(route('adm.index'));
+                }
+
                 return redirect(route('home'));
             }
         }

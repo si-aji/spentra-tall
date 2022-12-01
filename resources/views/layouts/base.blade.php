@@ -4,9 +4,9 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         @hasSection('title')
-            <title>@yield('title') - {{ config('app.name') }}</title>
+            <title>{{ isset($parentTitle) && !empty($parentTitle) ? ($parentTitle).' | ' : '' }}@yield('title') - {{ config('app.name') }}</title>
         @else
-            <title>{{ config('app.name') }}</title>
+            <title>{{ (isset($parentTitle) && !empty($parentTitle) ? ($parentTitle).' | ' : '').config('app.name') }}</title>
         @endif
 
         <!-- Favicon -->
@@ -48,6 +48,10 @@
             });
         </script> --}}
         @stack('javascript')
+
+        {{-- PACE Loader --}}
+        <link href="{{ mix('assets/plugins/pace-js/themes/purple/pace-theme-minimal.css') }}" rel="stylesheet">
+        <script src="{{ mix('assets/plugins/pace-js/pace.js') }}"></script>
 
         <!-- CSRF Token -->
         <meta name="csrf-token" content="{{ csrf_token() }}">

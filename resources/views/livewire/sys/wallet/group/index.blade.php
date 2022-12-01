@@ -17,9 +17,9 @@
 }">
     <div class=" tw__shadow tw__rounded-lg">
         <div class="sa-header tw__bg-white tw__p-4 tw__rounded-t-lg">
-            <div class=" tw__flex tw__items-center tw__flex-wrap lg:tw__flex-nowrap lg:tw__justify-between">
-                <span>Showing {{ $paginate->firstItem() }} to {{ $paginate->lastItem() }} of {{ $paginate->total() }} result{{ $paginate->total() > 1 ? 's' : '' }}</span>
-                <div class="">
+            <div class=" tw__flex tw__items-center tw__flex-wrap lg:tw__flex-nowrap lg:tw__justify-between tw__gap-2">
+                <span class="">Showing {{ $paginate->firstItem() }} to {{ $paginate->lastItem() }} of {{ $paginate->total() }} result{{ $paginate->total() > 1 ? 's' : '' }}</span>
+                <div class=" tw__order-first lg:tw__order-last">
                     {{-- <button type="button" class="btn btn-outline-secondary" @click="refreshState = true" :disabled="refreshState">
                         <span class=" tw__flex tw__items-center tw__gap-1"><i class="bx bx-refresh" :class="refreshState ? 'bx-spin-reverse' : ''"></i>Refresh</span>
                     </button> --}}
@@ -30,6 +30,25 @@
             </div>
         </div>
         <div class="sa-body tw__bg-white" id="wallet_group-container" wire:ignore>
+            @for ($i = 0; $i < ($paginate->total() > 10 ? 10 : $paginate->total()); $i++)
+                <div class="group-list tw__p-4 first:tw__border-t tw__border-b tw__transition-all hover:tw__bg-slate-100 hover:tw__bg-opacity-70" data-index="{{ $i }}">
+                    <div class=" tw__grid tw__grid-flow-row lg:tw__grid-flow-col tw__grid-cols-1 lg:tw__grid-cols-3 tw__items-center tw__gap-2 lg:tw__gap-4">
+                        <div class="">
+                            <span class=" tw__block tw__bg-gray-300 tw__rounded tw__animate-pulse tw__w-36 tw__h-5"></span>
+                            <span class=" tw__block tw__bg-gray-300 tw__rounded tw__animate-pulse tw__w-20 tw__h-3 tw__mt-2"></span>
+                        </div>
+                        <div class=" tw__flex tw__flex-wrap tw__gap-2 list-item">
+                            @for ($j = 0; $j < rand(5, 15); $j++)
+                                <span class=" tw__block tw__bg-gray-300 tw__rounded tw__animate-pulse tw__w-12 tw__h-5"></span>
+                            @endfor
+                        </div>
+                        <div class=" tw__flex tw__gap-2 lg:tw__justify-end">
+                            <span class=" tw__block tw__bg-gray-300 tw__rounded tw__animate-pulse tw__w-20 tw__h-8"></span>
+                            <span class=" tw__block tw__bg-gray-300 tw__rounded tw__animate-pulse tw__w-20 tw__h-8"></span>
+                        </div>
+                    </div>
+                </div>
+            @endfor
         </div>
         <div class="sa-footer tw__bg-white tw__rounded-b-lg tw__p-4">
             <div class=" tw__flex tw__items-center tw__flex-wrap lg:tw__flex-nowrap lg:tw__justify-between">
@@ -49,122 +68,6 @@
 
 @section('js_inline')
     <script>
-        // let table = new DataTable('#table-wallet_group', {
-        //     order: [1, 'asc'],
-        //     pagingType: 'numbers',
-        //     lengthMenu: [5, 10, 25],
-        //     stateSave: true,
-        //     processing: true,
-        //     serverSide: true,
-        //     ajax: {
-        //         url: "{{ route('api.sys.v0.wallet.group.list') }}",
-        //         type: "GET",
-        //         data: function(d){
-        //             d.is_datatable = true;
-        //         }
-        //     },
-        //     columns: [
-        //         { "data": null },
-        //         { "data": "name" },
-        //         { "data": null },
-        //         { "data": null },
-        //     ],
-        //     columnDefs: [
-        //         {
-        //             targets: 0,
-        //             searchable: false,
-        //             sortable: false,
-        //             render: function (row, type, data, meta) {
-        //                 return parseInt(meta.row) + 1;
-        //             }
-        //         }, {
-        //             targets: 1,
-        //             render: function (row, type, data, meta) {
-        //                 // console.log(data);
-        //                 return '-';
-        //                 return `
-        //                     ${row}
-        //                     <small class="tw__block tw__italic text-muted">${formatRupiah(data.balance)}</small>
-        //                 `;
-        //             }
-        //         }, {
-        //             targets: 2,
-        //             searchable: false,
-        //             sortable: false,
-        //             render: function (row, type, data, meta) {
-        //                 return '-';
-        //                 const showLimit = 2;
-        //                 let showMore = true;
-        //                 let walletList = [];
-        //                 data.wallet_group_list.forEach((wgl, row) => {
-        //                     if(row < showLimit){
-        //                         let walletName = wgl.name;
-        //                         if(wgl.parent_id){
-        //                             walletName = `${wgl.parent.name} - ${wgl.name}`;
-        //                         }
-        //                         walletList.push(`<small class=" bg-primary tw__px-2 tw__py-1 tw__rounded tw__text-white">${walletName}</small>`);
-        //                     } else if(showMore) {
-        //                         showMore = false;
-        //                         walletList.push(`<small class=" tw__bg-gray-400 tw__px-2 tw__py-1 tw__rounded tw__text-white">and ${(data.wallet_group_list).length - showLimit} more..</small>`);
-        //                     }
-        //                 });
-
-        //                 return `
-        //                     <small class=" tw__flex tw__items-center tw__gap-2 tw__mt-2 tw__flex-wrap">
-        //                         ${walletList.join('')}
-        //                     </small>
-        //                 `;
-        //             }
-        //         }, {
-        //             targets: 3,
-        //             searchable: false,
-        //             sortable: false,
-        //             render: function (row, type, data, meta) {
-        //                 return '-';
-        //                 return `
-        //                     <div class="">
-        //                         <a href="{{ route('sys.wallet.group.index') }}/${data.uuid}" class="btn btn-sm btn-primary">
-        //                             <span class="tw__flex tw__items-center tw__gap-2"><i class="bx bx-show"></i>Detail</span>
-        //                         </a>
-        //                         <button type="button" class="btn btn-sm btn-warning" x-on:click="$wire.emitTo('sys.component.wallet-group-modal', 'editAction', '${data.uuid}')">
-        //                             <span class="tw__flex tw__items-center tw__gap-2"><i class="bx bx-edit"></i>Edit</span>
-        //                         </button>
-        //                     </div>
-        //                 `;
-        //             }
-        //         }, 
-        //     ],
-        //     responsive: true
-        // });
-        // let tableSkeletonDraw = false;
-        // table.on('processing.dt', (e, settings, processing) => {
-        //     if(processing){
-        //         console.log("Show skeleton");
-
-        //         if(tableSkeletonDraw){
-        //             tableSkeletonDraw = false;
-        //         } else {
-        //             tableSkeletonDraw = true;
-        //             table.row.add([
-        //                 '<span>-</span>',
-        //                 '<span>-</span>',
-        //                 '<span>-</span>',
-        //                 '<span>-</span>',
-        //             ]).draw(false);
-        //         }
-        //         // // Show Processing
-        //         // table.row.add([
-        //         //     '<span>-</span>',
-        //         //     '<span>-</span>',
-        //         //     '<span>-</span>',
-        //         //     '<span>-</span>',
-        //         // ]).draw();
-        //     } else {
-        //         // Load complete
-        //         console.log("Hide skeleton");
-        //     }
-        // });
-
         let loadSkeleton = false;
         const loadDataSkeleton = () => {
             let container = document.getElementById('wallet_group-container');
@@ -232,7 +135,7 @@
             }
         };
         const loadData = () => {
-            console.log("Load data");
+            // console.log("Load data");
             loadSkeleton = false;
             let container = document.getElementById('wallet_group-container');
 
@@ -280,7 +183,7 @@
                             if(selectedWallet > 0){
                                 (val.wallet_group_list).some((lis, index) => {
                                     // console.log(lis);
-                                    let stopper = 4;
+                                    let stopper = 2;
                                     if(index > stopper){
                                         items.push(`<small class=" bg-secondary tw__px-2 tw__py-1 tw__rounded tw__text-white">and ${selectedWallet - (stopper + 1)} more...</small>`);
                                         return true;
@@ -323,7 +226,6 @@
             }
         });
 
-        loadDataSkeleton();
         window.addEventListener('wallet_group_index_wire-init', () => {
             loadData();
         });
@@ -333,7 +235,7 @@
 
         if(document.getElementById('modal-wallet_group')){
             document.getElementById('modal-wallet_group').addEventListener('hide.bs.offcanvas', (e) => {
-                console.log("Refresh datatable");
+                // console.log("Refresh datatable");
                 // table.ajax.reload(null, false);
             });
         }

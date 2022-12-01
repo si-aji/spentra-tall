@@ -63,6 +63,11 @@ class Category extends Model
         return $this->hasMany(\App\Models\Category::class, 'parent_id')
             ->orderBy('order', 'asc');
     }
+    public function record()
+    {
+        return $this->hasMany(\App\Models\Record::class, 'category_id')
+            ->orderBy('datetime', 'desc');
+    }
 
     /**
      * Foreign Key Relation

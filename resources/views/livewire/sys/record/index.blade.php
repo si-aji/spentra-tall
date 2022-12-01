@@ -106,7 +106,7 @@
                 <div class=" tw__w-full tw__flex tw__overflow-x-auto tw__pb-2">
                     <div class=" nav nav-tabs tw__flex-nowrap tw__flex-row-reverse md:tw__flex-row md:tw__min-w-full" id="monthly-key" role="tablist">
                         @for ($i = date('Y-01-01', strtotime($dataSelectedYear.'-01-01')); $i <= date('Y-m-01', strtotime($dataSelectedYear."-".($dataSelectedYear !== date("Y") ? '12' : date("m"))."-01")); $i = date("Y-m-01", strtotime($i.' +1 months')))
-                            <button type="button" class="tabbed-month nav-link {{ date("Y-m-01", strtotime($dataSelectedMonth)) === date("Y-m-01", strtotime($i)) ? 'active' : '' }}" data-date="{{ date("Y-m-01", strtotime($i)) }}" data-bs-toggle="tab" role="tab" wire:click="monthChanged" x-on:click="$wire.localUpdate('dataSelectedMonth', $event.target.dataset.date)">{{ date('M', strtotime($i)) }}</button>
+                            <button type="button" class="tabbed-month nav-link {{ date("Y-m-01", strtotime($dataSelectedMonth)) === date("Y-m-01", strtotime($i)) ? 'active' : '' }}" data-date="{{ date("Y-m-01", strtotime($i)) }}" data-selected="{{ date("Y-m-01", strtotime($dataSelectedMonth)) }}" data-bs-toggle="tab" role="tab" wire:click="monthChanged" x-on:click="console.log($event.target.dataset.date);@this.set('dataSelectedMonth', $event.target.dataset.date)">{{ date('M', strtotime($i)) }}</button>
                         @endfor
                     </div>
                 </div>
@@ -117,7 +117,7 @@
                     @for ($i = 0; $i < 3; $i++)
                         <div class=" tw__px-4 tw__flex tw__flex-col">
                             <div class="list-wrapper tw__flex tw__gap-2 tw__mb-4 last:tw__mb-0">
-                                <div class=" tw__p-4 tw__text-center">
+                                <div class=" tw__py-4 md:tw__px-4 tw__text-center">
                                     <div class="tw__sticky tw__top-24 md:tw__top-40 tw__flex tw__items-center tw__flex-col">
                                         <span class="tw__font-semibold tw__bg-gray-300 tw__animate-pulse tw__h-4 tw__w-8 tw__block tw__rounded tw__mr-0 tw__mb-2"></span>
                                         <div class=" tw__min-h-[40px] tw__min-w-[40px] tw__bg-gray-300 tw__bg-opacity-60 tw__rounded-full tw__flex tw__leading-none tw__items-center tw__justify-center tw__align-middle tw__animate-pulse">
@@ -134,12 +134,12 @@
                     @endfor
                 </div>
 
-                <div wire:loading.remove wire:target="monthChanged" class=" tw__px-4" id="record-container">
+                <div wire:loading.remove wire:target="monthChanged" id="record-container">
                     <div>
                         @for ($i = 0; $i < 3; $i++)
                             <div class=" tw__flex tw__flex-col">
                                 <div class="list-wrapper tw__flex tw__gap-2 tw__mb-4 last:tw__mb-0">
-                                    <div class=" tw__p-4 tw__text-center">
+                                    <div class=" tw__py-4 md:tw__px-4 tw__text-center">
                                         <div class="tw__sticky tw__top-24 md:tw__top-40 tw__flex tw__items-center tw__flex-col">
                                             <span class="tw__font-semibold tw__bg-gray-300 tw__animate-pulse tw__h-4 tw__w-8 tw__block tw__rounded tw__mr-0 tw__mb-2"></span>
                                             <div class=" tw__min-h-[40px] tw__min-w-[40px] tw__bg-gray-300 tw__bg-opacity-60 tw__rounded-full tw__flex tw__leading-none tw__items-center tw__justify-center tw__align-middle tw__animate-pulse">
@@ -250,6 +250,7 @@
         }
 
         const generateList = () => {
+            console.log("Generate List");
             if(document.getElementById('record-container')){
                 document.getElementById('record-container').innerHTML = ``;
             }

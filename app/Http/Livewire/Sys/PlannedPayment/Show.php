@@ -6,27 +6,46 @@ use Livewire\Component;
 
 class Show extends Component
 {
+    /**
+     * Sidebar Configuration
+     */
     public $menuState = null;
     public $submenuState = null;
 
+    /**
+     * Component Variable
+     */
     // Data
     public $plannedPaymentUuid;
     public $plannedPaymentData = '';
     public $plannedPaymentDataRecord;
-
     // Load More Conf
     public $loadPerPage = 10;
 
+    /**
+     * Validation
+     */
+    // 
+
+    /**
+     * Livewire Event Listener
+     */
     protected $listeners = [
         'refreshComponent' => '$refresh',
     ];
 
+    /**
+     * Livewire Mount
+     */
     public function mount($uuid)
     {
         $this->menuState = 'planned-payment';
         $this->plannedPaymentUuid = $uuid;
     }
 
+    /**
+     * Livewire Component Render
+     */
     public function render()
     {
         $this->plannedPaymentData = \App\Models\PlannedPayment::with('category.parent', 'wallet.parent', 'walletTransferTarget.parent', 'plannedPaymentTags')
@@ -53,12 +72,14 @@ class Show extends Component
         ]);
     }
 
+    /**
+     * Function
+     */
     public function skipPeriod($uuid = null)
     {
         $plannedRecordModal = new \App\Http\Livewire\Sys\Component\PlannedPaymentRecordModal();
         return $plannedRecordModal->skipRecord($uuid, $this->plannedPaymentUuid);
     }
-
     public function loadMore()
     {
         $this->loadPerPage += $this->loadPerPage;

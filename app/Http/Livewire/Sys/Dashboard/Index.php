@@ -6,33 +6,25 @@ use Livewire\Component;
 
 class Index extends Component
 {
+    /**
+     * Sidebar Configuration
+     */
     public $menuState = null;
     public $submenuState = null;
-    public $menuSearch = null;
 
+    /**
+     * Component Variable
+     */
+    public $menuSearch = null;
+    // Cashflow Graph
     public $cashFlowLabel = [];
     public $cashFlowIncome = [];
     public $cashFlowExpense = [];
     public $cashFlowIncomeSum = 0;
     public $cashFlowExpenseSum = 0;
     public $plannedPaymentCount = 0;
-    public $walletData;
-
-    // Weekly record
-    public $weeklyRecordType = 'income';
-    public $weeklyStart, 
-        $weeklyEnd,
-        $prevWeeklyStart,
-        $prevWeeklyEnd,
-        $weeklyAmount,
-        $prevWeeklyAmount,
-        $weeklyPercentage;
-
-    public function mount()
+    public function fetchCashflowGraph()
     {
-        $this->menuState = 'dashboard';
-        $this->submenuState = null;
-
         for($start = 1; $start <= date("m"); $start++){
             $this->cashFlowLabel[] = date('M', strtotime("1970-".(str_pad($start,  2, "0", STR_PAD_LEFT))."-01"));
 
@@ -45,13 +37,87 @@ class Index extends Component
             $this->cashFlowExpenseSum += $expense;
         }
     }
+    // Category Graph
+    public $categoryGraphLabel = [];
+    public $categoryGraphData = [];
+    public $categoryGraphColor = [];
+    public function fetchCategoryGraph()
+    {
+        $query = \App\Models\Category::limit(4);
 
+        $this->categoryGraphLabel = (clone $query)->pluck('name')
+            ->toArray();
+        foreach((clone $query)->get() as $key => $category){
+            // array_push($this->categoryGraphData, ((rand(1, 15) * 1000)) * 1);
+            $value = ((rand(1, 15) * [1000, 10000][rand(0, 1)])) * [-1, 1][rand(0, 1)];
+            array_push($this->categoryGraphData, $value * ($value < 0 ? -1 : 1));
+            array_push($this->categoryGraphColor, !empty($category->color) ? $category->color : 'rgba(133, 146, 163, 1)');
+
+            $this->categoryGraphLabel[$key] = '('.($value < 0 ? '-' : '+').') '.$this->categoryGraphLabel[$key];
+        }
+    }
+    // Report - Wallet List
+    public $walletData;
+    // Report - Weekly record
+    public $weeklyRecordType = 'income';
+    public $weeklyStart, 
+        $weeklyEnd,
+        $prevWeeklyStart,
+        $prevWeeklyEnd,
+        $weeklyAmount,
+        $prevWeeklyAmount,
+        $weeklyPercentage;
+
+    /**
+     * Validation
+     */
+    // 
+
+    /**
+     * Livewire Event Listener
+     */
     protected $listeners = ['searchKeyword'];
+
+    /**
+     * Livewire Mount
+     */
+    public function mount()
+    {
+        $this->menuState = 'dashboard';
+        $this->submenuState = null;
+    }
+
+    /**
+     * Livewire Component Render
+     */
+    public function render()
+    {
+        $notificationLivewire = (new \App\Http\Livewire\Sys\Component\NotificationFeature());
+        $this->plannedPaymentCount = $notificationLivewire->getPaginateToday()->total();
+        $this->plannedPaymentOverdueCount = $notificationLivewire->getPaginateOverdue()->total();
+
+        // Fetch Related Data
+        $this->fetchWeeklyRecord();
+        $this->fetchWalletData();
+        // Fetch Graph
+        $this->fetchCashflowGraph();
+        $this->fetchCategoryGraph();
+
+        $this->dispatchBrowserEvent('dashboardWireInit');
+
+        return view('livewire.sys.dashboard.index')->extends('layouts.sneat', [
+            'menuState' => $this->menuState,
+            'submenuState' => $this->submenuState,
+        ]);
+    }
+
+    /**
+     * Function
+     */
     public function searchKeyword($value)
     {
         $this->menuSearch = $value;
     }
-    
     private function fetchWalletData()
     {
         $this->walletData = \App\Models\Wallet::with('parent')
@@ -71,8 +137,10 @@ class Index extends Component
         }
 
         // Get This week
+        $rawWeeklyStart = (clone $now)->modify('Last Monday');
         $this->weeklyStart = (clone $now)->modify('Last Monday')->format('Y-m-d');
         if(strtolower((clone $now)->format('D')) === 'mon'){
+            $rawWeeklyStart = (clone $now);
             $this->weeklyStart = (clone $now)->format('Y-m-d');
         }
         $rawWeeklyEnd = (clone $now)->modify('Next Sunday');
@@ -82,8 +150,8 @@ class Index extends Component
             $this->weeklyEnd = (clone $rawWeeklyEnd)->format('Y-m-d');
         }
         // Get Prev week
-        $this->prevWeeklyStart = (clone $now)->modify('Last Monday')->format('Y-m-d');
-        $this->prevWeeklyEnd = (clone $now)->modify('Last '.(clone $rawWeeklyEnd)->format('l'))->format('Y-m-d');
+        $this->prevWeeklyStart = (clone $rawWeeklyStart)->modify('Last Monday')->format('Y-m-d');
+        $this->prevWeeklyEnd = (clone $rawWeeklyStart)->modify('Last '.(clone $rawWeeklyEnd)->format('l'))->format('Y-m-d');
 
         // Get Balance
         $this->weeklyAmount = (new \App\Models\WalletGroup())->getBalance('all', [$this->weeklyStart, $this->weeklyEnd], $recordType);
@@ -106,23 +174,5 @@ class Index extends Component
         if($divide === 0){
             $this->weeklyPercentage = 100;
         }
-    }
-
-    public function render()
-    {
-        $notificationLivewire = (new \App\Http\Livewire\Sys\Component\NotificationFeature());
-        $this->plannedPaymentCount = $notificationLivewire->getPaginateToday()->total();
-        $this->plannedPaymentOverdueCount = $notificationLivewire->getPaginateOverdue()->total();
-
-        // Fetch Related Data
-        $this->fetchWeeklyRecord();
-        $this->fetchWalletData();
-
-        $this->dispatchBrowserEvent('dashboardWireInit');
-
-        return view('livewire.sys.dashboard.index')->extends('layouts.sneat', [
-            'menuState' => $this->menuState,
-            'submenuState' => $this->submenuState,
-        ]);
     }
 }

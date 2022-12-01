@@ -1,12 +1,12 @@
 <div class="card">
     <div class="row row-bordered g-0">
-        <div class="col-md-8">
+        <div class="col-md-8" wire:ignore>
             <h5 class="card-header m-0 me-2 pb-3">Cash Flow</h5>
             <div id="cashFlowChart" class="px-2"></div>
         </div>
         <div class="col-md-4 tw__flex tw__flex-col">
             <div class=" tw__p-6">
-                <div class="text-center">
+                <div class=" tw__flex tw__items-center tw__justify-between">
                     <div class="dropdown" x-data="{
                         selectedYear: '{{ date("Y") }}'
                     }">
@@ -18,31 +18,35 @@
                             @endfor
                         </div>
                     </div>
+                    <div class="dropdown">
+                        <button class="btn p-0" type="button" id="orederStatistics" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="bx bx-cog"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="orederStatistics" style="">
+                            <a class="dropdown-item" href="javascript:void(0);">Select All</a>
+                            <a class="dropdown-item" href="javascript:void(0);">Refresh</a>
+                            <a class="dropdown-item" href="javascript:void(0);">Share</a>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class=" tw__my-auto">
-                <div class="text-center fw-bold">
-                    <span class=" tw__text-xl">Rp 2.000.000</span>
-                </div>
-                <div class="text-center fw-semibold pt-3 mb-2">Balance</div>
+            <div class=" tw__my-auto tw__flex tw__justify-center" wire:ignore>
+                <div id="orderStatisticsChart"></div>
             </div>
+            {{-- Sum of Income / Expense --}}
             <div class=" tw__grid tw__grid-cols-1 tw__gap-2 tw__p-6">    
-                <div class="d-flex tw__items-center">
-                    <div class="me-2">
-                        <span class="badge bg-label-primary p-2"><i class="bx bx-dollar text-primary"></i></span>
-                    </div>
-                    <div class="d-flex flex-column">
-                        <small>Income</small>
-                        <h6 class="mb-0">{{ formatRupiah($cashFlowIncomeSum / 1000) }}k</h6>
+                <div class=" tw__flex tw__items-center tw__gap-2">
+                    <span class="badge bg-label-primary p-2"><i class="bx bx-dollar text-primary"></i></span>
+                    <div class=" tw__flex tw__flex-col tw__gap-1">
+                        <small class=" tw__leading-none">Income</small>
+                        <h6 class=" tw__mb-0 tw__leading-none">{{ formatRupiah($cashFlowIncomeSum / 1000) }}k</h6>
                     </div>
                 </div>
-                <div class="d-flex tw__items-center">
-                    <div class="me-2">
-                        <span class="badge bg-label-info p-2"><i class="bx bx-wallet text-info"></i></span>
-                    </div>
-                    <div class="d-flex flex-column">
-                        <small>Expense</small>
-                        <h6 class="mb-0">{{ formatRupiah($cashFlowExpenseSum / 1000) }}k</h6>
+                <div class=" tw__flex tw__items-center tw__gap-2">
+                    <span class="badge bg-label-info p-2"><i class="bx bx-wallet text-info"></i></span>
+                    <div class=" tw__flex tw__flex-col tw__gap-1">
+                        <small class=" tw__leading-none">Expense</small>
+                        <h6 class=" tw__mb-0 tw__leading-none">{{ formatRupiah($cashFlowExpenseSum / 1000) }}k</h6>
                     </div>
                 </div>
             </div>

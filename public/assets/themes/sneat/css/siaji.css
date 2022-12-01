@@ -228,6 +228,8 @@ h4.breadcrumb span.active {
 .choices .choices__inner .choices__list {
   padding: unset;
   display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 .choices .choices__list {
   border-top-left-radius: 0 !important;

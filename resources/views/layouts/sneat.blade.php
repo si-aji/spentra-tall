@@ -35,6 +35,10 @@
     <link href="{{ mix('assets/plugins/choices.js/choices.min.css') }}" rel="stylesheet">
     <!-- Sweetalert2 -->
     <link href="{{ mix('assets/plugins/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet">
+    <!-- Color Pickr -->
+    <link href="{{ mix('assets/plugins/color-pickr/themes/classic.min.css') }}" rel="stylesheet">
+    <link href="{{ mix('assets/plugins/color-pickr/themes/monolith.min.css') }}" rel="stylesheet">
+    <link href="{{ mix('assets/plugins/color-pickr/themes/nano.min.css') }}" rel="stylesheet">
 
     @yield('css_plugins')
 @endsection
@@ -123,6 +127,14 @@
         {{-- Tag Modal --}}
         @livewire(\App\Http\Livewire\Sys\Component\TagModal::class, ['user' => \Auth::user()], key(generateRandomString()))
     @endif
+
+    {{-- Shopping List --}}
+    @if (isset($componentShoppingList) && $componentShoppingList)
+        {{-- Shopping List Modal --}}
+        @livewire(\App\Http\Livewire\Sys\Component\ShoppingListModal::class, ['user' => \Auth::user()], key(generateRandomString()))
+        {{-- Shopping List Item Modal --}}
+        @livewire(\App\Http\Livewire\Sys\Component\ShoppingListItemModal::class, ['user' => \Auth::user()], key(generateRandomString()))
+    @endif
 @endsection
 
 
@@ -137,7 +149,11 @@
     <script src="{{ mix('assets/plugins/imask/imask.js') }}"></script>
     <!-- Sweetalert2 -->
     <script src="{{ mix('assets/plugins/sweetalert2/sweetalert2.all.min.js') }}"></script>
-    @endpush
+    <!-- Color Pickr -->
+    {{-- <script src="{{ mix('assets/plugins/color-pickr/pickr.min.js') }}"></script> --}}
+    <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.es5.min.js"></script> --}}
+@endpush
 
 {{-- JS Plugins --}}
 @section('baseJsPlugins')

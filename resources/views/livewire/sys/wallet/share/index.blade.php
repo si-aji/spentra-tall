@@ -229,7 +229,6 @@
         Livewire.hook('message.sent', (message, component) => {
             if(component.el.id && component.el.id === 'walletShareIndex'){
                 loadSkeleton = true;
-
                 setTimeout(() => {
                     if(loadSkeleton){
                         loadDataSkeleton();
