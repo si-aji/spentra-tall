@@ -12,6 +12,9 @@ class LogoutController extends Controller
     public function __invoke(): RedirectResponse
     {
         Auth::logout();
+        if(\Session::has('impersonate')){
+            \Session::forget('impersonate');
+        }
 
         return redirect(route('home'));
     }

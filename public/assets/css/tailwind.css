@@ -777,6 +777,9 @@ select {
 .tw__mr-3 {
   margin-right: 0.75rem !important;
 }
+.tw__ml-4 {
+  margin-left: 1rem !important;
+}
 .tw__mr-0 {
   margin-right: 0px !important;
 }
@@ -791,6 +794,15 @@ select {
 }
 .tw__mt-0 {
   margin-top: 0px !important;
+}
+.tw__mt-20 {
+  margin-top: 5rem !important;
+}
+.tw__mb-0 {
+  margin-bottom: 0px !important;
+}
+.tw__mt-2 {
+  margin-top: 0.5rem !important;
 }
 .tw__block {
   display: block !important;
@@ -867,6 +879,9 @@ select {
 .tw__min-h-screen {
   min-height: 100vh !important;
 }
+.tw__min-h-\[calc\(100vh-175px\)\] {
+  min-height: calc(100vh - 175px) !important;
+}
 .tw__min-h-\[350px\] {
   min-height: 350px !important;
 }
@@ -926,6 +941,9 @@ select {
 }
 .tw__min-w-full {
   min-width: 100% !important;
+}
+.tw__max-w-\[250px\] {
+  max-width: 250px !important;
 }
 .tw__scale-50 {
   --tw-scale-x: .5 !important;
@@ -1032,6 +1050,9 @@ select {
 .tw__gap-4 {
   gap: 1rem !important;
 }
+.tw__gap-1 {
+  gap: 0.25rem !important;
+}
 .tw__space-x-4 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-x-reverse: 0 !important;
   margin-right: calc(1rem * var(--tw-space-x-reverse)) !important;
@@ -1045,11 +1066,17 @@ select {
 .tw__self-center {
   align-self: center !important;
 }
+.tw__overflow-hidden {
+  overflow: hidden !important;
+}
 .tw__overflow-x-auto {
   overflow-x: auto !important;
 }
 .tw__overflow-y-auto {
   overflow-y: auto !important;
+}
+.tw__text-ellipsis {
+  text-overflow: ellipsis !important;
 }
 .tw__whitespace-nowrap {
   white-space: nowrap !important;
@@ -1068,6 +1095,14 @@ select {
 }
 .tw__rounded {
   border-radius: 0.25rem !important;
+}
+.tw__rounded-t-xl {
+  border-top-left-radius: 0.75rem !important;
+  border-top-right-radius: 0.75rem !important;
+}
+.tw__rounded-b-xl {
+  border-bottom-right-radius: 0.75rem !important;
+  border-bottom-left-radius: 0.75rem !important;
 }
 .tw__rounded-t-lg {
   border-top-left-radius: 0.5rem !important;
@@ -1139,6 +1174,14 @@ select {
   --tw-bg-opacity: 1 !important;
   background-color: rgb(79 70 229 / var(--tw-bg-opacity)) !important;
 }
+.tw__bg-\[\#343a40\] {
+  --tw-bg-opacity: 1 !important;
+  background-color: rgb(52 58 64 / var(--tw-bg-opacity)) !important;
+}
+.tw__bg-gray-200 {
+  --tw-bg-opacity: 1 !important;
+  background-color: rgb(229 231 235 / var(--tw-bg-opacity)) !important;
+}
 .tw__bg-gray-300 {
   --tw-bg-opacity: 1 !important;
   background-color: rgb(209 213 219 / var(--tw-bg-opacity)) !important;
@@ -1204,11 +1247,11 @@ select {
 .tw__p-4 {
   padding: 1rem !important;
 }
-.tw__p-0 {
-  padding: 0px !important;
-}
 .tw__p-2 {
   padding: 0.5rem !important;
+}
+.tw__p-0 {
+  padding: 0px !important;
 }
 .tw__p-6 {
   padding: 1.5rem !important;
@@ -1241,13 +1284,17 @@ select {
   padding-top: 0.75rem !important;
   padding-bottom: 0.75rem !important;
 }
-.tw__px-2 {
-  padding-left: 0.5rem !important;
-  padding-right: 0.5rem !important;
+.tw__px-8 {
+  padding-left: 2rem !important;
+  padding-right: 2rem !important;
 }
 .tw__py-1 {
   padding-top: 0.25rem !important;
   padding-bottom: 0.25rem !important;
+}
+.tw__px-2 {
+  padding-left: 0.5rem !important;
+  padding-right: 0.5rem !important;
 }
 .tw__px-0 {
   padding-left: 0px !important;
@@ -1306,13 +1353,17 @@ select {
   font-size: 0.875rem !important;
   line-height: 1.25rem !important;
 }
+.tw__text-2xl {
+  font-size: 1.5rem !important;
+  line-height: 2rem !important;
+}
 .tw__text-4xl {
   font-size: 2.25rem !important;
   line-height: 2.5rem !important;
 }
-.tw__text-2xl {
-  font-size: 1.5rem !important;
-  line-height: 2rem !important;
+.tw__text-xl {
+  font-size: 1.25rem !important;
+  line-height: 1.75rem !important;
 }
 .tw__font-semibold {
   font-weight: 600 !important;
@@ -1325,6 +1376,9 @@ select {
 }
 .tw__font-extrabold {
   font-weight: 800 !important;
+}
+.tw__font-bold {
+  font-weight: 700 !important;
 }
 .tw__uppercase {
   text-transform: uppercase !important;
@@ -1736,6 +1790,10 @@ select {
     min-width: 25rem !important;
   }
 
+  .lg\:tw__max-w-\[450px\] {
+    max-width: 450px !important;
+  }
+
   .lg\:tw__grid-flow-col {
     grid-auto-flow: column !important;
   }
@@ -1774,6 +1832,10 @@ select {
 
   .lg\:tw__gap-4 {
     gap: 1rem !important;
+  }
+
+  .lg\:tw__gap-2 {
+    gap: 0.5rem !important;
   }
 
   .lg\:tw__rounded-lg {

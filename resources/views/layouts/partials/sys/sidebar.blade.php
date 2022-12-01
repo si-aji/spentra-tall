@@ -107,6 +107,15 @@
 					</li>
 				@endif
 			@endforeach
+
+			@if (\Auth::user()->is_admin)
+				<li class="menu-item">
+					<a href="{{ route('sys.impersonate') }}" class="menu-link" target="_blank">
+						<i class='menu-icon tf-icons bx bxs-face-mask' ></i>
+						<div>Admin Dashboard</div>
+					</a>
+				</li>
+			@endif
 		@else
 			<!-- Dashboard -->
 			<li class="menu-item active">

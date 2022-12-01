@@ -23,39 +23,10 @@ class Index extends Component
     public $cashFlowIncomeSum = 0;
     public $cashFlowExpenseSum = 0;
     public $plannedPaymentCount = 0;
-    public function fetchCashflowGraph()
-    {
-        for($start = 1; $start <= date("m"); $start++){
-            $this->cashFlowLabel[] = date('M', strtotime("1970-".(str_pad($start,  2, "0", STR_PAD_LEFT))."-01"));
-
-            $income = rand(1, 15) * 1000;
-            $this->cashFlowIncome[] = $income;
-            $this->cashFlowIncomeSum += $income;
-
-            $expense = (rand(1, 10) * 1000);
-            $this->cashFlowExpense[] = $expense * -1;
-            $this->cashFlowExpenseSum += $expense;
-        }
-    }
     // Category Graph
     public $categoryGraphLabel = [];
     public $categoryGraphData = [];
     public $categoryGraphColor = [];
-    public function fetchCategoryGraph()
-    {
-        $query = \App\Models\Category::limit(4);
-
-        $this->categoryGraphLabel = (clone $query)->pluck('name')
-            ->toArray();
-        foreach((clone $query)->get() as $key => $category){
-            // array_push($this->categoryGraphData, ((rand(1, 15) * 1000)) * 1);
-            $value = ((rand(1, 15) * [1000, 10000][rand(0, 1)])) * [-1, 1][rand(0, 1)];
-            array_push($this->categoryGraphData, $value * ($value < 0 ? -1 : 1));
-            array_push($this->categoryGraphColor, !empty($category->color) ? $category->color : 'rgba(133, 146, 163, 1)');
-
-            $this->categoryGraphLabel[$key] = '('.($value < 0 ? '-' : '+').') '.$this->categoryGraphLabel[$key];
-        }
-    }
     // Report - Wallet List
     public $walletData;
     // Report - Weekly record
@@ -173,6 +144,35 @@ class Index extends Component
         $this->weeklyPercentage = ($diff / (max($divide, 1))) * 100;
         if($divide === 0){
             $this->weeklyPercentage = 100;
+        }
+    }
+    public function fetchCategoryGraph()
+    {
+        $query = \App\Models\Category::with('parent')->limit(4);
+
+        $this->categoryGraphLabel = (clone $query)->pluck('name')
+            ->toArray();
+        foreach((clone $query)->get() as $key => $category){
+            // array_push($this->categoryGraphData, ((rand(1, 15) * 1000)) * 1);
+            $value = ((rand(1, 15) * [1000, 10000][rand(0, 1)])) * [-1, 1][rand(0, 1)];
+            array_push($this->categoryGraphData, $value * ($value < 0 ? -1 : 1));
+            array_push($this->categoryGraphColor, !empty($category->color) ? $category->color : 'rgba(133, 146, 163, 1)');
+
+            $this->categoryGraphLabel[$key] = '('.($value < 0 ? '-' : '+').') '.($category->parent()->exists() ? $category->parent->name.' - ' : '').$this->categoryGraphLabel[$key];
+        }
+    }
+    public function fetchCashflowGraph()
+    {
+        for($start = 1; $start <= date("m"); $start++){
+            $this->cashFlowLabel[] = date('M', strtotime("1970-".(str_pad($start,  2, "0", STR_PAD_LEFT))."-01"));
+
+            $income = rand(1, 15) * 1000;
+            $this->cashFlowIncome[] = $income;
+            $this->cashFlowIncomeSum += $income;
+
+            $expense = (rand(1, 10) * 1000);
+            $this->cashFlowExpense[] = $expense * -1;
+            $this->cashFlowExpenseSum += $expense;
         }
     }
 }
