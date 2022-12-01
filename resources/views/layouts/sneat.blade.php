@@ -67,6 +67,20 @@
                 <div class="content-wrapper tw__mt-20">
                     <!-- Content -->
                     <div class="container-xxl flex-grow-1 container-p-y">
+                        @if (\Auth::check() && \Session::has('impersonate'))
+                            {{-- Impersonate Alert --}}
+                            <div class="alert alert-primary" role="alert">
+                                <h1 class=" tw__text-xl tw__font-bold tw__mb-0">Impersonate Action</h1>
+                                <span>You're seeing this message because you're currently <strong>Impersonating</strong>.</span>
+                                <div class=" tw__block tw__mt-2">
+                                    <div class=" tw__flex tw__items-center tw__gap-1 lg:tw__gap-2 tw__flex-wrap">
+                                        <a href="{{ route('adm.index') }}" class="btn btn-primary btn-sm">Admin Dashboard</a>
+                                        <a href="{{ route('sys.impersonate.stop') }}" class="btn btn-secondary btn-sm">Stop Impersonating</a>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+
                         @yield('breadcrumb')
 
                         <div class="content-wrapper">

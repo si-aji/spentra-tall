@@ -219,4 +219,32 @@ Route::group([
     // Tags
     Route::get('tag', \App\Http\Livewire\Sys\Profile\Tag\Index::class)
         ->name('tag.index');
+
+    // Impersonate
+    Route::get('impersonate', function(){
+        $user = \Auth::user();
+        if(!($user->is_admin) || empty($user->admin_id)){
+            // Is not an admin
+            return redirect()->route('sys.index');
+        }
+
+        // Handle Session
+        $admin = $user->admin;
+        \Session::put('impersonate', $admin->uuid);
+
+        return redirect()->route('adm.index');
+    })->name('impersonate');
+    Route::get('impersonate/stop', function(){
+        $user = \Auth::user();
+        if(!($user->is_admin) || empty($user->admin_id)){
+            // Is not an admin
+            return redirect()->route('sys.index');
+        }
+
+        // Handle Session
+        if(\Session::has('impersonate')){
+            \Session::forget('impersonate');
+        }
+        return redirect()->route('sys.index');
+    })->name('impersonate.stop');
 });

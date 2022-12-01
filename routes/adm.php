@@ -31,7 +31,7 @@ Route::group([
 
     // Admin Auth
     Route::group([
-        'middleware' => ['auth:adm']
+        'middleware' => ['impersonate:adm', 'auth:adm']
     ], function(){
         Route::post('logout', \App\Http\Controllers\Adm\Auth\LogoutController::class)
             ->name('logout');
@@ -41,5 +41,8 @@ Route::group([
             return redirect(route('adm.index'));
         });
         Route::get('dashboard', \App\Http\Livewire\Adm\Dashboard\Index::class)->name('index');
+
+        // Log Viewer
+        Route::get('log-viewer', \App\Http\Livewire\Adm\LogViewer\Index::class)->name('log-viewer.index');
     });
 });

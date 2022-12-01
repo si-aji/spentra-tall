@@ -82,6 +82,10 @@ class User extends Authenticatable
      *
      * @return model
      */
+    public function admin()
+    {
+        return $this->belongsTo(\App\Models\Admin::class, 'admin_id');
+    }
 
     /**
      * Scope

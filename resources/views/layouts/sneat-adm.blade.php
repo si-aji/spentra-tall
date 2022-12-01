@@ -68,6 +68,20 @@
                 <div class="content-wrapper tw__mt-20">
                     <!-- Content -->
                     <div class="container-xxl flex-grow-1 container-p-y">
+                        @if (\Auth::check() && \Session::has('impersonate'))
+                            {{-- Impersonate Alert --}}
+                            <div class="alert alert-primary" role="alert">
+                                <h1 class=" tw__text-xl tw__font-bold tw__mb-0">Impersonate Action</h1>
+                                <span>You're seeing this message because you're currently <strong>Impersonating</strong> as <strong>{{ \Auth::guard('adm')->user()->name }}</strong>.</span>
+                                <div class=" tw__block tw__mt-2">
+                                    <div class=" tw__flex tw__items-center tw__gap-1 lg:tw__gap-2 tw__flex-wrap">
+                                        <a href="{{ route('sys.index') }}" class="btn btn-primary btn-sm">Dashboard</a>
+                                        <a href="{{ route('sys.impersonate.stop') }}" class="btn btn-secondary btn-sm">Stop Impersonating</a>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+
                         @yield('breadcrumb')
 
                         <div class="content-wrapper">
@@ -88,46 +102,6 @@
     @isset($slot)
         {{ $slot }}
     @endisset
-
-    {{-- Notification --}}
-    @livewire(\App\Http\Livewire\Sys\Component\NotificationFeature::class, ['user' => \Auth::user()], key(generateRandomString()))
-
-    {{-- Record Modal --}}
-    @livewire(\App\Http\Livewire\Sys\Component\RecordModal::class, ['user' => \Auth::user()], key(generateRandomString()))
-    @if (isset($componentRecordTemplate) && $componentRecordTemplate)
-        {{-- Record Template --}}
-        @livewire(\App\Http\Livewire\Sys\Component\RecordTemplateModal::class, ['user' => \Auth::user()], key(generateRandomString()))
-    @endif
-
-    {{-- Wallet Modal --}}
-    @if (isset($componentWallet) && $componentWallet)
-        @livewire(\App\Http\Livewire\Sys\Component\WalletModal::class, ['user' => \Auth::user()], key(generateRandomString()))
-        {{-- Wallet Balance Modal --}}
-        @livewire(\App\Http\Livewire\Sys\Component\WalletBalanceModal::class, ['user' => \Auth::user()], key(generateRandomString()))
-    @endif
-    @if (isset($componentWalletGroup) && $componentWalletGroup)
-        {{-- Wallet Group Modal --}}
-        @livewire(\App\Http\Livewire\Sys\Component\WalletGroupModal::class, ['user' => \Auth::user()], key(generateRandomString()))
-    @endif
-    @if (isset($componentWalletShare) && $componentWalletShare)
-        {{-- Wallet Group Modal --}}
-        @livewire(\App\Http\Livewire\Sys\Component\WalletShareModal::class, ['user' => \Auth::user()], key(generateRandomString()))
-    @endif
-
-    {{-- Planned Payment Record --}}
-    @livewire(\App\Http\Livewire\Sys\Component\PlannedPaymentRecordModal::class, ['user' => \Auth::user()], key(generateRandomString()))
-    @if (isset($componentPlannedPayment) && $componentPlannedPayment)
-        {{-- Planned Payment Modal --}}
-        @livewire(\App\Http\Livewire\Sys\Component\PlannedPaymentModal::class, ['user' => \Auth::user()], key(generateRandomString()))
-    @endif
-    @if (isset($componentCategory) && $componentCategory)
-        {{-- Category Modal --}}
-        @livewire(\App\Http\Livewire\Sys\Component\CategoryModal::class, ['user' => \Auth::user()], key(generateRandomString()))
-    @endif
-    @if (isset($componentTag) && $componentTag)
-        {{-- Tag Modal --}}
-        @livewire(\App\Http\Livewire\Sys\Component\TagModal::class, ['user' => \Auth::user()], key(generateRandomString()))
-    @endif
 @endsection
 
 
