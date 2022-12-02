@@ -17,13 +17,13 @@ class Impersonate
     public function handle(Request $request, Closure $next)
     {
         $url = preg_replace("(^https?://)", "", url()->current());
-        \Log::debug("Debug on Impersonate Middleware ~ \App\Http\Middleware\Impersonate@handle", [
-            'url' => $url,
-            'impersonate' => [
-                'validation' => $request->session()->has('impersonate') ? 'TRUE' : 'FALSE',
-                'value' => $request->session()->get('impersonate')
-            ]
-        ]);
+        // \Log::debug("Debug on Impersonate Middleware ~ \App\Http\Middleware\Impersonate@handle", [
+        //     'url' => $url,
+        //     'impersonate' => [
+        //         'validation' => $request->session()->has('impersonate') ? 'TRUE' : 'FALSE',
+        //         'value' => $request->session()->get('impersonate')
+        //     ]
+        // ]);
 
         if($request->session()->has('impersonate')){
             if(strpos($url, '/!') !== false){
@@ -31,10 +31,15 @@ class Impersonate
                 $guard = 'adm';
                 $user = \App\Models\Admin::where(\DB::raw('BINARY `uuid`'), $request->session()->get('impersonate'))
                     ->first();
-
-                \Log::info("Admin user", [
-                    'user' => $user
-                ]);
+                
+                if(!empty($user)){
+                    \Auth::guard($guard)->onceUsingId($user->id);
+                }
+            } else if(strpos($url, 'log-viewer') !== false){
+                // Impersonate Admin Dashboard, to access Log Viewer
+                $guard = 'adm';
+                $user = \App\Models\Admin::where(\DB::raw('BINARY `uuid`'), $request->session()->get('impersonate'))
+                    ->first();
                 
                 if(!empty($user)){
                     \Auth::guard($guard)->onceUsingId($user->id);
