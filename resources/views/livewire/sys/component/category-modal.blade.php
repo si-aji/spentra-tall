@@ -1,6 +1,6 @@
 <div>
     {{-- If your happiness depends on money, you will never be happy with yourself. --}}
-    <form id="category-form" wire.>
+    <form id="category-form">
         <div class="offcanvas offcanvas-end" tabindex="-1" id="modal-category" aria-labelledby="offcanvasLabel" wire:init="" wire:ignore.self x-data="">
             <div class="offcanvas-header">
                 <h5 id="offcanvasLabel" class="offcanvas-title">Category: {{ $categoryTitle }}</h5>

@@ -741,15 +741,6 @@ input:invalid, textarea:invalid, select:invalid {
 .tw__mt-0 {
   margin-top: 0px !important;
 }
-.tw__mt-20 {
-  margin-top: 5rem !important;
-}
-.tw__mb-0 {
-  margin-bottom: 0px !important;
-}
-.tw__mt-2 {
-  margin-top: 0.5rem !important;
-}
 .tw__block {
   display: block !important;
 }
@@ -783,6 +774,12 @@ input:invalid, textarea:invalid, select:invalid {
 .tw__h-20 {
   height: 5rem !important;
 }
+.tw__h-5 {
+  height: 1.25rem !important;
+}
+.tw__h-8 {
+  height: 2rem !important;
+}
 .tw__h-9 {
   height: 2.25rem !important;
 }
@@ -798,14 +795,8 @@ input:invalid, textarea:invalid, select:invalid {
 .tw__h-11 {
   height: 2.75rem !important;
 }
-.tw__h-5 {
-  height: 1.25rem !important;
-}
 .tw__h-24 {
   height: 6rem !important;
-}
-.tw__h-8 {
-  height: 2rem !important;
 }
 .tw__h-10 {
   height: 2.5rem !important;
@@ -846,11 +837,20 @@ input:invalid, textarea:invalid, select:invalid {
 .tw__w-12 {
   width: 3rem !important;
 }
-.tw__w-9 {
-  width: 2.25rem !important;
+.tw__w-20 {
+  width: 5rem !important;
+}
+.tw__w-5 {
+  width: 1.25rem !important;
 }
 .tw__w-24 {
   width: 6rem !important;
+}
+.tw__w-32 {
+  width: 8rem !important;
+}
+.tw__w-9 {
+  width: 2.25rem !important;
 }
 .tw__w-16 {
   width: 4rem !important;
@@ -858,17 +858,8 @@ input:invalid, textarea:invalid, select:invalid {
 .tw__w-11 {
   width: 2.75rem !important;
 }
-.tw__w-20 {
-  width: 5rem !important;
-}
 .tw__w-14 {
   width: 3.5rem !important;
-}
-.tw__w-5 {
-  width: 1.25rem !important;
-}
-.tw__w-32 {
-  width: 8rem !important;
 }
 .tw__w-36 {
   width: 9rem !important;
@@ -941,14 +932,14 @@ input:invalid, textarea:invalid, select:invalid {
 .tw__grid-flow-col {
   grid-auto-flow: column !important;
 }
-.tw__grid-cols-2 {
-  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-}
 .tw__grid-cols-3 {
   grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
 }
 .tw__grid-cols-1 {
   grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+}
+.tw__grid-cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
 }
 .tw__flex-row {
   flex-direction: row !important;
@@ -991,9 +982,6 @@ input:invalid, textarea:invalid, select:invalid {
 }
 .tw__gap-4 {
   gap: 1rem !important;
-}
-.tw__gap-1 {
-  gap: 0.25rem !important;
 }
 .tw__space-x-4 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-x-reverse: 0 !important;
@@ -1063,11 +1051,11 @@ input:invalid, textarea:invalid, select:invalid {
 .tw__border-b {
   border-bottom-width: 1px !important;
 }
-.tw__border-b-0 {
-  border-bottom-width: 0px !important;
-}
 .tw__border-t {
   border-top-width: 1px !important;
+}
+.tw__border-b-0 {
+  border-bottom-width: 0px !important;
 }
 .tw__border-gray-300 {
   --tw-border-opacity: 1 !important;
@@ -1303,10 +1291,6 @@ input:invalid, textarea:invalid, select:invalid {
   font-size: 2.25rem !important;
   line-height: 2.5rem !important;
 }
-.tw__text-xl {
-  font-size: 1.25rem !important;
-  line-height: 1.75rem !important;
-}
 .tw__font-semibold {
   font-weight: 600 !important;
 }
@@ -1318,9 +1302,6 @@ input:invalid, textarea:invalid, select:invalid {
 }
 .tw__font-extrabold {
   font-weight: 800 !important;
-}
-.tw__font-bold {
-  font-weight: 700 !important;
 }
 .tw__uppercase {
   text-transform: uppercase !important;
@@ -1521,6 +1502,10 @@ input:invalid, textarea:invalid, select:invalid {
 .hover\:tw__cursor-pointer:hover {
   cursor: pointer !important;
 }
+.hover\:tw__bg-slate-100:hover {
+  --tw-bg-opacity: 1 !important;
+  background-color: rgb(241 245 249 / var(--tw-bg-opacity)) !important;
+}
 .hover\:tw__bg-\[\#696cff\]:hover {
   --tw-bg-opacity: 1 !important;
   background-color: rgb(105 108 255 / var(--tw-bg-opacity)) !important;
@@ -1540,10 +1525,6 @@ input:invalid, textarea:invalid, select:invalid {
 .hover\:tw__bg-gray-100:hover {
   --tw-bg-opacity: 1 !important;
   background-color: rgb(243 244 246 / var(--tw-bg-opacity)) !important;
-}
-.hover\:tw__bg-slate-100:hover {
-  --tw-bg-opacity: 1 !important;
-  background-color: rgb(241 245 249 / var(--tw-bg-opacity)) !important;
 }
 .hover\:tw__bg-opacity-70:hover {
   --tw-bg-opacity: 0.7 !important;
@@ -1713,11 +1694,11 @@ input:invalid, textarea:invalid, select:invalid {
   .lg\:tw__grid-flow-col {
     grid-auto-flow: column !important;
   }
-  .lg\:tw__grid-cols-4 {
-    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-  }
   .lg\:tw__grid-cols-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+  .lg\:tw__grid-cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
   }
   .lg\:tw__grid-cols-6 {
     grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
@@ -1737,11 +1718,11 @@ input:invalid, textarea:invalid, select:invalid {
   .lg\:tw__justify-between {
     justify-content: space-between !important;
   }
-  .lg\:tw__gap-4 {
-    gap: 1rem !important;
-  }
   .lg\:tw__gap-2 {
     gap: 0.5rem !important;
+  }
+  .lg\:tw__gap-4 {
+    gap: 1rem !important;
   }
   .lg\:tw__rounded-lg {
     border-radius: 0.5rem !important;

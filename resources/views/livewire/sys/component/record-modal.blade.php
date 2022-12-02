@@ -435,7 +435,7 @@
                 e.preventDefault();
                 if(e.target.querySelector('button[type="submit"]')){
                     e.target.querySelector('button[type="submit"]').innerHTML = `
-                        <span class=" tw__flex tw__items-center tw__gap-2">
+                        <span class=" tw__flex tw__items-center tw__gap-2 tw__justify-center">
                             <i class="bx bx-loader-alt bx-spin"></i>
                             <span>Loading</span>    
                         </span>

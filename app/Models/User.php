@@ -76,6 +76,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(\App\Models\ShoppingList::class, 'user_id');
     }
+    public function budget()
+    {
+        return $this->hasMany(\App\Models\Budget::class, 'user_id');
+    }
 
     /**
      * Foreign Key Relation

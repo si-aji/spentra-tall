@@ -105,6 +105,11 @@
     {{-- Notification --}}
     @livewire(\App\Http\Livewire\Sys\Component\NotificationFeature::class, ['user' => \Auth::user()], key(generateRandomString()))
 
+    {{-- Budget --}}
+    @if (isset($componentBudget) && $componentBudget)
+        @livewire(\App\Http\Livewire\Sys\Component\BudgetModal::class, ['user' => \Auth::user()], key(generateRandomString()))
+    @endif
+
     {{-- Record Modal --}}
     @livewire(\App\Http\Livewire\Sys\Component\RecordModal::class, ['user' => \Auth::user()], key(generateRandomString()))
     @if (isset($componentRecordTemplate) && $componentRecordTemplate)
