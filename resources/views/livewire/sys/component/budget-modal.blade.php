@@ -250,7 +250,7 @@
 
                     let selection = @js($listWallet);
                     let formated = [];
-                    selection.forEach((val, row) => {
+                    selection.map((val, row) => {
                         let choice = [];
                         choice.push({
                             value: val.uuid,
@@ -259,13 +259,14 @@
                             selected: includedUuid.includes(val.uuid),
                         });
                         if(val.child && val.child.length > 0){
-                            (val.child).forEach((child, crow) => {
-                                choice.push({
-                                    value: child.uuid,
-                                    label: `${val.name} - ${child.name}`,
-                                    disabled: excludedUuid.includes(child.uuid),
-                                    selected: includedUuid.includes(child.uuid),
-                                });
+                            let childObj = (val.child).map((child) => {
+                                let choiceChild = {};
+                                choiceChild.value = child.uuid;
+                                choiceChild.label = `${val.name} - ${child.name}`;
+                                choiceChild.disabled = excludedUuid.includes(child.uuid);
+                                choiceChild.selected = includedUuid.includes(child.uuid);
+
+                                choice.push(choiceChild);
                             });
                         }
 
@@ -294,24 +295,14 @@
                 budgetIncludedCategoryChoice.passedElement.element.addEventListener('showDropdown', (event) => {
                     // Disable Data List
                     let excluded = budgetExcludedCategoryChoice.getValue();
-                    let excludedUuid = [];
-                    if(excluded.length > 0){
-                        excluded.forEach((val) => {
-                            excludedUuid.push(val.value);
-                        });
-                    }
+                    let excludedUuid = excluded.length > 0 ? excluded.map(val => val.value) : [];
                     // Selected Data List
                     let included = budgetIncludedCategoryChoice.getValue();
-                    let includedUuid = [];
-                    if(included.length > 0){
-                        included.forEach((val) => {
-                            includedUuid.push(val.value);
-                        });
-                    }
+                    let includedUuid = included.length > 0 ? included.map(val => val.value) : [];
 
                     let selection = @js($listCategory);
                     let formated = [];
-                    selection.forEach((val, row) => {
+                    selection.map((val, row) => {
                         let choice = [];
                         choice.push({
                             value: val.uuid,
@@ -320,13 +311,14 @@
                             selected: includedUuid.includes(val.uuid),
                         });
                         if(val.child && val.child.length > 0){
-                            (val.child).forEach((child, crow) => {
-                                choice.push({
-                                    value: child.uuid,
-                                    label: `${val.name} - ${child.name}`,
-                                    disabled: excludedUuid.includes(child.uuid),
-                                    selected: includedUuid.includes(child.uuid),
-                                });
+                            let childObj = (val.child).map((child) => {
+                                let choiceChild = {};
+                                choiceChild.value = child.uuid;
+                                choiceChild.label = `${val.name} - ${child.name}`;
+                                choiceChild.disabled = excludedUuid.includes(child.uuid);
+                                choiceChild.selected = includedUuid.includes(child.uuid);
+
+                                choice.push(choiceChild);
                             });
                         }
 
@@ -352,27 +344,17 @@
                     placeholderValue: 'Search for Category Data',
                     shouldSort: false
                 });
-
                 budgetExcludedCategoryChoice.passedElement.element.addEventListener('showDropdown', (event) => {
+                    // Disable Data List
                     let excluded = budgetIncludedCategoryChoice.getValue();
-                    let excludedUuid = [];
-                    if(excluded.length > 0){
-                        excluded.forEach((val) => {
-                            excludedUuid.push(val.value);
-                        });
-                    }
+                    let excludedUuid = excluded.length > 0 ? excluded.map(val => val.value) : [];
                     // Selected Data List
                     let included = budgetExcludedCategoryChoice.getValue();
-                    let includedUuid = [];
-                    if(included.length > 0){
-                        included.forEach((val) => {
-                            includedUuid.push(val.value);
-                        });
-                    }
+                    let includedUuid = included.length > 0 ? included.map(val => val.value) : [];
 
                     let selection = @js($listCategory);
                     let formated = [];
-                    selection.forEach((val, row) => {
+                    selection.map((val, row) => {
                         let choice = [];
                         choice.push({
                             value: val.uuid,
@@ -381,13 +363,14 @@
                             selected: includedUuid.includes(val.uuid),
                         });
                         if(val.child && val.child.length > 0){
-                            (val.child).forEach((child, crow) => {
-                                choice.push({
-                                    value: child.uuid,
-                                    label: `${val.name} - ${child.name}`,
-                                    disabled: excludedUuid.includes(child.uuid),
-                                    selected: includedUuid.includes(child.uuid),
-                                });
+                            let childObj = (val.child).map((child) => {
+                                let choiceChild = {};
+                                choiceChild.value = child.uuid;
+                                choiceChild.label = `${val.name} - ${child.name}`;
+                                choiceChild.disabled = excludedUuid.includes(child.uuid);
+                                choiceChild.selected = includedUuid.includes(child.uuid);
+
+                                choice.push(choiceChild);
                             });
                         }
 
@@ -416,29 +399,37 @@
                 budgetIncludedTagsChoice.passedElement.element.addEventListener('showDropdown', (event) => {
                     // Disable Data List
                     let excluded = budgetExcludedTagsChoice.getValue();
-                    let excludedUuid = [];
-                    if(excluded.length > 0){
-                        excluded.forEach((val) => {
-                            excludedUuid.push(val.value);
-                        });
-                    }
+                    let excludedUuid = excluded.length > 0 ? excluded.map(val => val.value) : [];
                     // Selected Data List
                     let included = budgetIncludedTagsChoice.getValue();
-                    let includedUuid = [];
-                    if(included.length > 0){
-                        included.forEach((val) => {
-                            includedUuid.push(val.value);
-                        });
-                    }
+                    let includedUuid = included.length > 0 ? included.map(val => val.value) : [];
 
-                    let selection = @js($listTag);
+                    let selection = @js($listCategory);
                     let formated = [];
-                    selection.forEach((val, row) => {
-                        formated.push({
+                    selection.map((val, row) => {
+                        let choice = [];
+                        choice.push({
                             value: val.uuid,
                             label: val.name,
                             disabled: excludedUuid.includes(val.uuid),
                             selected: includedUuid.includes(val.uuid),
+                        });
+                        if(val.child && val.child.length > 0){
+                            let childObj = (val.child).map((child) => {
+                                let choiceChild = {};
+                                choiceChild.value = child.uuid;
+                                choiceChild.label = `${val.name} - ${child.name}`;
+                                choiceChild.disabled = excludedUuid.includes(child.uuid);
+                                choiceChild.selected = includedUuid.includes(child.uuid);
+
+                                choice.push(choiceChild);
+                            });
+                        }
+
+                        formated.push({
+                            label: val.name,
+                            id: row,
+                            choices: choice
                         });
                     });
 
@@ -457,34 +448,26 @@
                     placeholderValue: 'Search for Tags Data',
                     shouldSort: false
                 });
-
                 budgetExcludedTagsChoice.passedElement.element.addEventListener('showDropdown', (event) => {
                     let excluded = budgetIncludedTagsChoice.getValue();
-                    let excludedUuid = [];
-                    if(excluded.length > 0){
-                        excluded.forEach((val) => {
-                            excludedUuid.push(val.value);
-                        });
-                    }
+                    let excludedUuid = excluded.length > 0 ? excluded.map(val => val.uuid) : [];
                     // Selected Data List
                     let included = budgetExcludedTagsChoice.getValue();
-                    let includedUuid = [];
-                    if(included.length > 0){
-                        included.forEach((val) => {
-                            includedUuid.push(val.value);
-                        });
-                    }
+                    let includedUuid = included.length > 0 ? included.map(val => val.uuid) : [];
 
                     let selection = @js($listTag);
                     let formated = [];
-                    selection.forEach((val, row) => {
-                        formated.push({
-                            value: val.uuid,
-                            label: val.name,
-                            disabled: excludedUuid.includes(val.uuid),
-                            selected: includedUuid.includes(val.uuid),
-                        });
-                    });
+                    if(selection.length > 0){
+                        formated = selection.map((val, row) => {
+                            let obj = {};
+                            obj.value = val.uuid;
+                            obj.label = val.name;
+                            obj.disabled = excludedUuid.includes(val.uuid);
+                            obj.selected = includedUuid.includes(val.uuid);
+
+                            return obj;
+                        })
+                    }
 
                     budgetExcludedTagsChoice.removeActiveItems();
                     budgetExcludedTagsChoice.clearChoices();
