@@ -88,7 +88,7 @@
 
 							<ul class="menu-sub">
 								@foreach ($menu['sub'] as $submenu)
-									<li class="menu-item {{ isset($submenuState) && isset($submenu['state']) && $submenuState === $submenu['state'] ? 'active' : '' }}">
+									<li class="menu-item {{ isset($submenuState) && isset($submenu['state']) && $submenuState === $submenu['state'] ? 'active' : '' }}" data-parent="{{ $menu['name'] }}">
 										<a href="{{ $submenu['route'] ? route($submenu['route']) : 'javascript:void(0)' }}" class="menu-link {{ isset($submenu['disabled']) && $submenu['disabled'] ? 'disabled' : '' }}">
 											<span>{{ $submenu['name'] }}</span>
 										</a>
@@ -112,7 +112,7 @@
 				<li class="menu-item">
 					<a href="{{ route('sys.impersonate') }}" class="menu-link" target="_blank">
 						<i class='menu-icon tf-icons bx bxs-face-mask' ></i>
-						<div>Admin Dashboard</div>
+						<span>Admin Dashboard</span>
 					</a>
 				</li>
 			@endif

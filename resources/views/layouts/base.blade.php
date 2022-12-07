@@ -16,8 +16,8 @@
         <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
         @yield('baseFonts')
 
-        <!-- Tailwind -->
-        <link href="{{ mix('assets/css/tailwind.css') }}" rel="stylesheet">
+        {{-- <!-- Tailwind -->
+        <link href="{{ mix('assets/css/tailwind.css') }}" rel="stylesheet"> --}}
         <!-- Style -->
         <link href="{{ mix('assets/css/app.css') }}" rel="stylesheet">
         <!-- CSS Plugins -->

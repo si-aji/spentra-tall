@@ -795,6 +795,7 @@ select {
 .tw__mt-0 {
   margin-top: 0px !important;
 }
+<<<<<<< Updated upstream
 .tw__mt-20 {
   margin-top: 5rem !important;
 }
@@ -803,6 +804,13 @@ select {
 }
 .tw__mt-2 {
   margin-top: 0.5rem !important;
+=======
+.tw__-mt-1 {
+  margin-top: -0.25rem !important;
+}
+.tw__-mr-1 {
+  margin-right: -0.25rem !important;
+>>>>>>> Stashed changes
 }
 .tw__block {
   display: block !important;
@@ -906,6 +914,18 @@ select {
 .tw__w-24 {
   width: 6rem !important;
 }
+<<<<<<< Updated upstream
+=======
+.tw__w-32 {
+  width: 8rem !important;
+}
+.tw__w-9 {
+  width: 2.25rem !important;
+}
+.tw__w-3 {
+  width: 0.75rem !important;
+}
+>>>>>>> Stashed changes
 .tw__w-16 {
   width: 4rem !important;
 }
@@ -981,6 +1001,24 @@ select {
 .tw__animate-pulse {
   -webkit-animation: tw__pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite !important;
           animation: tw__pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite !important;
+}
+@-webkit-keyframes tw__ping {
+
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+@keyframes tw__ping {
+
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+.tw__animate-ping {
+  -webkit-animation: tw__ping 1s cubic-bezier(0, 0, 0.2, 1) infinite !important;
+          animation: tw__ping 1s cubic-bezier(0, 0, 0.2, 1) infinite !important;
 }
 .tw__cursor-pointer {
   cursor: pointer !important;
@@ -1212,6 +1250,14 @@ select {
   --tw-bg-opacity: 1 !important;
   background-color: rgb(241 245 249 / var(--tw-bg-opacity)) !important;
 }
+.tw__bg-sky-400 {
+  --tw-bg-opacity: 1 !important;
+  background-color: rgb(56 189 248 / var(--tw-bg-opacity)) !important;
+}
+.tw__bg-sky-500 {
+  --tw-bg-opacity: 1 !important;
+  background-color: rgb(14 165 233 / var(--tw-bg-opacity)) !important;
+}
 .tw__bg-slate-200 {
   --tw-bg-opacity: 1 !important;
   background-color: rgb(226 232 240 / var(--tw-bg-opacity)) !important;
@@ -1395,6 +1441,9 @@ select {
 .tw__leading-5 {
   line-height: 1.25rem !important;
 }
+.tw__leading-6 {
+  line-height: 1.5rem !important;
+}
 .tw__leading-\[1\.25\] {
   line-height: 1.25 !important;
 }
@@ -1457,6 +1506,10 @@ select {
   --tw-text-opacity: 1 !important;
   color: rgb(105 108 255 / var(--tw-text-opacity)) !important;
 }
+.tw__text-sky-500 {
+  --tw-text-opacity: 1 !important;
+  color: rgb(14 165 233 / var(--tw-text-opacity)) !important;
+}
 .tw__text-black {
   --tw-text-opacity: 1 !important;
   color: rgb(0 0 0 / var(--tw-text-opacity)) !important;
@@ -1500,6 +1553,14 @@ select {
   --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05) !important;
   --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color) !important;
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important;
+}
+.tw__ring-1 {
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color) !important;
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color) !important;
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000) !important;
+}
+.tw__ring-slate-900\/10 {
+  --tw-ring-color: rgb(15 23 42 / 0.1) !important;
 }
 .tw__transition {
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter !important;
@@ -1634,6 +1695,17 @@ select {
 }
 .disabled\:tw__cursor-not-allowed:disabled {
   cursor: not-allowed !important;
+}
+@media (prefers-color-scheme: dark) {
+
+  .dark\:tw__bg-slate-800 {
+    --tw-bg-opacity: 1 !important;
+    background-color: rgb(30 41 59 / var(--tw-bg-opacity)) !important;
+  }
+
+  .dark\:tw__ring-slate-200\/20 {
+    --tw-ring-color: rgb(226 232 240 / 0.2) !important;
+  }
 }
 @media (min-width: 640px) {
 

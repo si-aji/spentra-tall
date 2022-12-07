@@ -21,6 +21,8 @@ class Show extends Component
     public $loadPerPage = 10;
     // Record
     public $walletRecordData;
+    // Wallet
+    public $dataWallet;
 
     /**
      * Validation
@@ -58,11 +60,25 @@ class Show extends Component
         $recordLivewire->fetchRecordData($this->walletGroup->walletGroupList()->pluck((new \App\Models\Wallet())->getTable().'.id')->toArray());
         $this->walletRecordData = $recordLivewire->dataRecord;
 
+        // Fetch Wallet Data
+        $this->dataWallet = \App\Models\Wallet::with('parent')
+            ->where('user_id', \Auth::user()->id)
+            ->whereIn('id', $this->walletGroup->walletGroupList()->pluck((new \App\Models\Wallet())->getTable().'.id')->toArray())
+            ->orderBy('order_main', 'asc');
+        $this->dataWallet = $this->dataWallet->paginate($this->loadPerPage);
+        $paginateWallet = $this->dataWallet;
+        $this->dataWallet = collect($this->dataWallet->items())->values()->map(function($data){
+            $data->balance = $data->getBalance();
+            $data->last_transaction = $data->getLastTransaction();
+            return $data;
+        });
 
+        $this->dispatchBrowserEvent('walletListLoadData');
         $this->dispatchBrowserEvent('walletGroupShow-loadData');
         $this->dispatchBrowserEvent('walletGroupShowRecordLoadData');
         return view('livewire.sys.wallet.group.show', [
-            'paginate' => $recordLivewire->getPaginate()
+            'paginate' => $recordLivewire->getPaginate(),
+            'paginateWallet' => $paginateWallet
         ])->extends('layouts.sneat', [
             'menuState' => $this->menuState,
             'submenuState' => $this->submenuState,

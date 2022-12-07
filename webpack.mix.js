@@ -5,10 +5,10 @@ mix.options({
 });
 
 // Tailwind
-mix.sass('resources/css/tailwind.scss', 'public/assets/css').options({
+mix.sass('resources/sass/app.scss', 'public/assets/css').options({
     processCssUrls: false,
     postCss: [tailwindcss('./tailwind.config.js')],
-});
+}).sourceMaps();
 
 /*
  |--------------------------------------------------------------------------
@@ -22,7 +22,6 @@ mix.sass('resources/css/tailwind.scss', 'public/assets/css').options({
  */
 
 mix.js('resources/js/app.js', 'public/assets/js')
-    .sass('resources/sass/app.scss', 'public/assets/css')
     .sourceMaps();
 
 /**

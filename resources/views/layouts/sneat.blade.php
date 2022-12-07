@@ -219,6 +219,33 @@
         });
     </script>
 
+    {{-- Handle Keyboard Shortcut --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', (e) => {
+            if(document.getElementById('sia-search_input')){
+                console.log("Search Input found");
+                let searchField = document.getElementById('sia-search_input');
+                if((navigator.userAgent).toLowerCase().includes('mac')){
+                    searchField.setAttribute('placeholder', `(Control^ + /) Search...`);
+                } else if((navigator.userAgent).toLowerCase().includes('windows')){
+                    searchField.setAttribute('placeholder', `(CTRL + /) Search...`);
+                } 
+
+                window.onkeydown = (e) => {
+                    var e = e || window.event; // for IE to cover IEs window event-object
+                    if(e.ctrlKey && e.which == 191) {
+                        if(document.activeElement === searchField){
+                            return false;
+                        }
+                        searchField.focus();
+                        searchField.select();
+                        return false;
+                    }
+                }
+            }
+        });
+    </script>
+
     {{-- Handle Session TZ --}}
     <script>
         // document.addEventListener('DOMContentLoaded', (e) => {

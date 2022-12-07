@@ -18,17 +18,7 @@
                     <div class="navbar-nav align-items-center tw__w-full">
                         <div class="nav-item d-flex align-items-center tw__w-full tw__gap-2 tw__mr-3">
                             <i class="bx bx-search fs-4 lh-0" id="toggle-search"></i>
-                            <input
-                                type="text"
-                                class="form-control border-0 shadow-none tw__w-full"
-                                placeholder="(CTRL + /) Search..."
-                                aria-label="(CTRL + /) Search..."
-                                id="sia-search_input"
-                                x-on:focusout="backdrop = false; result = false"
-                                x-on:focusin="(($event.target.value).length > 2 ? backdrop = true : backdrop = false);($event.target.value).length > 2 ? result = true : result = false"
-                                @input.debounce="(($event.target.value).length > 2 ? (backdrop = true) : (backdrop = false)); ($event.target.value).length > 2 ? (result = true) : (result = false);sidebarSearch($event)"
-                                readonly
-                            />
+                            <input type="text" class="form-control border-0 shadow-none tw__w-full tw__bg-transparent" placeholder="Search..." aria-label="Search..." id="sia-search_input" x-on:focusout="backdrop = false; result = false" x-on:focusin="(($event.target.value).length > 2 ? backdrop = true : backdrop = false);($event.target.value).length > 2 ? result = true : result = false" @input.debounce="(($event.target.value).length > 2 ? (backdrop = true) : (backdrop = false)); ($event.target.value).length > 2 ? (result = true) : (result = false);sidebarSearch($event)"/>
                         </div>
                     </div>
                     <!-- /Search -->
@@ -38,7 +28,11 @@
                         <li class="nav-item dropdown-shortcuts navbar-dropdown dropdown me-2 me-xl-0">
                             <a class="nav-link dropdown-toggle hide-arrow tw__relative" href="javascript:void(0);" data-bs-toggle="dropdown" title="Open Shortcut">
                                 <i class='bx bx-sm bx-grid-alt'></i>
-                                <span class="badge bg-primary tw__text-[#696cff] rounded-pill badge-notifications tw__absolute tw__top-0 tw__right-[-.5rem] lg:tw__right-0 tw__scale-50" x-show="notificationState">5</span>
+                                {{-- Notification badge --}}
+                                <span x-show="notificationState">
+                                    <span class=" tw__absolute tw__top-2 tw__right-0 lg:tw__right-2 tw__rounded-full tw__h-2 tw__w-2 tw__bg-[#696cff] badge-notification tw__animate-ping"></span>
+                                    <span class=" tw__absolute tw__top-2 tw__right-0 lg:tw__right-2 tw__rounded-full tw__h-2 tw__w-2 tw__bg-[#696cff] badge-notification"></span>
+                                </span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-end py-0 lg:tw__min-w-[25rem]">
                                 <div class="dropdown-menu-header border-bottom">
@@ -197,11 +191,54 @@
         function sidebarSearch(el){
             let keyword = (el.target.value).toUpperCase();
             let searchResult = document.querySelector('#search-result .search-result');
-    
+            console.log(keyword);
+
             // Append Loading
             searchResult.innerHTML = `
                 <span class=" tw__flex tw__items-center tw__gap-2"><i class='bx bx-loader-alt tw__animate-spin'></i>Loading...</span>
             `;
+
+            // Build Search Item
+            let searchItems = [];
+            let sidebar = document.getElementById('layout-menu');
+            if(sidebar){
+                sidebar.querySelectorAll('li.menu-item').forEach((menu) => {
+                    let link = menu.querySelector('a.menu-link');
+                    if(link && !((link.href).toLowerCase().includes('javascript:void(0)'))){
+                        let menuName = [];
+                        if(menu.dataset.parent){
+                            menuName.push(menu.dataset.parent);
+                        }
+                        menuName.push(link.querySelector('span').innerText);
+                        searchItems.push({
+                            link: link.href,
+                            name: menuName.join(' - ')
+                        });
+                    }
+                });
+            }
+
+            // Search Result
+            let result = searchItems.filter((item) => {
+                return (item.name).toLowerCase().includes(keyword.toLowerCase());
+            });
+            let endResult = result.slice(0, 5);
+            if(endResult.length === 0){
+                searchResult.innerHTML = `
+                    <span>No sidebar menu found!</span>
+                `;
+            } else {
+                let result = [];
+                endResult.forEach((list) => {
+                    result.push(`<a href="${list.link}" class="list-group-item list-group-item-action">${list.name}</a>`);
+                });
+                
+                searchResult.innerHTML = `
+                    <div class="list-group">
+                        ${result.join('')}
+                    </div>
+                `;
+            }
         }
     </script>
 @endpush

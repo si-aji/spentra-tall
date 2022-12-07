@@ -20,7 +20,13 @@
                     @endif
                 </p>
 
-                <a href="{{ route('sys.planned-payment.index') }}" class="btn btn-sm btn-outline-primary">View Planned Payment</a>
+                <a href="{{ route('sys.planned-payment.index') }}" class="btn btn-sm btn-outline-primary tw__relative">
+                    <span>View Planned Payment</span>
+                    @if ($plannedPaymentCount > 0 || $plannedPaymentOverdueCount > 0)
+                        <span class=" tw__absolute tw__-top-1 tw__-right-1 tw__rounded-full tw__h-2 tw__w-2 tw__bg-[#696cff] tw__animate-ping"></span>
+                        <span class=" tw__absolute tw__-top-1 tw__-right-1 tw__rounded-full tw__h-2 tw__w-2 tw__bg-[#696cff] "></span>
+                    @endif
+                </a>
             </div>
         </div>
         <div class="col-sm-5 text-center text-sm-left">
