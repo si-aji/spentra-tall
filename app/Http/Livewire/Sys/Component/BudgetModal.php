@@ -43,7 +43,10 @@ class BudgetModal extends Component
     /**
      * Livewire Event Listener
      */
-    // 
+    protected $listeners = [
+        'refreshComponent' => '$refresh',
+        'closeModal' => 'closeModal',
+    ];
 
     /**
      * Livewire Mount
@@ -78,20 +81,53 @@ class BudgetModal extends Component
     /**
      * Function
      */
+    public function closeModal()
+    {
+        $this->budgetModalState = 'hide';
+        $this->reset($this->budgetResetField);
+
+        $this->dispatchBrowserEvent('trigger-eventBudget', [
+            'budgetName' => $this->budgetName,
+            'budgetPeriod' => $this->budgetPeriod,
+            'budgetAmount' => $this->budgetAmount,
+            'budgetIncludedWallet' => $this->budgetIncludedWallet,
+            'budgetIncludedCategory' => $this->budgetIncludedCategory,
+            'budgetIncludedTags' => $this->budgetIncludedTags,
+            'budgetExcludedWallet' => $this->budgetExcludedWallet,
+            'budgetExcludedCategory' => $this->budgetExcludedCategory,
+            'budgetExcludedTags' => $this->budgetExcludedTags,
+        ]);
+    }
     public function save()
     {
         $this->validate([
             'budgetName' => ['required', 'string'],
             'budgetPeriod' => ['required', 'string', 'in:daily,weekly,monthly,yearly'],
             'budgetAmount' => ['required', 'numeric', 'min:0'],
-            'budgetIncludedWallet.*' => ['nullable', 'string', 'exists:'.(new \App\Models\Wallet())->getTable().',uuid', 'not_in:'.$this->budgetExcludedWallet],
-            'budgetIncludedCategory.*' => ['nullable', 'string', 'exists:'.(new \App\Models\Category())->getTable().',uuid', 'not_in:'.$this->budgetExcludedCategory],
-            'budgetIncludedTags.*' => ['nullable', 'string', 'exists:'.(new \App\Models\Tag())->getTable().',uuid', 'not_in:'.$this->budgetExcludedTags],
-            'budgetExcludedWallet.*' => ['nullable', 'string', 'exists:'.(new \App\Models\Wallet())->getTable().',uuid', 'not_in:'.$this->budgetIncludedWallet],
-            'budgetExcludedCategory.*' => ['nullable', 'string', 'exists:'.(new \App\Models\Category())->getTable().',uuid', 'not_in:'.$this->budgetIncludedCategory],
-            'budgetExcludedTags.*' => ['nullable', 'string', 'exists:'.(new \App\Models\Tag())->getTable().',uuid', 'not_in:'.$this->budgetIncludedTags],
+            'budgetIncludedWallet.*' => ['nullable', 'string', 'exists:'.(new \App\Models\Wallet())->getTable().',uuid', 'not_in:'.implode(',', $this->budgetExcludedWallet)],
+            'budgetIncludedCategory.*' => ['nullable', 'string', 'exists:'.(new \App\Models\Category())->getTable().',uuid', 'not_in:'.implode(',', $this->budgetExcludedCategory)],
+            'budgetIncludedTags.*' => ['nullable', 'string', 'exists:'.(new \App\Models\Tag())->getTable().',uuid', 'not_in:'.implode(',', $this->budgetExcludedTags)],
+            'budgetExcludedWallet.*' => ['nullable', 'string', 'exists:'.(new \App\Models\Wallet())->getTable().',uuid', 'not_in:'.implode(',', $this->budgetIncludedWallet)],
+            'budgetExcludedCategory.*' => ['nullable', 'string', 'exists:'.(new \App\Models\Category())->getTable().',uuid', 'not_in:'.implode(',', $this->budgetIncludedCategory)],
+            'budgetExcludedTags.*' => ['nullable', 'string', 'exists:'.(new \App\Models\Tag())->getTable().',uuid', 'not_in:'.implode(',', $this->budgetIncludedTags)],
         ]);
         $data = new \App\Models\Category();
+
+        \Log::debug("Debug on Budget Modal Save", [
+            'name' => $this->budgetName,
+            'period' => $this->budgetPeriod,
+            'amount' => $this->budgetAmount,
+            'included' => [
+                'wallet' => $this->budgetIncludedWallet,
+                'category' => $this->budgetIncludedCategory,
+                'tags' => $this->budgetIncludedTags,
+            ],
+            'exlucded' => [
+                'wallet' => $this->budgetExcludedWallet,
+                'category' => $this->budgetExcludedCategory,
+                'tags' => $this->budgetExcludedTags,
+            ]
+        ]);
     }
     public function fetchListCategory()
     {

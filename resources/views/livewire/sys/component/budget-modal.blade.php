@@ -163,7 +163,7 @@
                 @this.set('budgetModalState', 'show');
             });
             document.getElementById('modal-budget').addEventListener('hidden.bs.offcanvas', (e) => {
-                @this.set('budgetModalState', 'hide');
+                @this.closeModal();
             });
 
             // Choices
@@ -404,7 +404,7 @@
                     let included = budgetIncludedTagsChoice.getValue();
                     let includedUuid = included.length > 0 ? included.map(val => val.value) : [];
 
-                    let selection = @js($listCategory);
+                    let selection = @js($listTag);
                     let formated = [];
                     selection.map((val, row) => {
                         let choice = [];
@@ -499,7 +499,87 @@
                         `;
                         e.target.querySelector('button[type="submit"]').disabled = true;
                     }
+
+                    // Set Form Value
+                    @this.set('budgetName', document.getElementById('input_budget-name').value);
+                    @this.set('budgetPeriod', document.getElementById('input_budget-period').value);
+                    @this.set('budgetAmount', budgetAmountMask.unmaskedValue);
+                    @this.set('budgetIncludedWallet', budgetIncludedWalletChoice.getValue().map(val => val.value));
+                    @this.set('budgetIncludedCategory', budgetIncludedCategoryChoice.getValue().map(val => val.value));
+                    @this.set('budgetIncludedTags', budgetIncludedTagsChoice.getValue().map(val => val.value));
+                    @this.set('budgetExcludedWallet', budgetExcludedWalletChoice.getValue().map(val => val.value));
+                    @this.set('budgetExcludedCategory', budgetExcludedCategoryChoice.getValue().map(val => val.value));
+                    @this.set('budgetExcludedTags', budgetExcludedTagsChoice.getValue().map(val => val.value));
+                    // Save to database
+                    @this.save();
                 });
+            }
+        });
+        window.addEventListener('trigger-eventBudget', (e) => {
+            let el = event.detail;
+            if(el.hasOwnProperty('budgetName')){
+                document.getElementById('input_budget-name').value = el.budgetName;
+            }
+            if(el.hasOwnProperty('budgetPeriod')){
+                budgetPeriodChoice.setChoiceByValue(el.budgetPeriod);
+            }
+            if(el.hasOwnProperty('budgetAmount')){
+                budgetAmountMask.value = (el.budgetAmount ?? '')->toString();
+            }
+            if(el.hasOwnProperty('budgetIncludedWallet')){
+                if((el.budgetIncludedWallet).length > 0){
+                    (el.budgetIncludedWallet).forEach((val) => {
+                        budgetIncludedWalletChoice.setChoiceByValue(val.uuid);
+                    });
+                } else {
+                    budgetIncludedWalletChoice.removeActiveItems();
+                }
+            }
+            if(el.hasOwnProperty('budgetIncludedCategory')){
+                if((el.budgetIncludedCategory).length > 0){
+                    (el.budgetIncludedCategory).forEach((val) => {
+                        budgetIncludedCategoryChoice.setChoiceByValue(val.uuid);
+                    });
+                } else {
+                    budgetIncludedCategoryChoice.removeActiveItems();
+                }
+            }
+            if(el.hasOwnProperty('budgetIncludedTags')){
+                if((el.budgetIncludedTags).length > 0){
+                    (el.budgetIncludedTags).forEach((val) => {
+                        budgetIncludedTagsChoice.setChoiceByValue(val.uuid);
+                    });
+                } else {
+                    budgetIncludedTagsChoice.removeActiveItems();
+                }
+            }
+
+            if(el.hasOwnProperty('budgetExcludedWallet')){
+                if((el.budgetExcludedWallet).length > 0){
+                    (el.budgetExcludedWallet).forEach((val) => {
+                        budgetExcludedWalletChoice.setChoiceByValue(val.uuid);
+                    });
+                } else {
+                    budgetExcludedWalletChoice.removeActiveItems();
+                }
+            }
+            if(el.hasOwnProperty('budgetExcludedCategory')){
+                if((el.budgetExcludedCategory).length > 0){
+                    (el.budgetExcludedCategory).forEach((val) => {
+                        budgetExcludedCategoryChoice.setChoiceByValue(val.uuid);
+                    });
+                } else {
+                    budgetExcludedCategoryChoice.removeActiveItems();
+                }
+            }
+            if(el.hasOwnProperty('budgetExcludedTags')){
+                if((el.budgetExcludedTags).length > 0){
+                    (el.budgetExcludedTags).forEach((val) => {
+                        budgetExcludedTagsChoice.setChoiceByValue(val.uuid);
+                    });
+                } else {
+                    budgetExcludedTagsChoice.removeActiveItems();
+                }
             }
         });
     </script>
