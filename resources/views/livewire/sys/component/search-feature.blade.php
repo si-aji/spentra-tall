@@ -1,7 +1,7 @@
 <div x-data="{
-    result: false,
-    notificationState: @entangle('notificationState')
-}">
+    resultPage: false,
+    notificationState: @entangle('notificationState'),
+}" @click.outside="resultPage ? (resultPage = false) : '';backdrop ? (backdrop = false) : '';">
     {{-- Nothing in the world is as soft and yielding as water. --}}
     <div class=" tw__fixed tw__pt-4 tw__z-[1050] tw__w-full lg:tw__w-[calc(100%-calc(0.625rem*2)-15rem)]">
         <div class="container-xxl">
@@ -18,7 +18,7 @@
                     <div class="navbar-nav align-items-center tw__w-full">
                         <div class="nav-item d-flex align-items-center tw__w-full tw__gap-2 tw__mr-3">
                             <i class="bx bx-search fs-4 lh-0" id="toggle-search"></i>
-                            <input type="text" class="form-control border-0 shadow-none tw__w-full tw__bg-transparent" placeholder="Search..." aria-label="Search..." id="sia-search_input" x-on:focusout="backdrop = false; result = false" x-on:focusin="(($event.target.value).length > 2 ? backdrop = true : backdrop = false);($event.target.value).length > 2 ? result = true : result = false" @input.debounce="(($event.target.value).length > 2 ? (backdrop = true) : (backdrop = false)); ($event.target.value).length > 2 ? (result = true) : (result = false);sidebarSearch($event)"/>
+                            <input type="text" class="form-control border-0 shadow-none tw__w-full tw__bg-transparent" placeholder="Search..." aria-label="Search..." id="sia-search_input" x-on:focusout="backdrop = true;" x-on:focusin="(($event.target.value).length > 2 ? backdrop = true : backdrop = false);($event.target.value).length > 2 ? resultPage = true : resultPage = false" @input.debounce="(($event.target.value).length > 2 ? (backdrop = true) : (backdrop = false)); ($event.target.value).length > 2 ? (resultPage = true) : (resultPage = false);sidebarSearch($event)"/>
                         </div>
                     </div>
                     <!-- /Search -->
@@ -161,7 +161,7 @@
             </nav>
             <!-- / Navbar -->
         
-            <div class=" tw__mt-2" id="search-result" x-show="result" style="display: none;">
+            <div class=" tw__mt-2" id="search-result" x-show="resultPage" style="display: none;">
                 <!-- Search Result -->
                 <div class=" tw__bg-white tw__rounded tw__p-4">
                     <div class="search-result">

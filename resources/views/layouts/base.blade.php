@@ -55,6 +55,16 @@
 
         <!-- CSRF Token -->
         <meta name="csrf-token" content="{{ csrf_token() }}">
+
+        <!-- Google Analytic -->
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-QMKXHMNXK8"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-QMKXHMNXK8');
+        </script>
     </head>
 
     <body class="{{ isset($sbodyClass) ? $sbodyClass : '' }}">
