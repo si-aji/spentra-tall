@@ -83,7 +83,7 @@
                             <tr x-data="{toggle: false}">
                                 <th>Total</th>
                                 <td data-orig="{{ formatRupiah($recordData->amount + $recordData->extra_amount) }}" data-short="{{ formatRupiah($recordData->amount + $recordData->extra_amount, 'Rp', true) }}" x-on:click="toggle = !toggle;$el.innerHTML = `${toggle ? $el.dataset.orig : $el.dataset.short}`">
-                                    <span>{{ formatRupiah($recordData->amount + $recordData->extra_amount, 'Rp', true) }}</span>
+                                    <strong>{{ formatRupiah($recordData->amount + $recordData->extra_amount, 'Rp', true) }}</strong>
                                 </td>
                             </tr>
                         </tbody>
