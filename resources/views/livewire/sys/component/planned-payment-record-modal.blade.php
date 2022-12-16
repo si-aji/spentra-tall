@@ -110,7 +110,7 @@
                                 </div>
 
                                 {{-- Amount --}}
-                                <div class="form-group tw__mb-4" id="form-amount">
+                                <div class="form-group tw__mb-4" id="form-amount" wire:ignore>
                                     <label for="input_planned_payment_record-amount">Amount</label>
                                     <div class="input-group">
                                         <span class="input-group-text" id="input_group-amount">
@@ -125,7 +125,7 @@
                                 </div>
 
                                 {{-- Extra Amount --}}
-                                <div class="row">
+                                <div class="row" wire:ignore>
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="input_planned_payment_record-extra">Extra Amount</label>

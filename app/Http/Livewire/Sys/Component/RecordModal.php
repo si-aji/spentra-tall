@@ -111,6 +111,20 @@ class RecordModal extends Component
     /**
      * Function
      */
+    public function upload($name)
+    {
+        $destinationPath = 'files/user'.'/'.\Auth::user()->uuid.'/receipt';
+        // Check if directory exists
+        if (! (\File::exists($destinationPath))) {
+            \File::makeDirectory($destinationPath, 0777, true, true);
+        }
+
+        \Log::debug("Debug on Upload file", [
+            'name' => $name
+        ]);
+
+        $this->recordReceipt->storeAs($destinationPath, $name);
+    }
     // Fetch Data
     public function fetchDataTemplateData($uuid = null)
     {
