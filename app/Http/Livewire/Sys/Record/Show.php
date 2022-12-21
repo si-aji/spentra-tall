@@ -28,6 +28,7 @@ class Show extends Component
      */
     protected $listeners = [
         'refreshComponent' => '$refresh',
+        'removeData' => 'removeData'
     ];
 
     /**
@@ -57,5 +58,9 @@ class Show extends Component
     /**
      * Function
      */
-    // 
+    // Remove Data
+    public function removeData($uuid)
+    {
+        return (new \App\Http\Livewire\Sys\Record\Index())->removeData($uuid);
+    }
 }

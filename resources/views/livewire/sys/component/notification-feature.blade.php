@@ -18,7 +18,7 @@
                     </div>
                     @if (!empty($paginateOverdue))
                         <div class=" tw__mt-1 tw__flex tw__items-center tw__justify-between">
-                            <button type="button" class="btn btn-sm btn-primary disabled:tw__cursor-not-allowed" {{ $paginateOverdue->hasMorePages() ? '' : 'disabled' }} x-on:click="@this.loadMoreOverdue(1)">Load more</button>
+                            <button type="button" class="btn btn-sm btn-primary disabled:tw__cursor-not-allowed" {{ $paginateOverdue->hasMorePages() ? '' : 'disabled' }} x-on:click="@this.loadMoreOverdue()">Load more</button>
                             <span>Showing {{ $paginateOverdue->count() }} of {{ $paginateOverdue->total() }} entries</span>
                         </div>
                     @endif

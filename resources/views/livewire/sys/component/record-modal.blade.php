@@ -2,7 +2,7 @@
     {{-- Because she competes with no one, no one can compete with her. --}}
     {{-- <form id="record-form" wire:submit.prevent="store()"> --}}
     <form id="record-form">
-        <div class="modal fade" wire:init="openModal()" wire:ignore.self id="modal-record" data-bs-backdrop="static" tabindex="-1" aria-hidden="true" x-data="{
+        <div class="modal fade" wire:init="openModal()" wire:ignore.self id="modal-record" data-bs-focus="false" data-bs-backdrop="static" tabindex="-1" aria-hidden="true" x-data="{
             init(){
                 this.selectedRecordType = 'income';
                 this.selectedExtraType = 'amount';

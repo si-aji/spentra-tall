@@ -128,6 +128,9 @@
                     <button type="button" class="btn btn-warning tw__mr-0 md:tw__mr-auto lg:tw__mr-0" data-uuid="{{ $recordData->uuid }}" x-on:click="$wire.emitTo('sys.component.record-modal', 'editAction', @this.get('recordUuid'))">
                         <span class="tw__flex tw__items-center tw__gap-2"><i class='bx bx-edit'></i>Edit</span>
                     </button>
+                    <button type="button" class="btn btn-danger tw__mr-0 md:tw__mr-auto lg:tw__mr-0" data-uuid="{{ $recordData->uuid }}" x-on:click="removeRecord('{{ $recordData->uuid }}')">
+                        <span class="tw__flex tw__items-center tw__gap-2"><i class='bx bx-trash'></i>Remove</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -162,5 +165,30 @@
                 el.innerHTML = momentDateTime(el.dataset.period, 'DD MMM, YYYY / HH:mm', true);
             });
         });
+
+        // Remove  Action
+        function removeRecord(uuid){
+            Swal.fire({
+                title: 'Warning',
+                icon: 'warning',
+                text: `You'll perform remove action, this action cannot be undone and will affect your related Wallet Balance. If this data had related record, it'll also be deleted!`,
+                showCancelButton: true,
+                reverseButtons: true,
+                confirmButtonText: 'Remove',
+                showLoaderOnConfirm: true,
+                preConfirm: (request) => {
+                    return @this.call('removeData', uuid).then((e) => {
+                        Swal.fire({
+                            'title': 'Action: Success',
+                            'icon': 'success',
+                            'text': 'Record data successfully deleted'
+                        }).then((e) => {
+                            location.href = "{{ route('sys.record.index') }}";
+                        });
+                    });
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            });
+        }
     </script>
 @endsection

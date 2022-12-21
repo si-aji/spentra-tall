@@ -120,23 +120,32 @@ class NotificationFeature extends Component
 
         $this->dispatchBrowserEvent('notificationGenerateOverdueList');
     }
-    public function loadMoreOverdue($limit = 10)
+    public function loadMoreOverdue($limit = null)
     {
         $this->loadData();
+        if(empty($limit)){
+            $limit = $this->loadPerPageOverdue;
+        }
 
         $this->notificationModalState = 'show';
         $this->loadPerPageOverdue += $limit;
     }
-    public function loadMoreToday($limit = 10)
+    public function loadMoreToday($limit = null)
     {
         $this->loadData();
+        if(empty($limit)){
+            $limit = $this->loadPerPageToday;
+        }
 
         $this->notificationModalState = 'show';
         $this->loadPerPageToday += $limit;
     }
-    public function loadMoreUpcoming($limit = 10)
+    public function loadMoreUpcoming($limit = null)
     {
         $this->loadData();
+        if(empty($limit)){
+            $limit = $this->loadPerPageUpcoming;
+        }
 
         $this->notificationModalState = 'show';
         $this->loadPerPageUpcoming += $limit;

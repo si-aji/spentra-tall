@@ -10,7 +10,7 @@
         @endif
 
         <!-- Favicon -->
-		<link rel="shortcut icon" href="{{ url(asset('favicon.ico')) }}">
+		<link rel="shortcut icon" href="{{ asset('assets/icon.ico') }}">
 
         <!-- Fonts -->
         <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
