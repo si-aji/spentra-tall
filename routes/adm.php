@@ -33,8 +33,28 @@ Route::group([
     Route::group([
         'middleware' => ['impersonate:adm', 'auth:adm']
     ], function(){
+        // LogOut
         Route::post('logout', \App\Http\Controllers\Adm\Auth\LogoutController::class)
             ->name('logout');
+
+        // Manual
+        Route::group([
+            'prefix' => 'manual',
+            'as' => 'manual.'
+        ], function(){
+            // Google Analytics
+            Route::get('google-analytics', function(){
+                $analytics = Analytics::fetchVisitorsAndPageViews(\Spatie\Analytics\Period::days(7));
+                
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Data Fetched',
+                    'result' => [
+                        'data' => $analytics
+                    ]
+                ]);
+            });
+        });
 
         // Dashboard
         Route::get('/', function(){
