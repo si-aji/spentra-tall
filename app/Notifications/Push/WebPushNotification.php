@@ -87,6 +87,14 @@ class WebPushNotification extends Notification
             $notification->data($this->data);
         }
 
+        \Log::debug("Debug on Web Push Notification ~ \App\Notifications\Push\WebPushNotification", [
+            'title' => $this->title,
+            'body' => $this->message,
+            'action' => $this->actions,
+            'data' => $this->data,
+            'notifiable' => $notifiable
+        ]);
+
         return $notification;
     }
 }
