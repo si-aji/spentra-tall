@@ -78,7 +78,7 @@ self.addEventListener('notificationclick', function(event) {
                         let splitTargetUrl = (actionUrl.pathname).split('/');
 
                         if(splitUrl[1] === splitTargetUrl[1]){
-                            // return client.navigate(actionUrl.pathname).then(client => client.focus());
+                            return client.navigate(actionUrl.pathname).then(client => client.focus());
                         }
                     }
                 }
