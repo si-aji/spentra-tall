@@ -5,6 +5,7 @@ const contentToCache = appShellFiles;
 // Install Service Worker
 self.addEventListener('install', (e) => {
     // console.log("===== Installed =====");
+    self.skipWaiting();
 });
 
 // Fetch Asset
@@ -35,7 +36,7 @@ self.addEventListener('push', (e) => {
 }); 
 self.addEventListener('notificationclick', function(event) {
     event.notification.close();
-    console.log(event.notification);
+    console.log("Notification is clicked");
     // console.log(event);
     // clients.openWindow(`${baseUrl}/${event.action}`);
 
@@ -72,6 +73,13 @@ self.addEventListener('notificationclick', function(event) {
                     const url = new URL(client.url);
                     if(url.pathname === actionUrl.pathname){
                         return client.focus();
+                    } else {
+                        let splitUrl = (url.pathname).split('/');
+                        let splitTargetUrl = (actionUrl.pathname).split('/');
+
+                        if(splitUrl[1] === splitTargetUrl[1]){
+                            // return client.navigate(actionUrl.pathname).then(client => client.focus());
+                        }
                     }
                 }
     
