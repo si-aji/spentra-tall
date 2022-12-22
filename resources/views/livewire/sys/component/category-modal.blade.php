@@ -1,7 +1,7 @@
 <div>
     {{-- If your happiness depends on money, you will never be happy with yourself. --}}
-    <form id="category-form" wire.>
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="modal-category" aria-labelledby="offcanvasLabel" wire:init="" wire:ignore.self x-data="">
+    <form id="category-form">
+        <div class="offcanvas offcanvas-end" tabindex="1" id="modal-category" data-bs-scroll="true" aria-labelledby="offcanvasLabel" wire:init="" wire:ignore.self x-data="">
             <div class="offcanvas-header">
                 <h5 id="offcanvasLabel" class="offcanvas-title">Category: {{ $categoryTitle }}</h5>
                 <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -61,10 +61,18 @@
     <script>
         window.addEventListener('category_wire-init', (event) => {
             document.getElementById('modal-category').addEventListener('hidden.bs.offcanvas', (e) => {
+                // Enable Scroll
+                document.getElementsByTagName('body')[0].style.overflow = null;
+                document.getElementsByTagName('body')[0].style.paddingRight = null;
+
                 Livewire.emitTo('sys.component.category-modal', 'closeModal');
                 colorPickrInit();
             });
             document.getElementById('modal-category').addEventListener('shown.bs.offcanvas', (e) => {
+                // Prevent Scroll
+                document.getElementsByTagName('body')[0].style.overflow = 'hidden';
+                document.getElementsByTagName('body')[0].style.paddingRight = '0px';
+
                 Livewire.emitTo('sys.component.category-modal', 'localUpdate', 'categoryModalState', 'show');
             });
         });

@@ -83,6 +83,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(\App\Models\ShoppingList::class, 'user_id');
     }
+    public function userPreference()
+    {
+        return $this->hasMany(\App\Models\UserPreference::class, 'user_id');
+    }
+    public function recordReminderLog()
+    {
+        return $this->hasMany(\App\Models\RecordReminderLog::class, 'user_id');
+    }
 
     /**
      * Foreign Key Relation
@@ -114,5 +122,14 @@ class User extends Authenticatable
         // }
 
         return $firstYear;
+    }
+    public function scopeGetSpecificUserPreference($query, $key = null)
+    {
+        $data = null;
+        if(!empty($key)){
+            $data = $this->userPreference()->where('key', $key)->first();
+        }
+
+        return $data;
     }
 }
