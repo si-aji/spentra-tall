@@ -55,6 +55,9 @@ Route::middleware('auth')->group(function () {
 
     Route::post('logout', LogoutController::class)
         ->name('logout');
+
+    // Subscript Notification
+    Route::post('notification-subscribe', [\App\Http\Controllers\Front\NotificationSubscribeController::class, 'store'])->name('notification.subscribe');
 });
 
 /*

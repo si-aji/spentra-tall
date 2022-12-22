@@ -1071,9 +1071,6 @@ input:invalid, textarea:invalid, select:invalid {
 .tw__border {
   border-width: 1px !important;
 }
-.tw__border-4 {
-  border-width: 4px !important;
-}
 .tw__border-2 {
   border-width: 2px !important;
 }

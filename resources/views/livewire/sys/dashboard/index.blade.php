@@ -14,6 +14,9 @@
         </div>
         <div class="col-lg-4 col-12">
             <div class=" tw__mb-4">
+                <span><a href="javascript:void(0)" class="btn btn-primary tw__w-full" wire:click="sampleNotification()">Test Notification</a></span>
+            </div>
+            <div class=" tw__mb-4">
                 {{-- Balance --}}
                 <div class="card">
                     <div class="card-header d-flex align-items-center justify-content-between pb-0">

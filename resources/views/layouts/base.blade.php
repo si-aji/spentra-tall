@@ -57,8 +57,8 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <!-- Google Analytic -->
-        <!-- Google tag (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=UA-251484487-1"></script>
+        <!-- Google tag (gtag.js) -->
         <script>
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
@@ -66,6 +66,9 @@
 
             gtag('config', 'UA-251484487-1');
         </script>
+
+        <!-- Axios -->
+        <script src="{{ mix('assets/js/axios/axios.min.js') }}"></script>
     </head>
 
     <body class="{{ isset($sbodyClass) ? $sbodyClass : '' }}">

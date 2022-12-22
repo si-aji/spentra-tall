@@ -85,6 +85,27 @@ class Index extends Component
     /**
      * Function
      */
+    public function sampleNotification()
+    {
+        $data = [
+            'title' => 'Sample Notification',
+            'message' => 'This is just sample notification for testing purpose',
+            'actions' => [
+                [
+                    'title' => 'Open App',
+                    'route' => route('sys.index')
+                ]
+            ],
+            'data' => [
+                'id' => 'planned-payment',
+                'url' => route('sys.planned-payment.index')
+            ]
+        ];
+
+        // Sample Notification
+        $notification = new \App\Notifications\Push\WebPushNotification($data);
+        \Illuminate\Support\Facades\Notification::send(\App\Models\User::all(), $notification);
+    }
     public function searchKeyword($value)
     {
         $this->menuSearch = $value;
