@@ -72,16 +72,26 @@ function formatRupiah($number = 0, $prefix = true, $short = false)
             $number = number_format((int) $number, 0, ',', '.').(! empty($decimal) ? ','.$decimal : '');
         }
     }
-
+    
     return ($prefix ? 'Rp ' : '').$number;
 }
 
 function shortNumber($number)
 {
+    $negative = false;
+    if($number < 0){
+        $negative = true;
+        $number *= -1;
+    }
+
     $units = ['', 'K', 'M', 'B', 'T'];
     $i = 0;
     for($i = 0;$number >= 1000; $i++){
       $number /= 1000;
+    }
+
+    if($negative){
+        $number *= -1;
     }
     
     return round($number, 2).$units[$i];

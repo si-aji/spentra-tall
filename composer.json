@@ -7,7 +7,7 @@
     "require": {
         "php": "^8.0.2",
         "doctrine/dbal": "^3.5",
-        "guzzlehttp/guzzle": "^7.2",
+        "guzzlehttp/guzzle": "^7.5",
         "laravel-frontend-presets/tall": "^5.0",
         "laravel-notification-channels/webpush": "^7.0",
         "laravel/framework": "^9.19",

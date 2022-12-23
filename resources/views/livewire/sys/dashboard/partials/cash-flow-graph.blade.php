@@ -34,19 +34,19 @@
                 <div id="orderStatisticsChart"></div>
             </div>
             {{-- Sum of Income / Expense --}}
-            <div class=" tw__grid tw__grid-cols-1 tw__gap-2 tw__p-6">    
+            <div class=" tw__grid tw__grid-cols-1 tw__gap-2 tw__p-6" x-data="{toggle: false}">    
                 <div class=" tw__flex tw__items-center tw__gap-2">
                     <span class="badge bg-label-primary p-2"><i class="bx bx-dollar text-primary"></i></span>
                     <div class=" tw__flex tw__flex-col tw__gap-1">
                         <small class=" tw__leading-none">Income</small>
-                        <h6 class=" tw__mb-0 tw__leading-none">{{ formatRupiah($cashFlowIncomeSum / 1000) }}k</h6>
+                        <h6 class=" tw__mb-0 tw__leading-none" data-orig="{{ formatRupiah($cashFlowIncomeSum) }}" data-short="{{ formatRupiah($cashFlowIncomeSum, 'Rp', true) }}" x-on:click="toggle = !toggle" x-text="(toggle ? $el.dataset.orig : $el.dataset.short)">{{ formatRupiah($cashFlowIncomeSum, 'Rp', true) }}k</h6>
                     </div>
                 </div>
                 <div class=" tw__flex tw__items-center tw__gap-2">
                     <span class="badge bg-label-info p-2"><i class="bx bx-wallet text-info"></i></span>
                     <div class=" tw__flex tw__flex-col tw__gap-1">
                         <small class=" tw__leading-none">Expense</small>
-                        <h6 class=" tw__mb-0 tw__leading-none">{{ formatRupiah($cashFlowExpenseSum / 1000) }}k</h6>
+                        <h6 class=" tw__mb-0 tw__leading-none" data-orig="{{ formatRupiah($cashFlowExpenseSum) }}" data-short="{{ formatRupiah($cashFlowExpenseSum, 'Rp', true) }}" x-on:click="toggle = !toggle" x-text="(toggle ? $el.dataset.orig : $el.dataset.short)">{{ formatRupiah($cashFlowExpenseSum, 'Rp', true) }}k</h6>
                     </div>
                 </div>
             </div>

@@ -15,7 +15,7 @@
     @include('layouts.plugins.datatable.css')
 @endsection
 
-<div>
+<div x-data="{toggle: false}">
     <div>
         <a href="{{ url()->previous() }}" class="btn btn-secondary">
             <span class="tw__flex tw__items-center tw__gap-2"><i class='bx bx-arrow-back'></i>Back</span>
@@ -45,7 +45,7 @@
                 <tr>
                     <th>Balance</th>
                     <td>
-                        <span>{{ formatRupiah($walletGroup->getBalance()) }}</span>
+                        <span data-orig="{{ formatRupiah($walletGroup->getBalance()) }}" data-short="{{ formatRupiah($walletGroup->getBalance(), 'Rp', true) }}" x-on:click="toggle = !toggle" x-text="(toggle ? $el.dataset.orig : $el.dataset.short)">{{ formatRupiah($walletGroup->getBalance()) }}</span>
                     </td>
                 </tr>
             </table>
@@ -364,8 +364,8 @@
                                         <strong class="">${walletName}</strong>
                                         <small class=" tw__hidden lg:tw__flex tw__items-center tw__gap-1"><i class="bx bx-align-left"></i>${val.note ? val.note : 'No Description'}</small>
                                     </div>
-                                    <div class="" x-data="{toggle: false}">
-                                        <span class="tw__block" data-orig="${formatRupiah(val.balance)}" data-short="${formatRupiah(val.balance, 'Rp', true)}" x-on:click="toggle = !toggle;$el.innerHTML = (toggle ? $el.dataset.orig : $el.dataset.short)">${formatRupiah(val.balance, 'Rp', true)}</span>
+                                    <div class="">
+                                        <span class="tw__block" data-orig="${formatRupiah(val.balance)}" data-short="${formatRupiah(val.balance, 'Rp', true)}" x-on:click="toggle = !toggle" x-text="(toggle ? $el.dataset.orig : $el.dataset.short)">${formatRupiah(val.balance, 'Rp', true)}</span>
                                         ${extraInformation.join('')}
                                     </div>
                                     <div class=" tw__flex tw__gap-2 lg:tw__justify-end tw__flex-col">

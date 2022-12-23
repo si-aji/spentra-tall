@@ -96,6 +96,9 @@ function ucwords(str){
     if(timezone === null){
         // Get user Timezone if timezone is not specified
         timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        if(selectedTzOffset !== null || selectedTzOffset !== ''){
+            timezone = selectedTz;
+        }
     }
 
     return new Date((typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", {timeZone: timezone}));
@@ -117,6 +120,7 @@ function ucwords(str){
     }
 
     const tzOffset = defaultTimezone.getTimezoneOffset();
+    console.log(tzOffset);
     let formatedDate = format;
 
     // Get Timezone symbol (ex: UTC+7 etc)

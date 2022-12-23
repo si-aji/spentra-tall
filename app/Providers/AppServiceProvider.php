@@ -40,5 +40,25 @@ class AppServiceProvider extends ServiceProvider
                 ]
             );
         });
+
+        // Override TZ Session
+        view()->composer('*', function ($view) 
+        {
+            if(\Auth::check() && get_class(\Auth::user()) === get_class((new \App\Models\User()))){
+                if(!empty(\Auth::user()->getSpecificUserPreference('timezone'))){
+                    $tz = \Auth::user()->getSpecificUserPreference('timezone')->value;
+                    if(!empty($tz)){
+                        $dtz = new \DateTimeZone($tz);
+                        $utc = new \DateTime('now', $dtz);
+                        $offset = $dtz->getOffset( $utc );
+        
+                        \Session::put('SAUSER_TZ', $tz);
+                        \Session::put('SAUSER_TZ_OFFSET', (($offset / 60) * -1));
+                    }
+                }
+            }
+
+            $view;
+        });
     }
 }

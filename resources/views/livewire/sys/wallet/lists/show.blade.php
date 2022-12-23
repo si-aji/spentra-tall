@@ -27,11 +27,13 @@
             <table class="table table-hover">
                 <tr>
                     <th>Name</th>
-                    <td>{{ ($walletData->parent()->exists() ? $walletData->parent->name : '').($walletData->name) }}</td>
+                    <td>{{ ($walletData->parent()->exists() ? $walletData->parent->name.' - ' : '').($walletData->name) }}</td>
                 </tr>
-                <tr>
+                <tr x-data="{toggle: false}">
                     <th>Balance</th>
-                    <td>{{ formatRupiah($walletData->getBalance()) }}</td>
+                    <td>
+                        <span class="tw__block" data-orig="{{ formatRupiah($walletData->getBalance()) }}" data-short="{{ formatRupiah($walletData->getBalance(), 'Rp', true) }}" x-on:click="toggle = !toggle" x-text="(toggle ? $el.dataset.orig : $el.dataset.short)">{{ formatRupiah($walletData->getBalance(), 'Rp', true) }}</span>
+                    </td>
                 </tr>
             </table>
 

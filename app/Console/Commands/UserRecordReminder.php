@@ -27,7 +27,7 @@ class UserRecordReminder extends Command
      */
     public function handle()
     {
-        \Log::debug("User Record Reminder successfully running at ".(date('Y-m-d H:i:s')));
+        // \Log::debug("User Record Reminder successfully running at ".(date('Y-m-d H:i:s')));
         // Date Now
         $now = \Carbon\Carbon::now();
 

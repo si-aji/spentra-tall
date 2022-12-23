@@ -217,6 +217,9 @@ Route::group([
     // Tags
     Route::get('tag', \App\Http\Livewire\Sys\Profile\Tag\Index::class)
         ->name('tag.index');
+    // Preference
+    Route::get('preference', \App\Http\Livewire\Sys\Profile\Preference\Index::class)
+        ->name('preference.index');
 
     // Impersonate
     Route::get('impersonate', function(){

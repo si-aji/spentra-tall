@@ -15,8 +15,12 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        // Sync Timezone List
+        $schedule->command('timezone:sync-list')->monthly();
+        // Create notification
         $schedule->command('reminder:user-record')->everyMinute();
+        // Remove older log
+        $schedule->command('reminder:remove-log')->daily();
     }
 
     /**

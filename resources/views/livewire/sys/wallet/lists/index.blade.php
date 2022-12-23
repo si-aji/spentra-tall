@@ -61,7 +61,7 @@
                     <span>Balance / Last Transaction</span>
                     <span class=" tw__flex tw__justify-end">Action</span>
                 </div>
-                <div id="walletList-container" wire:ignore></div>
+                <div id="walletList-container" x-data="{toggle: false}" wire:ignore></div>
             </div>
 
             <div class="sa-footer tw__bg-white tw__rounded-b-lg tw__p-4">
@@ -305,8 +305,8 @@
                                     <strong class="">${walletName}</strong>
                                     <small class=" tw__hidden lg:tw__flex tw__items-center tw__gap-1"><i class="bx bx-align-left"></i>${val.note ? val.note : 'No Description'}</small>
                                 </div>
-                                <div class="" x-data="{toggle: false}">
-                                    <span class="tw__block" data-orig="${formatRupiah(val.balance)}" data-short="${formatRupiah(val.balance, 'Rp', true)}" x-on:click="toggle = !toggle;$el.innerHTML = (toggle ? $el.dataset.orig : $el.dataset.short)">${formatRupiah(val.balance, 'Rp', true)}</span>
+                                <div class="">
+                                    <span class="tw__block" data-orig="${formatRupiah(val.balance)}" data-short="${formatRupiah(val.balance, 'Rp', true)}" x-on:click="toggle = !toggle" x-text="(toggle ? $el.dataset.orig : $el.dataset.short)">${formatRupiah(val.balance, 'Rp', true)}</span>
                                     ${extraInformation.join('')}
                                 </div>
                                 <div class=" tw__flex tw__gap-2 lg:tw__justify-end tw__flex-col">

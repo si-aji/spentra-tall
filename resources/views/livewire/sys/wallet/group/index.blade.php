@@ -13,7 +13,8 @@
 @endsection
 
 <div id="walletGroupIndex" x-data="{
-    refreshState: false
+    refreshState: false,
+    toggle: false
 }">
     <div class=" tw__shadow tw__rounded-lg">
         <div class="sa-header tw__bg-white tw__p-4 tw__rounded-t-lg">
@@ -161,7 +162,7 @@
                                 <div class=" tw__grid tw__grid-flow-row lg:tw__grid-flow-col tw__grid-cols-1 lg:tw__grid-cols-3 tw__items-center tw__gap-2 lg:tw__gap-4">
                                     <div class="">
                                         <span class="">${val.name}</span>
-                                        <small class="tw__block tw__italic text-muted">${formatRupiah(val.balance)}</small>
+                                        <small class="tw__block tw__italic text-muted" data-orig="${formatRupiah(val.balance)}" data-short="${formatRupiah(val.balance, 'Rp', true)}" x-on:click="toggle = !toggle" x-text="(toggle ? $el.dataset.orig : $el.dataset.short)">${formatRupiah(val.balance, 'Rp', true)}</small>
                                     </div>
                                     <div class=" tw__flex tw__flex-wrap tw__gap-2 list-item">
                                     </div>

@@ -145,6 +145,11 @@ return [
                         'route' => 'sys.tag.index',
                         'state' => 'tag',
                         'icon' => 'bx bx-purchase-tag',
+                    ], [
+                        'name' => 'Preference',
+                        'route' => 'sys.preference.index',
+                        'state' => 'preference',
+                        'icon' => 'bx bx-cog',
                     ], 
                 ]
             ], 

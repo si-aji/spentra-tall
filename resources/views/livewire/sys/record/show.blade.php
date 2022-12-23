@@ -56,33 +56,36 @@
                     </div>
                     <hr/>
                     <div class="">
-                        <strong class=" tw__mb-1">Record Note</strong>
                         <div class=" tw__w-full tw__p-4 tw__rounded-lg tw__border-2 tw__border-dashed">
-                            {{ $recordData->note ? $recordData->note : 'No description' }}
+                            <span class=" tw__flex tw__items-center tw__gap-1">
+                                <i class="bx bx-paragraph"></i>
+                                <strong>Record Note</strong>
+                            </span>
+                            <span class=" tw__block tw__mt-2">{{ $recordData->note ? $recordData->note : 'No description' }}</span>
                         </div>
                     </div>
                 </div>
-                <div class="table-responsive">
+                <div class="table-responsive" x-data="{toggle: false}">
                     <table class=" table border-top m-0">
                         <tbody>
-                            <tr x-data="{toggle: false}">
+                            <tr>
                                 <th>Base Amount</th>
-                                <td data-orig="{{ formatRupiah($recordData->amount) }}" data-short="{{ formatRupiah($recordData->amount, 'Rp', true) }}" x-on:click="toggle = !toggle;$el.innerHTML = `${toggle ? $el.dataset.orig : $el.dataset.short}`">
+                                <td data-orig="{{ formatRupiah($recordData->amount) }}" data-short="{{ formatRupiah($recordData->amount, 'Rp', true) }}" x-on:click="toggle = !toggle" x-text="(toggle ? $el.dataset.orig : $el.dataset.short)">
                                     <span>{{ formatRupiah($recordData->amount, 'Rp', true) }}</span>
                                 </td>
                             </tr>
-                            <tr x-data="{toggle: false}">
+                            <tr>
                                 <th>Extra Amount</th>
                                 <td>
-                                    <span class=" tw__block" data-orig="{{ formatRupiah($recordData->extra_amount) }}" data-short="{{ formatRupiah($recordData->extra_amount, 'Rp', true) }}" x-on:click="toggle = !toggle;$el.innerHTML = `${toggle ? $el.dataset.orig : $el.dataset.short}`">{{ formatRupiah($recordData->extra_amount, 'Rp', true) }}</span>
+                                    <span class=" tw__block" data-orig="{{ formatRupiah($recordData->extra_amount) }}" data-short="{{ formatRupiah($recordData->extra_amount, 'Rp', true) }}" x-on:click="toggle = !toggle" x-text="(toggle ? $el.dataset.orig : $el.dataset.short)">{{ formatRupiah($recordData->extra_amount, 'Rp', true) }}</span>
                                     @if ($recordData->extra_amount > 0)
                                         <small class="badge bg-secondary">{{ ucwords($recordData->extra_type) }}</small>
                                     @endif
                                 </td>
                             </tr>
-                            <tr x-data="{toggle: false}">
+                            <tr>
                                 <th>Total</th>
-                                <td data-orig="{{ formatRupiah($recordData->amount + $recordData->extra_amount) }}" data-short="{{ formatRupiah($recordData->amount + $recordData->extra_amount, 'Rp', true) }}" x-on:click="toggle = !toggle;$el.innerHTML = `${toggle ? $el.dataset.orig : $el.dataset.short}`">
+                                <td data-orig="{{ formatRupiah($recordData->amount + $recordData->extra_amount) }}" data-short="{{ formatRupiah($recordData->amount + $recordData->extra_amount, 'Rp', true) }}" x-on:click="toggle = !toggle" x-text="(toggle ? $el.dataset.orig : $el.dataset.short)">
                                     <strong>{{ formatRupiah($recordData->amount + $recordData->extra_amount, 'Rp', true) }}</strong>
                                 </td>
                             </tr>

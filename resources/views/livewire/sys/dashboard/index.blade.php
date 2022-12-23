@@ -198,7 +198,7 @@
                         </div> --}}
                     </div>
                 </div>
-                <div class="card-body px-0 tw__pt-24 tw__relative">
+                <div class="card-body px-0 tw__pt-24 tw__relative" x-data="{toggle: false}">
                     <div class=" tw__absolute tw__top-4 tw__w-full tw__px-4">
                         <div class=" tw__flex tw__justify-between">
                             <div class=" tw__flex tw__flex-col">
@@ -224,8 +224,8 @@
                         </div>
                         <div>
                             <small class="text-muted d-block">This Week Amount</small>
-                            <div class="d-flex align-items-center" x-data="{toggle: false}">
-                                <h6 class="mb-0 me-1" data-orig="{{ formatRupiah($weeklyAmount) }}" data-short="{{ formatRupiah($weeklyAmount, 'Rp', true) }}" x-on:click="toggle = !toggle;$el.innerHTML = `${toggle ? $el.dataset.orig : $el.dataset.short}`">{{ formatRupiah($weeklyAmount, 'Rp', true) }}</h6>
+                            <div class="d-flex align-items-center">
+                                <h6 class="mb-0 me-1" data-orig="{{ formatRupiah($weeklyAmount) }}" data-short="{{ formatRupiah($weeklyAmount, 'Rp', true) }}" x-on:click="toggle = !toggle" x-text="toggle ? $el.dataset.orig : $el.dataset.short">{{ formatRupiah($weeklyAmount, 'Rp', true) }}</h6>
                                 <small class="text-{{ $weeklyRecordType === 'expense' ? ($weeklyAmount < $prevWeeklyAmount ? 'success' : 'danger') : ($weeklyAmount < $prevWeeklyAmount ? 'danger' : 'success') }} fw-semibold">
                                     <i class="bx bx-chevron-{{ $weeklyAmount < $prevWeeklyAmount ? 'down' : 'up' }}"></i>
                                     {{ number_format((float)$weeklyPercentage, 2, '.', '') }}%
@@ -239,14 +239,14 @@
                         </div>
                         <div>
                             <small class="text-muted d-block">Last Week Amount</small>
-                            <div class="d-flex align-items-center" x-data="{toggle: false}">
-                                <h6 class="mb-0 me-1" data-orig="{{ formatRupiah($prevWeeklyAmount) }}" data-short="{{ formatRupiah($prevWeeklyAmount, 'Rp', true) }}" x-on:click="toggle = !toggle;$el.innerHTML = `${toggle ? $el.dataset.orig : $el.dataset.short}`">{{ formatRupiah($prevWeeklyAmount, 'Rp', true) }}</h6>
+                            <div class="d-flex align-items-center">
+                                <h6 class="mb-0 me-1" data-orig="{{ formatRupiah($prevWeeklyAmount) }}" data-short="{{ formatRupiah($prevWeeklyAmount, 'Rp', true) }}" x-on:click="toggle = !toggle" x-text="toggle ? $el.dataset.orig : $el.dataset.short">{{ formatRupiah($prevWeeklyAmount, 'Rp', true) }}</h6>
                             </div>
                         </div>
                     </div>
                     <div class="d-flex justify-content-center pt-4 gap-2">
-                        <div x-data="{toggle: false}">
-                                {{-- <h6 class="mb-0 me-1" data-orig="{{ formatRupiah($weeklyAmount) }}" data-short="{{ formatRupiah($weeklyAmount, 'Rp', true) }}" x-on:click="toggle = !toggle;$el.innerHTML = `${toggle ? $el.dataset.orig : $el.dataset.short}`">{{ formatRupiah($weeklyAmount, 'Rp', true) }}</h6> --}}
+                        <div class=" tw__text-center">
+                            {{-- <h6 class="mb-0 me-1" data-orig="{{ formatRupiah($weeklyAmount) }}" data-short="{{ formatRupiah($weeklyAmount, 'Rp', true) }}" x-on:click="toggle = !toggle" x-text="toggle ? $el.dataset.orig : $el.dataset.short">{{ formatRupiah($weeklyAmount, 'Rp', true) }}</h6> --}}
                             <p class="mb-n1 mt-1 tw__text-center" x-text="`${selectedRecordType} This Week`"></p>
                             <small class="text-muted">{{ $weeklyAmount !== $prevWeeklyAmount ? ($weeklyAmount > $prevWeeklyAmount ? formatRupiah($weeklyAmount - $prevWeeklyAmount, 'Rp', true) : formatRupiah($prevWeeklyAmount - $weeklyAmount, 'Rp', true)) : '' }}{{ ($weeklyAmount === $prevWeeklyAmount ? 'same with' : ($weeklyAmount > $prevWeeklyAmount ? ' more than' : ' less than')) }} last week</small>
                         </div>

@@ -76,6 +76,10 @@
 
         <!-- Script -->
         <script src="{{ mix('assets/js/app.js') }}"></script>
+        <script>
+            var selectedTz = '{{ \Session::get('SAUSER_TZ') }}';
+            var selectedTzOffset = '{{ \Session::get('SAUSER_TZ_OFFSET') }}';
+        </script>
         <!-- JS Plugins -->
         @yield('baseJsPlugins')
         <!-- Script Inline -->
