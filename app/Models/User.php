@@ -128,6 +128,9 @@ class User extends Authenticatable
         $data = null;
         if(!empty($key)){
             $data = $this->userPreference()->where('key', $key)->first();
+            if(empty($data)){
+                $data = [];
+            }
         }
 
         return $data;

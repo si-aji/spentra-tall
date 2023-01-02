@@ -46,8 +46,9 @@ class AppServiceProvider extends ServiceProvider
         {
             if(\Auth::check() && get_class(\Auth::user()) === get_class((new \App\Models\User()))){
                 if(!empty(\Auth::user()->getSpecificUserPreference('timezone'))){
-                    $tz = \Auth::user()->getSpecificUserPreference('timezone')->value;
+                    $tz = \Auth::user()->getSpecificUserPreference('timezone');
                     if(!empty($tz)){
+                        $tz = $tz->value;
                         $dtz = new \DateTimeZone($tz);
                         $utc = new \DateTime('now', $dtz);
                         $offset = $dtz->getOffset( $utc );

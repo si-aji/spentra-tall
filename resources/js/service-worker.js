@@ -9,6 +9,8 @@ function initSW(){
         return;
     }
 
+    console.log(navigator.serviceWorker);
+    console.log(swBase);
     // Register SW
     navigator.serviceWorker.register(swBase)
         .then((registration) => {
@@ -39,7 +41,7 @@ function initPush(){
         }
     }).then((permissionResult) => {
         if (permissionResult !== 'granted') {
-            alert('We weren\'t granted permission.');
+            // alert('We weren\'t granted permission.');
             throw new Error('We weren\'t granted permission.');
         }
 

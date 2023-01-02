@@ -52,6 +52,9 @@ class Index extends Component
     public function mount()
     {    
         $this->dataSelectedYear = date("Y");
+        if($this->dataSelectedMonth === ''){
+            $this->dataSelectedMonth = date("Y-m-01", strtotime($this->dataSelectedYear.'-'.($this->dataSelectedYear !== date("Y") ? '12' : date("m")).'-01'));
+        }
 
         $this->menuState = 'record';
         $this->submenuState = null;
@@ -62,8 +65,13 @@ class Index extends Component
      */
     public function render()
     {
-        if($this->dataSelectedMonth === ''){
-            $this->dataSelectedMonth = date("Y-m-01", strtotime($this->dataSelectedYear.'-'.($this->dataSelectedYear !== date("Y") ? '12' : date("m")).'-01'));
+        // Validate Selected Month based on Year
+        if($this->dataSelectedYear !== date('Y', strtotime($this->dataSelectedMonth))){
+            if($this->dataSelectedYear < date('Y')){
+                $this->dataSelectedMonth = date('Y-m-01', strtotime($this->dataSelectedYear.'-12-01'));
+            } else if($this->dataSelectedYear === date('Y')){
+                $this->dataSelectedMonth = date('Y-m-01', strtotime($this->dataSelectedYear.'-'.(date('m')).'-01'));
+            }
         }
 
         // Get Record Data
