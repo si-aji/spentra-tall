@@ -182,7 +182,7 @@
     <!-- Core -->
     <script src="{{ mix('assets/themes/sneat/libs/popper/popper.js') }}"></script>
     <script src="{{ mix('assets/themes/sneat/js/bootstrap.js') }}"></script>
-    {{-- <script src="{{ mix('assets/themes/sneat/libs/perfect-scrollbar/perfect-scrollbar.js') }}"></script> --}}
+    <script src="{{ mix('assets/themes/sneat/libs/perfect-scrollbar/perfect-scrollbar.js') }}"></script>
     <script src="{{ mix('assets/themes/sneat/js/menu.js') }}"></script>
 
     <!-- Vendor -->
