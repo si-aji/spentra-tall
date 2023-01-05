@@ -1,7 +1,7 @@
 <div>
     {{-- If your happiness depends on money, you will never be happy with yourself. --}}
     <form id="plannedPaymentRecord-form">
-        <div class="modal fade" wire:init="openModal()" wire:ignore.self id="modal-plannedPaymentRecord" data-bs-backdrop="static" tabindex="-1" aria-hidden="true" x-data="{
+        <div class="modal fade" wire:init="openModal()" wire:ignore.self id="modal-plannedPaymentRecord" data-bs-focus="false" data-bs-backdrop="static" tabindex="-1" aria-hidden="true" x-data="{
             init(){
                 this.selectedRecordType = 'income';
                 this.selectedExtraType = 'amount';
@@ -171,14 +171,14 @@
                                     </div>
 
                                     {{-- Receipt --}}
-                                    <div class="form-group tw__mb-4" x-on:livewire-upload-start="uploadState = true;uploadProgress = 0;$wire.removeReceipt()" x-on:livewire-upload-progress="uploadProgress = $event.detail.progress" x-on:livewire-upload-finish="uploadState = false">
+                                    <div class="form-group tw__mb-4" id="input_planned_payment_record-receipt_drop" x-on:livewire-upload-start="uploadState = true;uploadProgress = 0;$wire.removeReceipt()" x-on:livewire-upload-progress="uploadProgress = $event.detail.progress" x-on:livewire-upload-finish="uploadState = false">
                                         <label for="input_planned_payment_record-receipt">Receipt</label>
         
-                                        <div class="d-flex">
+                                        <div class="container d-flex tw__w-full tw__rounded-lg tw__border-2 tw__border-dotted tw__p-2">
                                             <input type="file" class="tw__hidden" id="input_planned_payment_record-receipt" name="receipt" accept=".jpeg,.jpg,.png,.pdf" max="512" wire:model.defer="plannedPaymentRecordReceipt">
             
                                             @if ($plannedPaymentRecordReceipt || $plannedPaymentRecordReceiptTemp)
-                                                <label for="input_planned_payment_record-receipt" id="input_planned_payment_record-receipt_label" class="tw__cursor-pointer">
+                                                <label for="input_planned_payment_record-receipt" id="input_planned_payment_record-receipt_label" class="tw__cursor-pointer tw__w-full">
                                                     <div class="d-flex tw__items-center">
                                                         <i class="bx bx-paperclip bx-rotate-90 tw__text-4xl"></i>
                                                         {{-- <i class="bi bi-paperclip tw__text-3xl"></i> --}}
@@ -235,12 +235,6 @@
                                                     </div>
                                                 </label>
                                             @endif
-                                        </div>
-
-                                        <div class=" tw__mt-2" x-show="uploadState">
-                                            <div class="progress">
-                                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" style="width: 20%" x-bind:style="{width: `${uploadProgress}%`}" aria-valuemin="0" aria-valuemax="100"></div>
-                                            </div>
                                         </div>
 
                                         @error('plannedPaymentRecordReceipt')
@@ -440,6 +434,46 @@
                 plannedPaymentRecordModalWalletTransferChoice.setChoiceByValue(wallet);
             });
 
+            // Handle Drop Event
+            if(document.getElementById('input_planned_payment_record-receipt_drop')){
+                let dropArea = document.getElementById('input_planned_payment_record-receipt_drop');
+
+                // Prevent Default
+                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                    dropArea.addEventListener(eventName, (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }, false);
+                });
+                // Handle Drag Enter - Add Highlight
+                ['dragenter', 'dragover'].forEach(eventName => {
+                    dropArea.addEventListener(eventName, (e) => {
+                        let target = e.target;
+                        if(target !== dropArea){
+                            target = target.closest('#input_planned_payment_record-receipt_drop');
+                        }
+
+                        target.querySelector('.container').classList.add('tw__border-[#696cff]');
+                    }, false);
+                });
+                // Handle Drag Leave - Remove Highlight
+                ['dragleave', 'drop'].forEach(eventName => {
+                    dropArea.addEventListener(eventName, (e) => {
+                        let target = e.target;
+                        if(target !== dropArea){
+                            target = target.closest('#input_planned_payment_record-receipt_drop');
+                        }
+
+                        target.querySelector('.container').classList.remove('tw__border-[#696cff]');
+                        if(eventName === 'drop'){
+                            const dT = new DataTransfer();
+                            dT.items.add(e.dataTransfer.files[0]);
+                            document.getElementById('input_planned_payment_record-receipt').files = dT.files;
+                            document.getElementById('input_planned_payment_record-receipt').dispatchEvent(new Event('change'));
+                        }
+                    }, false);
+                });
+            }
         });
 
         window.addEventListener('plannedPaymentRecord_wire-init', (event) => {

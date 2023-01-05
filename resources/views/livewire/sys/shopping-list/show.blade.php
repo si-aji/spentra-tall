@@ -11,7 +11,7 @@
     </h4>
 @endsection
 
-<div>
+<div x-data="{toggle: false}">
     {{-- Success is as dangerous as failure. --}}
     <div class="card">
         <div class="card-body">
@@ -33,11 +33,9 @@
                     <th>Note</th>
                     <td>{{ $shoppingListData->note ?? '-' }}</td>
                 </tr>
-                <tr x-data="{
-                    toggle: false
-                }">
+                <tr>
                     <th>Budget</th>
-                    <td data-orig="{{ formatRupiah($shoppingListData->budget) }}" data-short="{{ formatRupiah($shoppingListData->budget, true, true) }}" x-on:click="toggle = !toggle;$el.innerHTML = `${toggle ? $el.dataset.orig : $el.dataset.short}`">{{ formatRupiah($shoppingListData->budget, true, true) }}</td>
+                    <td data-orig="{{ formatRupiah($shoppingListData->budget) }}" data-short="{{ formatRupiah($shoppingListData->budget, true, true) }}" x-on:click="toggle = !toggle;" x-text="toggle ? $el.dataset.orig : $el.dataset.short">{{ formatRupiah($shoppingListData->budget, true, true) }}</td>
                 </tr>
             </table>
 
@@ -55,7 +53,7 @@
                         <div class=" tw__col-span-4">
                             <div id="shoppingListItem-container" wire:ignore></div>
                         </div>
-                        <div class=" tw__col-span-2 lg:tw__ml-auto tw__border tw__rounded lg:tw__rounded-lg lg:tw__sticky lg:tw__top-28 tw__w-full" id="shopping_list_item-summary" wire:ignore>
+                        <div class=" tw__col-span-4 md:tw__col-span-2 lg:tw__ml-auto tw__border tw__rounded lg:tw__rounded-lg lg:tw__sticky lg:tw__top-28 tw__w-full" id="shopping_list_item-summary" wire:ignore>
                             <div class="tw__p-4 tw__border-b">
                                 <strong>Summary</strong>
                             </div>
@@ -64,13 +62,13 @@
                                     <th>Total Item</th>
                                     <td class="total-item">-</td>
                                 </tr>
-                                <tr x-data="{toggle: false}">
+                                <tr>
                                     <th>Total</th>
-                                    <td class="total" data-orig="{{ formatRupiah(0) }}" data-short="{{ formatRupiah(0) }}" x-on:click="toggle = !toggle;$el.innerHTML = `${toggle ? $el.dataset.orig : $el.dataset.short}`">{{ formatRupiah(0) }}</td>
+                                    <td class="total" data-orig="{{ formatRupiah(0) }}" data-short="{{ formatRupiah(0) }}" x-on:click="toggle = !toggle;" x-text="toggle ? $el.dataset.orig : $el.dataset.short">{{ formatRupiah(0) }}</td>
                                 </tr>
-                                <tr x-data="{toggle: false}">
+                                <tr>
                                     <th>Budget Leftover</th>
-                                    <td class="left-over" data-budget="{{ $shoppingListData->budget }}" x-on:click="toggle = !toggle;$el.innerHTML = `${toggle ? $el.dataset.orig : $el.dataset.short}`">{{ formatRupiah(0) }}</td>
+                                    <td class="left-over" data-budget="{{ $shoppingListData->budget }}" x-on:click="toggle = !toggle;" x-text="toggle ? $el.dataset.orig : $el.dataset.short">{{ formatRupiah(0) }}</td>
                                 </tr>
                             </table>
                         </div>

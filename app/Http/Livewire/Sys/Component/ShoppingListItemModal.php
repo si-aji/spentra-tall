@@ -23,7 +23,7 @@ class ShoppingListItemModal extends Component
     public $shoppingListItemState = '';
     public $shoppingListItemName = '';
     public $shoppingListItemPrice = '';
-    public $shoppingListItemQty = '';
+    public $shoppingListItemQty = 1;
     // Reset Field
     public $shoppingListItemResetField = [];
 
@@ -48,7 +48,6 @@ class ShoppingListItemModal extends Component
     {
         $this->shoppingListItemResetField = [
             'shoppingListItemModalState',
-            'shoppingListUuid',
             'shoppingListItemUuid',
             'shoppingListItemName',
             'shoppingListItemPrice',
@@ -122,6 +121,7 @@ class ShoppingListItemModal extends Component
         $data->save();
 
         // Hide Modal
+        $this->reset($this->shoppingListItemResetField);
         $this->dispatchBrowserEvent('shopping_list_item_wire-modalHide');
     }
 }

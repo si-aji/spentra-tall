@@ -9,7 +9,9 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" wire:click="closeModal"></button>
                     </div>
                     <div class="modal-body">
-                        <input type="hidden" name="shopping_id" id="input_shopping_list_item-shopping_id" readonly>
+                        <div wire:ignore>
+                            <input type="hidden" name="shopping_id" id="input_shopping_list_item-shopping_id" readonly>
+                        </div>
 
                         {{-- Name --}}
                         <div class="form-group tw__mb-4" id="form-current">
@@ -32,8 +34,9 @@
                                 </div>
                             </div>
                             <div class="col-12 col-lg-6 tw__mb-4 lg:tw__mb-0" x-data="{
-                                qty: 0
+                                qty: @entangle('shoppingListItemQty')
                             }">
+                                <button type="button" class=" tw__hidden" x-on:click="qty = 1" id="input_shopping_list_item-qty_reset"></button>
                                 {{-- QTY --}}
                                 <div class="form-group">
                                     <label for="input_shopping_list_item-qty">QTY</label>
@@ -142,15 +145,35 @@
             shoppingListItemModalPriceMask.on('accept', (e) => {
                 document.getElementById('input_shopping_list_item-qty').dispatchEvent(new Event('change'));
             });
+
+            if(document.getElementById('modal-shopping_list_item')){
+                document.getElementById('modal-shopping_list_item').addEventListener('hidden.bs.modal', (e) => {
+                    // @this.set('shoppingListItemQty', 1);
+                    @this.set('shoppingListItemQty', 1);
+                    shoppingListItemModalPriceMask.value = '0';
+                    document.getElementById('input_shopping_list_item-qty').dispatchEvent(new Event('change'));
+                });
+                document.getElementById('modal-shopping_list_item').addEventListener('show.bs.modal', (e) => {
+                    // @this.set('shoppingListItemQty', 1);
+                    @this.set('shoppingListItemQty', 1);
+                    shoppingListItemModalPriceMask.value = '0';
+                    document.getElementById('input_shopping_list_item-qty').dispatchEvent(new Event('change'));
+                });
+                document.getElementById('modal-shopping_list_item').addEventListener('shown.bs.modal', (e) => {
+                    if(document.getElementById('input_shopping_list_item-name')){
+                        document.getElementById('input_shopping_list_item-name').focus();
+                    }
+                });
+            }
         });
 
         window.addEventListener('shopping_list_item_wire-modalShow', (event) => {
-            var myModalEl = document.getElementById('modal-shopping_list_item')
+            var myModalEl = document.getElementById('modal-shopping_list_item');
             var modal = new bootstrap.Modal(myModalEl)
             modal.show();
         });
         window.addEventListener('shopping_list_item_wire-modalHide', (event) => {
-            var myModalEl = document.getElementById('modal-shopping_list_item')
+            var myModalEl = document.getElementById('modal-shopping_list_item');
             var modal = bootstrap.Modal.getInstance(myModalEl);
             modal.hide();
         });

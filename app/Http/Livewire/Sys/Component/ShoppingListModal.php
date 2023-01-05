@@ -87,7 +87,7 @@ class ShoppingListModal extends Component
         $data->user_id = \Auth::user()->id;
         $data->name = $this->shoppingListName;
         $data->note = $this->shoppingListDescription;
-        $data->budget = $this->shoppingListBudget;
+        $data->budget = $this->shoppingListBudget ?? 0;
         $data->save();
 
         $this->dispatchBrowserEvent('shoppingList_wire-modalHide');
